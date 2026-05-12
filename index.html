@@ -104,6 +104,7 @@ tfoot td{border-top:2px solid var(--border)}
 .dragging-row{opacity:.4}
 .drag-handle{cursor:grab;color:#ccc;padding:0 4px;user-select:none;font-size:14px}
 .drag-handle:hover{color:#888}
+@keyframes slideIn{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
 .item-incomplete td{background:rgba(251,233,40,.13)!important;border-bottom:1px solid rgba(220,190,0,.2)!important}
 .price-warn{color:#92680a!important;font-weight:700}
 .price-warn-icon{font-size:11px;margin-right:2px}
@@ -640,10 +641,13 @@ function addSidebarButtons() {
   if(userEmail === ADMIN_EMAIL) {
     const adminBtn = document.createElement('button');
     adminBtn.id='adminBtn';
-    adminBtn.textContent='👑 Admin';
+    adminBtn.innerHTML='👑 Admin <span id="adminBadge" style="display:none;background:#ef4444;color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:4px">0</span>';
     adminBtn.onclick=openAdminPanel;
     adminBtn.style.cssText='background:#1d4ed8;color:#fff;border:none;border-radius:5px;padding:6px;font-size:11px;cursor:pointer;width:100%;margin-top:4px';
     sbBottom.appendChild(adminBtn);
+    // Start polling for pending users
+    checkPendingUsers();
+    setInterval(checkPendingUsers, 30000); // check every 30 seconds
   }
 }
 
@@ -993,6 +997,69 @@ function itemRonCell(item,inc){
   return '<td class="num fw7">'+fm(item.ron)+'</td>';
 }
 
+
+// ── ADMIN NOTIFICATIONS ────────────────────────────────────────
+let _lastPendingCount = 0;
+
+async function checkPendingUsers() {
+  const token = await getSession();
+  if(!token || !SB_USER || SB_USER.email !== ADMIN_EMAIL) return;
+  try {
+    const res = await fetch(SB_URL+'/rest/v1/user_access?status=eq.pending&select=email,name,created_at', {
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}
+    });
+    if(!res.ok) return;
+    const pending = await res.json();
+    const count = pending.length;
+    
+    // Update badge
+    const badge = document.getElementById('adminBadge');
+    if(badge) {
+      badge.textContent = count;
+      badge.style.display = count > 0 ? 'inline' : 'none';
+    }
+    
+    // Show notification for NEW requests (count increased)
+    if(count > _lastPendingCount && _lastPendingCount >= 0) {
+      const newRequests = pending.slice(0, count - _lastPendingCount);
+      newRequests.forEach(u => showAdminNotif(u));
+    }
+    _lastPendingCount = count;
+  } catch(e) {}
+}
+
+function showAdminNotif(user) {
+  // Remove existing notif
+  const existing = document.getElementById('adminNotif');
+  if(existing) existing.remove();
+  
+  const notif = document.createElement('div');
+  notif.id = 'adminNotif';
+  notif.style.cssText = 'position:fixed;bottom:24px;right:24px;background:#1e293b;color:#fff;border-radius:12px;padding:16px 20px;z-index:9997;box-shadow:0 8px 32px rgba(0,0,0,.4);max-width:320px;border-left:4px solid #3b82f6;animation:slideIn .3s ease';
+  notif.innerHTML = `
+    <div style="display:flex;align-items:flex-start;gap:12px">
+      <span style="font-size:24px">🔔</span>
+      <div style="flex:1">
+        <div style="font-weight:700;font-size:13px;margin-bottom:4px">Cerere acces nouă</div>
+        <div style="font-size:12px;color:#94a3b8;margin-bottom:10px">${esc(user.name||user.email)} cere acces la aplicație</div>
+        <div style="display:flex;gap:8px">
+          <button onclick="setUserStatus('${esc(user.email)}','approved');document.getElementById('adminNotif')?.remove()" 
+            style="flex:1;padding:6px;background:#22c55e;color:#fff;border:none;border-radius:6px;font-size:12px;cursor:pointer;font-weight:600">✓ Aprobă</button>
+          <button onclick="openAdminPanel();document.getElementById('adminNotif')?.remove()"
+            style="flex:1;padding:6px;background:#334155;color:#94a3b8;border:none;border-radius:6px;font-size:12px;cursor:pointer">Vezi toți</button>
+          <button onclick="this.closest('#adminNotif').remove()"
+            style="padding:6px 10px;background:none;color:#64748b;border:none;cursor:pointer;font-size:16px">×</button>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(notif);
+  
+  // Auto-dismiss after 15 seconds
+  setTimeout(() => notif?.remove(), 15000);
+}
+
+
 // ── ADMIN & ACCESS CONTROL ─────────────────────────────────────
 const ADMIN_EMAIL = 'catalin.caraza@ingineriecreativa.ro';
 
@@ -1033,6 +1100,7 @@ function closeAdminPanel() {
 }
 
 async function loadAdminUsers() {
+  _lastPendingCount = -1; // reset so badge updates correctly
   const token = await getSession();
   const res = await fetch(SB_URL+'/rest/v1/user_access?select=*&order=created_at.desc', {
     headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}
