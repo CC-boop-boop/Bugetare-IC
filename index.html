@@ -2855,7 +2855,7 @@ async function authSubmit() {
   await loadAndRender();
 }
 async function authGoogle() {
-  window.location.href = SB_URL+'/auth/v1/authorize?provider=google&redirect_to='+encodeURIComponent(window.location.href);
+  window.location.href = SB_URL+'/auth/v1/authorize?provider=google&redirect_to='+encodeURIComponent('https://cc-boop-boop.github.io/Bugetare-IC/');
 }
 async function authForgotPass() {
   const email = document.getElementById('authEmail').value.trim();
