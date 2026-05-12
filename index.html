@@ -1303,9 +1303,33 @@ function renderDeviz(){
       <td class="num">${eur>0?fm(eur):'-'}</td>
       <td class="num">${ronM>0?fm(ronM*(1+TVA)):'-'}</td>
     </tr>`;
-    cat.items.filter(i=>i.ron>0).forEach(item=>{
-      html+=`<tr><td class="muted" style="padding-left:20px"></td><td style="padding-left:20px;color:#374151;font-size:12px">• ${esc(item.name)}</td><td class="num muted">${fm(item.ron)}</td><td class="num muted">${fm(item.ron/e)}</td><td></td></tr>`;
-    });
+    // Group items by subcapitol
+    const subcats = cat.subcats && cat.subcats.length ? cat.subcats : [];
+    const itemsWithSub = cat.items.filter(i=>i.ron>0 && i.subcat);
+    const itemsNoSub = cat.items.filter(i=>i.ron>0 && !i.subcat);
+    const usedSubcats = subcats.filter(s=>itemsWithSub.some(i=>i.subcat===s));
+    
+    if(usedSubcats.length > 0) {
+      // Show items grouped by subcat
+      usedSubcats.forEach((sg,si)=>{
+        const sgItems = itemsWithSub.filter(i=>i.subcat===sg);
+        if(!sgItems.length) return;
+        const sgRon = sgItems.reduce((a,i)=>a+(i.ron||0),0);
+        html+=`<tr style="background:#e8f0fe"><td style="padding-left:16px;font-size:11px;font-weight:700;color:#1e3a8a">${letterCode(idx)}${si+1}.</td><td style="padding-left:16px;font-size:12px;font-weight:700;color:#1e3a8a">${esc(sg)}</td><td class="num" style="font-size:11px;font-weight:700;color:#1e3a8a">${fm(sgRon)}</td><td class="num" style="font-size:11px;color:#64748b">${fm(sgRon/e)}</td><td></td></tr>`;
+        sgItems.forEach(item=>{
+          html+=`<tr><td class="muted" style="padding-left:28px"></td><td style="padding-left:28px;color:#374151;font-size:12px">• ${esc(item.name)}</td><td class="num muted">${fm(item.ron)}</td><td class="num muted">${fm(item.ron/e)}</td><td></td></tr>`;
+        });
+      });
+      // Items without subcat at end
+      itemsNoSub.forEach(item=>{
+        html+=`<tr><td class="muted" style="padding-left:20px"></td><td style="padding-left:20px;color:#374151;font-size:12px">• ${esc(item.name)}</td><td class="num muted">${fm(item.ron)}</td><td class="num muted">${fm(item.ron/e)}</td><td></td></tr>`;
+      });
+    } else {
+      // No subcats - show all items flat
+      cat.items.filter(i=>i.ron>0).forEach(item=>{
+        html+=`<tr><td class="muted" style="padding-left:20px"></td><td style="padding-left:20px;color:#374151;font-size:12px">• ${esc(item.name)}</td><td class="num muted">${fm(item.ron)}</td><td class="num muted">${fm(item.ron/e)}</td><td></td></tr>`;
+      });
+    }
   });
   html+=`</tbody><tfoot>
     <tr style="background:#1e293b;color:#fff"><td colspan="2" style="padding:10px;font-weight:700">TOTAL FĂRĂ TVA</td><td class="num" style="padding:10px;font-weight:700;color:#93c5fd">${fm(totRon)}</td><td class="num" style="padding:10px">${fm(totRon/e)}</td><td></td></tr>
