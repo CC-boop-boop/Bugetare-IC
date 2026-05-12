@@ -1122,18 +1122,23 @@ async function loadAdminUsers() {
   const statusColors = {pending:'#fbbf24',approved:'#4ade80',rejected:'#f87171'};
   const statusLabels = {pending:'În așteptare',approved:'Aprobat',rejected:'Respins'};
   
-  list.innerHTML = users.map(u => `
-    <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #f1f5f9">
-      <div style="flex:1">
-        <div style="font-size:13px;font-weight:600;color:#0f172a">${u.name||'—'}</div>
-        <div style="font-size:12px;color:#64748b">${u.email}</div>
-        <div style="font-size:11px;color:#94a3b8;margin-top:2px">${new Date(u.created_at).toLocaleDateString('ro-RO')}</div>
-      </div>
-      <span style="padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background:${statusColors[u.status]}22;color:${statusColors[u.status]}">${statusLabels[u.status]}</span>
-      ${u.status!=='approved'?`<button onclick="setUserStatus('${u.email}','approved')" style="padding:5px 12px;background:#22c55e;color:#fff;border:none;border-radius:6px;font-size:12px;cursor:pointer">✓ Aprobă</button>`:'<button onclick="setUserStatus(\'' + u.email + '\',\'approved\')" style="padding:5px 12px;background:#22c55e;color:#fff;border:none;border-radius:6px;font-size:12px;cursor:pointer;opacity:.4" disabled>✓ Aprobat</button>'}
-      ${u.status!=='rejected'?`<button onclick="setUserStatus('${u.email}','rejected')" style="padding:5px 12px;background:#ef4444;color:#fff;border:none;border-radius:6px;font-size:12px;cursor:pointer">✕ Respinge</button>`:''}
-    </div>
-  `).join('');
+  list.innerHTML = users.map(function(u) {
+    const approveBtn = u.status!=='approved'
+      ? '<button onclick="setUserStatus(\''+u.email+'\',\'approved\')" style="padding:5px 12px;background:#22c55e;color:#fff;border:none;border-radius:6px;font-size:12px;cursor:pointer">✓ Aprobă</button>'
+      : '<button style="padding:5px 12px;background:#22c55e;color:#fff;border:none;border-radius:6px;font-size:12px;opacity:.4" disabled>✓ Aprobat</button>';
+    const rejectBtn = u.status!=='rejected'
+      ? '<button onclick="setUserStatus(\''+u.email+'\',\'rejected\')" style="padding:5px 12px;background:#ef4444;color:#fff;border:none;border-radius:6px;font-size:12px;cursor:pointer">✕ Respinge</button>'
+      : '';
+    return '<div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #f1f5f9">'
+      +'<div style="flex:1">'
+      +'<div style="font-size:13px;font-weight:600;color:#0f172a">'+(u.name||'—')+'</div>'
+      +'<div style="font-size:12px;color:#64748b">'+u.email+'</div>'
+      +'<div style="font-size:11px;color:#94a3b8;margin-top:2px">'+new Date(u.created_at).toLocaleDateString('ro-RO')+'</div>'
+      +'</div>'
+      +'<span style="padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background:'+statusColors[u.status]+'22;color:'+statusColors[u.status]+'">'+statusLabels[u.status]+'</span>'
+      +approveBtn+rejectBtn
+      +'</div>';
+  }).join('');
 }
 
 async function setUserStatus(email, status) {
@@ -2183,11 +2188,7 @@ function fm2(n){return((+n)||0).toFixed(2);}
 function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
 
-function openMaps(){
-  const adr=document.getElementById('np_adr')?.value||'';
-  if(!adr){alert('Introdu mai întâi adresa.');return;}
-  window.open('https://www.google.com/maps/search/'+encodeURIComponent(adr),'_blank');
-}
+
 
 // ═══════════════════════════════════════════════════════════════════
 // GRAFIC DE EXECUȚIE — Gantt module
@@ -2998,12 +2999,7 @@ function gShowToast(msg,color){
 }
 
 // ── MAIN RENDER ───────────────────────────────────────────────
-function renderGantt(){
-  if(!document.getElementById('ganttApp'))return;
-  gLoad();
-  gInitDivider();
-  gRecalc();
-}
+
 
 
 // ── SUPABASE AUTH + SYNC ──────────────────────────────────────
