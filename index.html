@@ -623,6 +623,17 @@ function libApplyPick(selEl) {
 }
 
 async function loadAndRender() {
+  // Check access
+  const token = await getSession();
+  if(token && SB_USER) {
+    const access = await checkUserAccess(SB_USER);
+    if(access === 'pending' || access === 'rejected') {
+      showPendingScreen(SB_USER);
+      return;
+    }
+    hidePendingScreen();
+  }
+  
   showSyncStatus('⟳ Se încarcă...', '#94a3b8');
   const fromCloud = await sbLoad();
   if(!fromCloud && !load()) {
@@ -668,6 +679,15 @@ async function init() {
     btn.id='logoutBtn';
     btn.textContent='⎋ Deconectare';
     btn.onclick=authLogout;
+    // Add admin button if admin
+    if(SB_USER && SB_USER.email === ADMIN_EMAIL) {
+      const adminBtn = document.createElement('button');
+      adminBtn.id='adminBtn';
+      adminBtn.textContent='👑 Admin';
+      adminBtn.onclick=openAdminPanel;
+      adminBtn.style.cssText='background:#1d4ed8;color:#fff;border:none;border-radius:5px;padding:6px;font-size:11px;cursor:pointer;width:100%;margin-bottom:4px';
+      sbBottom.insertBefore(adminBtn, btn);
+    }
     btn.style.cssText='background:#334155;color:#94a3b8;border:1px solid #475569;border-radius:5px;padding:6px;font-size:11px;cursor:pointer;width:100%';
     sbBottom.appendChild(btn);
   }
@@ -939,6 +959,86 @@ function itemRonCell(item,inc){
   if(inc) return '<td class="num fw7" style="color:#92680a;font-weight:700">&#9651; de completat</td>';
   return '<td class="num fw7">'+fm(item.ron)+'</td>';
 }
+
+// ── ADMIN & ACCESS CONTROL ─────────────────────────────────────
+const ADMIN_EMAIL = 'catalin.caraza@ingineriecreativa.ro';
+
+async function checkUserAccess(user) {
+  // Admin always has access
+  if(user.email === ADMIN_EMAIL) return 'admin';
+  
+  const token = await getSession();
+  const res = await fetch(SB_URL+'/rest/v1/user_access?email=eq.'+encodeURIComponent(user.email)+'&select=status', {
+    headers: {'apikey':SB_KEY,'Authorization':'Bearer '+token}
+  });
+  const rows = await res.json();
+  if(rows && rows.length > 0) return rows[0].status; // 'approved' | 'pending' | 'rejected'
+  
+  // First time — create pending request
+  await fetch(SB_URL+'/rest/v1/user_access', {
+    method:'POST',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json','Prefer':'resolution=ignore-duplicates'},
+    body:JSON.stringify({email:user.email, name:user.user_metadata?.full_name||'', status:'pending', created_at:new Date().toISOString()})
+  });
+  return 'pending';
+}
+
+function showPendingScreen(user) {
+  document.getElementById('pendingEmail').textContent = user.email;
+  document.getElementById('pendingScreen').style.display='flex';
+}
+function hidePendingScreen() {
+  document.getElementById('pendingScreen').style.display='none';
+}
+
+async function openAdminPanel() {
+  document.getElementById('adminPanel').style.display='flex';
+  await loadAdminUsers();
+}
+function closeAdminPanel() {
+  document.getElementById('adminPanel').style.display='none';
+}
+
+async function loadAdminUsers() {
+  const token = await getSession();
+  const res = await fetch(SB_URL+'/rest/v1/user_access?select=*&order=created_at.desc', {
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}
+  });
+  const users = await res.json();
+  
+  const list = document.getElementById('adminUserList');
+  if(!users||!users.length) {
+    list.innerHTML='<p style="color:#64748b;font-size:13px;padding:20px 0">Niciun utilizator înregistrat încă.</p>';
+    return;
+  }
+  
+  const statusColors = {pending:'#fbbf24',approved:'#4ade80',rejected:'#f87171'};
+  const statusLabels = {pending:'În așteptare',approved:'Aprobat',rejected:'Respins'};
+  
+  list.innerHTML = users.map(u => `
+    <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #f1f5f9">
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600;color:#0f172a">${u.name||'—'}</div>
+        <div style="font-size:12px;color:#64748b">${u.email}</div>
+        <div style="font-size:11px;color:#94a3b8;margin-top:2px">${new Date(u.created_at).toLocaleDateString('ro-RO')}</div>
+      </div>
+      <span style="padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background:${statusColors[u.status]}22;color:${statusColors[u.status]}">${statusLabels[u.status]}</span>
+      ${u.status!=='approved'?`<button onclick="setUserStatus('${u.email}','approved')" style="padding:5px 12px;background:#22c55e;color:#fff;border:none;border-radius:6px;font-size:12px;cursor:pointer">✓ Aprobă</button>`:'<button onclick="setUserStatus(\'' + u.email + '\',\'approved\')" style="padding:5px 12px;background:#22c55e;color:#fff;border:none;border-radius:6px;font-size:12px;cursor:pointer;opacity:.4" disabled>✓ Aprobat</button>'}
+      ${u.status!=='rejected'?`<button onclick="setUserStatus('${u.email}','rejected')" style="padding:5px 12px;background:#ef4444;color:#fff;border:none;border-radius:6px;font-size:12px;cursor:pointer">✕ Respinge</button>`:''}
+    </div>
+  `).join('');
+}
+
+async function setUserStatus(email, status) {
+  const token = await getSession();
+  await fetch(SB_URL+'/rest/v1/user_access?email=eq.'+encodeURIComponent(email), {
+    method:'PATCH',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},
+    body:JSON.stringify({status})
+  });
+  await loadAdminUsers();
+}
+
 
 function renderCost(){
   const p=proj(); if(!p) return;
@@ -1382,6 +1482,36 @@ function exportDeviz(){
     <p id="authForgot" style="text-align:center;margin-top:14px;font-size:12px;color:#64748b">
       <a href="#" onclick="authForgotPass()" style="color:#1d4ed8;text-decoration:none">Am uitat parola</a>
     </p>
+  </div>
+</div>
+
+
+<!-- ADMIN PANEL -->
+<div id="adminPanel" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9998;align-items:center;justify-content:center;padding:20px">
+  <div style="background:#fff;border-radius:16px;width:100%;max-width:700px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column">
+    <div style="padding:20px 24px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <h2 style="font-size:18px;font-weight:700;color:#0f172a">👑 Panou Admin</h2>
+        <p style="font-size:12px;color:#64748b;margin-top:2px">Gestionare utilizatori</p>
+      </div>
+      <button onclick="closeAdminPanel()" style="background:none;border:none;font-size:20px;cursor:pointer;color:#64748b">×</button>
+    </div>
+    <div style="padding:16px 24px;overflow-y:auto;flex:1">
+      <div id="adminUserList">
+        <p style="color:#64748b;font-size:13px">Se încarcă...</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PENDING ACCESS SCREEN -->
+<div id="pendingScreen" style="display:none;position:fixed;inset:0;background:linear-gradient(135deg,#1e293b 0%,#0f172a 100%);z-index:9999;align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:16px;padding:40px;width:100%;max-width:400px;text-align:center">
+    <div style="font-size:48px;margin-bottom:16px">⏳</div>
+    <h2 style="font-size:18px;font-weight:700;color:#0f172a;margin-bottom:8px">Cont în așteptare</h2>
+    <p style="font-size:14px;color:#64748b;margin-bottom:20px">Cererea ta de acces a fost trimisă administratorului. Vei putea folosi aplicația după aprobare.</p>
+    <p style="font-size:12px;color:#94a3b8;margin-bottom:20px" id="pendingEmail"></p>
+    <button onclick="authLogout()" style="padding:10px 24px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;cursor:pointer;color:#374151">Deconectare</button>
   </div>
 </div>
 
@@ -2704,6 +2834,36 @@ function gExportManopera(){
   </div>
 </div>
 
+
+<!-- ADMIN PANEL -->
+<div id="adminPanel" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9998;align-items:center;justify-content:center;padding:20px">
+  <div style="background:#fff;border-radius:16px;width:100%;max-width:700px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column">
+    <div style="padding:20px 24px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <h2 style="font-size:18px;font-weight:700;color:#0f172a">👑 Panou Admin</h2>
+        <p style="font-size:12px;color:#64748b;margin-top:2px">Gestionare utilizatori</p>
+      </div>
+      <button onclick="closeAdminPanel()" style="background:none;border:none;font-size:20px;cursor:pointer;color:#64748b">×</button>
+    </div>
+    <div style="padding:16px 24px;overflow-y:auto;flex:1">
+      <div id="adminUserList">
+        <p style="color:#64748b;font-size:13px">Se încarcă...</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PENDING ACCESS SCREEN -->
+<div id="pendingScreen" style="display:none;position:fixed;inset:0;background:linear-gradient(135deg,#1e293b 0%,#0f172a 100%);z-index:9999;align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:16px;padding:40px;width:100%;max-width:400px;text-align:center">
+    <div style="font-size:48px;margin-bottom:16px">⏳</div>
+    <h2 style="font-size:18px;font-weight:700;color:#0f172a;margin-bottom:8px">Cont în așteptare</h2>
+    <p style="font-size:14px;color:#64748b;margin-bottom:20px">Cererea ta de acces a fost trimisă administratorului. Vei putea folosi aplicația după aprobare.</p>
+    <p style="font-size:12px;color:#94a3b8;margin-bottom:20px" id="pendingEmail"></p>
+    <button onclick="authLogout()" style="padding:10px 24px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;cursor:pointer;color:#374151">Deconectare</button>
+  </div>
+</div>
+
 </body></html>`);
   win.document.close();
 }
@@ -2978,6 +3138,36 @@ init();
     <p id="authForgot" style="text-align:center;margin-top:14px;font-size:12px;color:#64748b">
       <a href="#" onclick="authForgotPass()" style="color:#1d4ed8;text-decoration:none">Am uitat parola</a>
     </p>
+  </div>
+</div>
+
+
+<!-- ADMIN PANEL -->
+<div id="adminPanel" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9998;align-items:center;justify-content:center;padding:20px">
+  <div style="background:#fff;border-radius:16px;width:100%;max-width:700px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column">
+    <div style="padding:20px 24px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <h2 style="font-size:18px;font-weight:700;color:#0f172a">👑 Panou Admin</h2>
+        <p style="font-size:12px;color:#64748b;margin-top:2px">Gestionare utilizatori</p>
+      </div>
+      <button onclick="closeAdminPanel()" style="background:none;border:none;font-size:20px;cursor:pointer;color:#64748b">×</button>
+    </div>
+    <div style="padding:16px 24px;overflow-y:auto;flex:1">
+      <div id="adminUserList">
+        <p style="color:#64748b;font-size:13px">Se încarcă...</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PENDING ACCESS SCREEN -->
+<div id="pendingScreen" style="display:none;position:fixed;inset:0;background:linear-gradient(135deg,#1e293b 0%,#0f172a 100%);z-index:9999;align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:16px;padding:40px;width:100%;max-width:400px;text-align:center">
+    <div style="font-size:48px;margin-bottom:16px">⏳</div>
+    <h2 style="font-size:18px;font-weight:700;color:#0f172a;margin-bottom:8px">Cont în așteptare</h2>
+    <p style="font-size:14px;color:#64748b;margin-bottom:20px">Cererea ta de acces a fost trimisă administratorului. Vei putea folosi aplicația după aprobare.</p>
+    <p style="font-size:12px;color:#94a3b8;margin-bottom:20px" id="pendingEmail"></p>
+    <button onclick="authLogout()" style="padding:10px 24px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;cursor:pointer;color:#374151">Deconectare</button>
   </div>
 </div>
 
