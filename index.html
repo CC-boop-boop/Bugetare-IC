@@ -1,10 +1,14 @@
-<!DOCTYPE html>
+<!DOCTYPE html><!-- v1778602958 -->
 <html lang="ro">
 <head>
 <meta charset="UTF-8">
+<meta name="version" content="1778602958">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Inginerie Creativa — Bugetare Construcții</title>
 <meta name="robots" content="noindex,nofollow">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Arial,sans-serif;font-size:14px;background:#f1f5f9;color:#1e293b}
@@ -245,6 +249,27 @@ tfoot td{border-top:2px solid var(--border)}
 </head>
 <body>
 
+<script>
+// Force fresh content - bypass CDN cache
+if('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.unregister()));
+}
+// Check if current version matches server version
+(async function() {
+  try {
+    const res = await fetch(location.href, {cache: 'no-store', headers: {'Cache-Control': 'no-cache'}});
+    const serverHTML = await res.text();
+    const serverVer = serverHTML.match(/name="version" content="(\d+)"/)?.[1];
+    const localVer = document.querySelector('meta[name="version"]')?.content;
+    if(serverVer && localVer && serverVer !== localVer) {
+      // New version available - reload
+      location.reload(true);
+    }
+  } catch(e) {}
+})();
+</script>
+
+
 <div class="app">
 <div class="sidebar">
   <div class="sb-logo">
@@ -470,6 +495,8 @@ function curs() { return parseFloat(proj()?.curs_euro)||5.09; }
 
 function save() {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(projects)); } catch(e){}
+  // Mark as dirty to prevent sync overwrite for 5 seconds
+  window._lastSaveTime = Date.now();
   sbSave();
 }
 function load() {
@@ -639,6 +666,8 @@ function nav(page) {
   document.querySelectorAll('.nav-it').forEach(n=>n.classList.remove('active'));
   document.getElementById('pg-'+page)?.classList.add('active');
   document.getElementById('ni-'+page)?.classList.add('active');
+  // Save last state
+  try { localStorage.setItem('last_state', JSON.stringify({page, pid})); } catch(e) {}
   const titles={cost:'Centru de cost',centralizator:'Centralizator',deviz:'Deviz general',cashflow:'Cash-flow',projects:'Proiecte',gantt:'Grafic de execuție'};
   document.getElementById('pgTitle').textContent=titles[page]||page;
   const addBtn=document.getElementById('addBtn');
@@ -911,7 +940,7 @@ function renderCost(){
         </div>
       </div>
       ${isOpen?`<div class="cat-body"><table>
-        <thead><tr><th style="width:36px">Nr</th><th>Denumire</th><th>Furnizor</th><th class="num" style="width:80px">Cant.</th><th style="width:50px">UM</th><th class="num" style="width:100px">Preț UM</th><th class="num" style="width:110px">RON fără TVA</th><th class="no-print" style="width:70px"></th></tr></thead>
+        <thead><tr><th style="width:36px">Nr</th><th>Denumire</th><th>Furnizor</th><th class="num" style="width:80px">Cant.</th><th style="width:50px">UM</th><th class="num" style="width:100px">Preț UM</th><th class="num" style="width:110px">RON fără TVA</th><th class="num" style="width:90px;color:#64748b">EUR</th><th class="no-print" style="width:70px"></th></tr></thead>
         <tbody>${(()=>{
           const groups={},order=[];
           filtered.forEach(item=>{const sg=item.subcat||'';if(!groups[sg]){groups[sg]=[];order.push(sg);}groups[sg].push(item);});
@@ -952,6 +981,7 @@ function renderCost(){
                 <td class="num">${item.cant}</td><td class="muted">${esc(item.um)}</td>
                 ${itemPretCell(item,_isIncomplete,e)}
                 ${itemRonCell(item,_isIncomplete)}
+                <td class="num" style="color:#64748b;font-size:12px">${item.ron>0?fm2(item.ron/e)+' €':''}</td>
                 <td class="no-print" style="white-space:nowrap">
                   <button class="btn btn-sm btn-icon" title="Editează" onclick="event.stopPropagation();openEditItemModal('${cat.id}','${item.id}')">✎</button>
                   <button class="btn btn-sm btn-icon" title="Duplicează" onclick="event.stopPropagation();dupItem('${cat.id}','${item.id}')">⧉</button>
@@ -1061,6 +1091,8 @@ function openAddItemModal(catId){
 }
 
 function openEditItemModal(catId,itemId){
+  // Pause auto-sync during editing to prevent overwrite
+  if(window._syncInterval) { clearInterval(window._syncInterval); window._syncInterval=null; }
   const p=proj();
   const cat=p.categories.find(c=>c.id===catId);
   const item=cat?.items.find(i=>i.id===itemId);
@@ -1099,6 +1131,10 @@ function openEditItemModal(catId,itemId){
     item.obs=document.getElementById('fi_obs').value;
     item.subcat=document.getElementById('fi_subcat')?.value||'';
     save(); closeModal(); renderCost();
+    // Resume auto-sync after save
+    if(!window._syncInterval) {
+      window._syncInterval=setInterval(async()=>{const f=await sbLoad();if(f){refreshProjSel();renderCost&&renderCost();showSyncStatus('↻ Sincronizat','#4ade80');}},60000);
+    }
   });
   setTimeout(function(){ var s=document.getElementById('fi_um'); if(s) s.addEventListener('change',onUmChange); },50);
 }
@@ -2732,6 +2768,8 @@ async function getSession() {
 }
 
 async function sbLoad() {
+  // Don't overwrite if we just saved locally (within 5 seconds)
+  if(window._lastSaveTime && Date.now() - window._lastSaveTime < 5000) return false;
   try {
     const token = await getSession();
     if(!token) return false;
@@ -2937,7 +2975,15 @@ async function loadAndInit() {
     pid=projects[0]?.id;
     if(fromCloud) showSyncStatus('✓ Date încărcate din cloud','#4ade80');
   }
-  refreshProjSel(); nav('cost');
+  // Restore last state
+  try {
+    const last = JSON.parse(localStorage.getItem('last_state')||'{}');
+    if(last.pid && projects.find(p=>p.id===last.pid)) pid = last.pid;
+    refreshProjSel();
+    nav(last.page||'cost');
+  } catch(e) {
+    refreshProjSel(); nav('cost');
+  }
   addSidebarButtons();
   // Auto-sync every 60s
   if(window._syncInterval) clearInterval(window._syncInterval);
