@@ -1,0 +1,2600 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Inginerie Creativa Design & Build</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;font-size:14px;background:#f1f5f9;color:#1e293b}
+:root{--blue:#2563eb;--blue-l:#eff6ff;--green:#16a34a;--green-l:#f0fdf4;--red:#dc2626;--red-l:#fef2f2;--amber:#d97706;--amber-l:#fffbeb;--gray:#6b7280;--border:#e2e8f0;--card:#fff;--r:8px;--sidebar:#1e293b}
+h1,h2,h3,h4{font-weight:600}
+
+.app{display:flex;height:100vh;overflow:hidden}
+.sidebar{width:228px;background:var(--sidebar);color:#94a3b8;flex-shrink:0;display:flex;flex-direction:column;overflow-y:auto}
+.sb-logo{padding:18px 16px 10px;border-bottom:1px solid #334155}
+.sb-logo h2{font-size:14px;color:#f1f5f9;font-weight:700;margin-bottom:2px}
+.sb-logo p{font-size:11px;color:#64748b}
+.sb-proj{padding:10px 12px 6px;border-bottom:1px solid #334155}
+.sb-proj label{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#475569;display:block;margin-bottom:4px}
+.proj-sel{width:100%;padding:7px 10px;background:#334155;border:1px solid #475569;border-radius:6px;color:#e2e8f0;font-size:12px;cursor:pointer}
+.sb-curs{display:flex;align-items:center;gap:6px;padding:8px 12px;border-bottom:1px solid #334155;font-size:12px;color:#94a3b8}
+.sb-curs input{width:64px;padding:4px 6px;background:#334155;border:1px solid #475569;border-radius:4px;color:#e2e8f0;font-size:12px;text-align:right}
+.sb-curs input:focus{outline:none;border-color:#60a5fa}
+.sb-nav{padding:6px 0;flex:1}
+.nav-sec{padding:14px 16px 3px;font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:#475569;font-weight:700}
+.nav-it{display:flex;align-items:center;gap:8px;padding:8px 16px;cursor:pointer;font-size:13px;color:#94a3b8;border-left:3px solid transparent;transition:all .12s;user-select:none}
+.nav-it:hover{background:#334155;color:#e2e8f0}
+.nav-it.active{background:#1d4ed8;color:#fff;border-left-color:#93c5fd}
+.nav-it svg{width:15px;height:15px;flex-shrink:0}
+.sb-bottom{padding:12px;border-top:1px solid #334155;display:flex;gap:6px}
+.sb-bottom button{flex:1;padding:6px;background:#334155;border:1px solid #475569;border-radius:5px;color:#94a3b8;font-size:11px;cursor:pointer}
+.sb-bottom button:hover{background:#475569;color:#e2e8f0}
+
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{background:#fff;border-bottom:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.topbar h1{font-size:16px;color:#0f172a;font-weight:700}
+.topbar-r{display:flex;gap:8px;align-items:center}
+.content{flex:1;overflow-y:auto;padding:18px 20px}
+
+.btn{padding:7px 14px;border-radius:6px;font-size:13px;cursor:pointer;border:1px solid var(--border);background:#fff;font-weight:500;transition:all .12s;white-space:nowrap}
+.btn:hover{background:#f8fafc;border-color:#cbd5e1}
+.btn-primary{background:var(--blue);color:#fff;border-color:var(--blue)}
+.btn-primary:hover{background:#1d4ed8}
+.btn-green{background:var(--green);color:#fff;border-color:var(--green)}
+.btn-green:hover{background:#15803d}
+.btn-sm{padding:3px 8px;font-size:12px}
+.btn-icon{padding:4px 6px;font-size:14px;line-height:1}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:18px}
+.stat{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:13px 15px}
+.stat-lbl{font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px}
+.stat-val{font-size:20px;font-weight:700;color:#0f172a}
+.stat-sub{font-size:11px;color:var(--gray);margin-top:1px}
+.stat.blue .stat-val{color:var(--blue)}
+.stat.green .stat-val{color:var(--green)}
+.stat.red .stat-val{color:var(--red)}
+.stat.amber .stat-val{color:var(--amber)}
+
+.card{background:#fff;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:14px}
+.card-hd{padding:10px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:#fafafa}
+.card-hd h3{font-size:13px;font-weight:600;color:#0f172a}
+.card-bd{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:#f8fafc;padding:7px 10px;text-align:left;font-weight:600;color:#475569;font-size:11px;border-bottom:1px solid var(--border);white-space:nowrap;text-transform:uppercase;letter-spacing:.04em}
+td{padding:7px 10px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafafa}
+tfoot td{border-top:2px solid var(--border)}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+.muted{color:var(--gray);font-size:12px}.cat-hd .muted{color:#94a3b8}
+.fw7{font-weight:700}
+
+.badge{display:inline-block;padding:2px 7px;border-radius:10px;font-size:11px;font-weight:600;white-space:nowrap}
+.bg{background:#f3f4f6;color:#374151}
+.bb{background:#dbeafe;color:#1e40af}
+.bgn{background:#dcfce7;color:#166534}
+.br{background:#fee2e2;color:#991b1b}
+.ba{background:#fef3c7;color:#92400e}
+.bp{background:#f3e8ff;color:#6b21a8}
+
+.fg{display:flex;flex-direction:column;gap:3px;margin-bottom:12px}
+.fg label{font-size:12px;font-weight:600;color:#374151}
+.fg input,.fg select,.fg textarea{padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;color:#111;background:#fff;width:100%}
+.fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 2px #bfdbfe40}
+.frow{display:grid;gap:10px}
+.frow-2{grid-template-columns:1fr 1fr}
+.frow-3{grid-template-columns:1fr 1fr 1fr}
+
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:999;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{background:#fff;border-radius:10px;width:100%;max-width:600px;max-height:92vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.modal.lg{max-width:760px}
+.modal-hd{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:1}
+.modal-hd h3{font-size:15px;font-weight:600}
+.modal-x{background:none;border:none;font-size:22px;cursor:pointer;color:var(--gray);line-height:1;padding:0 2px}
+.modal-bd{padding:18px}
+.modal-ft{padding:12px 18px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;position:sticky;bottom:0;background:#fff}
+
+.cat-sec{margin-bottom:12px}
+.cat-hd{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;background:linear-gradient(90deg,#1e293b 0%,#2d3f55 100%);border:1px solid #1e293b;border-radius:6px;cursor:grab;user-select:none}.cat-hd:active{cursor:grabbing}
+.drag-over-row{border-top:2px solid var(--blue)!important;background:#e8f4ff!important}
+.dragging-row{opacity:.4}
+.drag-handle{cursor:grab;color:#ccc;padding:0 4px;user-select:none;font-size:14px}
+.drag-handle:hover{color:#888}
+.item-incomplete td{background:rgba(251,233,40,.13)!important;border-bottom:1px solid rgba(220,190,0,.2)!important}
+.price-warn{color:#92680a!important;font-weight:700}
+.price-warn-icon{font-size:11px;margin-right:2px}
+.cat-hd:hover{background:#f1f5f9}
+.cat-title{font-weight:700;font-size:14px;display:flex;align-items:center;gap:10px;color:#f1f5f9}
+.cat-actions{display:flex;align-items:center;gap:10px}
+.cat-total{font-weight:700;font-size:13px;color:#93c5fd}
+.cat-body{border:1px solid var(--border);border-top:none;border-radius:0 0 6px 6px;overflow:hidden}
+
+.cf-in{color:var(--green);font-weight:600}
+.cf-out{color:var(--red);font-weight:600}
+.cf-bal{font-weight:700}
+
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.bar-lbl{width:200px;font-size:12px;text-align:right;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#374151}
+.bar-track{flex:1;height:16px;background:#f1f5f9;border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;background:var(--blue)}
+.bar-val{width:100px;font-size:12px;text-align:right;flex-shrink:0;color:#374151}
+
+.tabs{display:flex;border-bottom:2px solid var(--border);margin-bottom:14px}
+.tab{padding:7px 14px;font-size:13px;font-weight:500;cursor:pointer;color:var(--gray);border-bottom:2px solid transparent;margin-bottom:-2px}
+.tab:hover{color:#0f172a}
+.tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+
+.page{display:none}.page.active{display:block}.hidden{display:none!important}
+
+.proj-card{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:all .12s}
+.proj-card:hover{border-color:#93c5fd;box-shadow:0 2px 8px #2563eb18}
+.proj-card.sel{border-color:var(--blue);background:var(--blue-l)}
+
+.inp-sm{padding:3px 6px!important;font-size:12px!important;width:72px!important;text-align:right}
+.srch{padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;width:220px}
+.srch:focus{outline:none;border-color:var(--blue)}
+
+.file-drop{border:2px dashed var(--border);border-radius:8px;padding:18px;text-align:center;cursor:pointer;transition:all .15s;color:var(--gray)}
+.file-drop:hover,.file-drop.over{border-color:var(--blue);background:var(--blue-l);color:var(--blue)}
+.file-drop input{display:none}
+.file-thumb{width:32px;height:32px;background:#f1f5f9;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;flex-shrink:0}
+.file-thumb:hover{background:#dbeafe}
+.ai-badge{font-size:10px;background:#8b5cf6;color:#fff;padding:1px 5px;border-radius:8px;font-weight:700}
+
+.loading{display:inline-flex;align-items:center;gap:6px;color:var(--gray);font-size:12px}
+.spin{width:14px;height:14px;border:2px solid #e2e8f0;border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.deviz-print-hd{text-align:center;padding:20px 0 14px;border-bottom:2px solid #1e293b;margin-bottom:18px}
+.deviz-print-hd h2{font-size:19px;font-weight:700;color:#0f172a}
+
+/* GANTT */
+.gantt-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--r);background:#fff;margin-bottom:14px}
+.gantt-table{min-width:900px;width:100%;border-collapse:collapse}
+.gantt-table th{background:#1e293b;color:#94a3b8;padding:7px 10px;font-size:11px;text-transform:uppercase;letter-spacing:.04em;font-weight:600;white-space:nowrap;border-right:1px solid #334155}
+.gantt-table td{padding:6px 10px;border-bottom:1px solid #f1f5f9;vertical-align:middle;font-size:13px;white-space:nowrap}
+.gantt-table tr:hover td{background:#f8fafc}
+.gantt-bar-cell{padding:4px 6px!important}
+.gantt-bar-bg{height:22px;background:#f1f5f9;border-radius:4px;position:relative;overflow:hidden}
+.gantt-bar-fill{height:100%;border-radius:4px;position:absolute;left:0;top:0;display:flex;align-items:center;padding-left:6px;font-size:11px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;min-width:4px;transition:width .3s}
+.gantt-today{position:absolute;top:0;bottom:0;width:2px;background:#ef4444;z-index:2}
+.gantt-header-dates{display:flex;padding:0;overflow:hidden;position:relative}
+.task-milestone .gantt-bar-fill{background:#8b5cf6!important}
+.task-done .gantt-bar-fill{background:#16a34a!important}
+.task-late .gantt-bar-fill{background:#dc2626!important}
+.status-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px;flex-shrink:0}
+.sd-plan{background:#2563eb}.sd-done{background:#16a34a}.sd-late{background:#dc2626}.sd-pause{background:#d97706}
+
+@media print{.sidebar,.topbar,.no-print{display:none!important}.main{overflow:visible}.content{padding:0}body{background:#fff}.card{border:1px solid #ccc;page-break-inside:avoid}}
+
+/* ═══ GANTT ═══════════════════════════════════════════════════ */
+#pg-gantt.active{display:flex;flex-direction:column;padding:0;overflow:hidden;height:calc(100vh - 52px)}
+.g-topbar{background:#fff;border-bottom:1px solid #ddd;padding:8px 12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;flex-shrink:0}
+.g-topbar-title{font-size:14px;font-weight:700;color:#1e293b}
+.g-topbar-sub{font-size:11px;color:#888;margin-top:1px}
+.g-actions{display:flex;gap:4px;flex-wrap:wrap}
+.g-btn{padding:4px 10px;border:1px solid #ccc;border-radius:5px;background:#fff;cursor:pointer;font-size:11px;color:#333;white-space:nowrap}
+.g-btn:hover{background:#f0f0ec}
+.g-btn-primary{background:#2a5cbf;color:#fff;border-color:#2a5cbf;font-weight:600}
+.g-btn-primary:hover{background:#1e4a9e}
+.g-btn-success{background:#27873c;color:#fff;border-color:#27873c}
+.g-btn-warn{background:#c07020;color:#fff;border-color:#c07020}
+.g-stats{display:flex;gap:6px;padding:8px 12px;flex-shrink:0;flex-wrap:wrap;background:#fafafa;border-bottom:1px solid #eee}
+.g-stat{background:#fff;border-radius:6px;padding:6px 12px;min-width:80px;border:1px solid #e4e4e0}
+.g-stat-lbl{font-size:10px;color:#888;margin-bottom:1px}
+.g-stat-val{font-size:15px;font-weight:700;color:#1a1a1a}
+.g-split{display:flex;flex:1;overflow:hidden;min-height:0}
+.g-left{overflow-y:auto;overflow-x:hidden;border-right:1px solid #e0e0da;flex-shrink:0;width:320px;min-width:200px;max-width:50%}
+.g-divider{width:5px;background:#f0f0ec;cursor:col-resize;flex-shrink:0}
+.g-divider:hover{background:#d0d0c8}
+.g-right{flex:1;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.g-left-hdr{display:flex;align-items:center;padding:5px 8px;background:#f5f5f3;border-bottom:1px solid #e0e0da;font-size:10px;font-weight:700;color:#888;position:sticky;top:0;z-index:5}
+.g-row{display:flex;align-items:center;min-height:26px;border-bottom:1px solid #f0f0ec;cursor:pointer;transition:background .1s;user-select:none}
+.g-row:hover{background:#fafaf8}
+.g-row.sec-hdr{background:#f5f5f3;font-weight:700;font-size:11px}
+.g-row.dragging{opacity:.4}
+.g-row.drag-over{border-top:2px solid #2a5cbf}
+.g-drag{color:#ccc;font-size:13px;cursor:grab;padding:0 4px;flex-shrink:0}
+.g-drag:hover{color:#888}
+.g-row-name{flex:1;font-size:11px;padding:2px 4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.g-row-meta{font-size:10px;color:#888;padding-right:5px;white-space:nowrap;flex-shrink:0;line-height:1.3}
+.g-prog-wrap{height:3px;background:#e0e0da;border-radius:2px;margin-top:1px}
+.g-prog-fill{height:3px;border-radius:2px;background:#2a5cbf}
+.g-gantt-hdr{flex-shrink:0;overflow:hidden;background:#f5f5f3;border-bottom:1px solid #e0e0da}
+.g-gantt-scroll-wrap{flex:1;overflow:auto;position:relative}
+.g-gantt-inner{position:relative}
+.g-gantt-row{position:absolute;left:0;right:0;height:26px;border-bottom:1px solid #f0f0ec}
+.g-gantt-row.sec-row{background:#f5f5f3}
+.g-bar{position:absolute;height:14px;top:6px;border-radius:3px;cursor:pointer;opacity:.87;transition:opacity .1s}
+.g-bar:hover{opacity:1;z-index:5}
+.g-bar-rain{position:absolute;top:6px;height:14px;border-radius:3px;background:repeating-linear-gradient(45deg,rgba(50,102,173,.25),rgba(50,102,173,.25) 3px,transparent 3px,transparent 6px);border:1px dashed #3266ad;pointer-events:none}
+.g-today{position:absolute;top:0;bottom:0;width:2px;background:#e24b4a;opacity:.6;z-index:10;pointer-events:none}
+.g-wkend{position:absolute;top:0;bottom:0;background:rgba(0,0,0,.03);pointer-events:none}
+.g-hdr-months{display:flex;height:18px;position:relative;will-change:transform}
+.g-hdr-weeks{display:flex;height:16px;border-top:1px solid #e0e0da;position:relative;will-change:transform}
+.g-hdr-days{display:flex;height:14px;border-top:1px solid #e8e8e4;position:relative;will-change:transform;background:#fafaf8}
+.g-hdr-month{border-left:1px solid #ddd;font-size:10px;font-weight:700;color:#555;padding:2px 4px;overflow:hidden;white-space:nowrap;flex-shrink:0}
+.g-hdr-week{border-left:1px solid #eee;font-size:9px;color:#aaa;padding:2px 2px;text-align:center;flex-shrink:0;overflow:hidden}
+.g-hdr-day{font-size:8px;text-align:center;line-height:14px;border-left:1px solid #f0f0ec;flex-shrink:0;overflow:hidden}
+.g-modal{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:2000;display:flex;align-items:flex-start;justify-content:center;padding-top:40px}
+.g-modal-box{background:#fff;border-radius:10px;padding:20px;width:540px;max-width:96vw;max-height:84vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.2)}
+.g-fr{margin-bottom:10px}
+.g-fr label{display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:3px}
+.g-fr input,.g-fr select,.g-fr textarea{width:100%;padding:6px 9px;border:1px solid #ccc;border-radius:5px;font-size:12px;color:#1a1a1a;background:#fff}
+.g-fr input:focus,.g-fr select:focus{outline:none;border-color:#2a5cbf}
+.g-fr2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.g-fr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.g-worker-row{display:grid;grid-template-columns:1fr 90px 80px 24px;gap:4px;align-items:center;margin-bottom:5px}
+.g-worker-row input{padding:4px 7px;border:1px solid #ccc;border-radius:4px;font-size:11px;width:100%}
+.g-sec-row{display:grid;grid-template-columns:28px 36px 1fr 24px;gap:5px;align-items:center;padding:4px 0;border-bottom:1px solid #f0f0ec}
+.g-tip{position:fixed;background:#1a1a1a;color:#fff;font-size:11px;padding:6px 10px;border-radius:5px;z-index:9999;pointer-events:none;max-width:280px;line-height:1.5;white-space:pre-wrap}
+.g-btab-wrap{border-top:1px solid #e0e0da;background:#fff;flex-shrink:0}
+.g-btabs{display:flex;gap:2px;padding:0 10px;border-bottom:1px solid #e0e0da}
+.g-btab{padding:6px 12px;font-size:12px;cursor:pointer;border:none;background:none;color:#888;border-bottom:2px solid transparent;margin-bottom:-1px;font-weight:500}
+.g-btab:hover{color:#333}
+.g-btab.active{color:#2a5cbf;border-bottom-color:#2a5cbf;font-weight:700}
+.g-btab-content{padding:10px;max-height:200px;overflow-y:auto;font-size:12px}
+.g-badge{display:inline-block;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:700}
+.g-sat-row{background:#f0f4ff !important}
+.g-hol-row{background:#fff8f0 !important}
+@media print{.g-actions,.g-btab-wrap,.g-topbar .g-actions{display:none}.g-split{height:auto}}
+
+</style>
+</head>
+<body>
+<div class="app">
+<div class="sidebar">
+  <div class="sb-logo">
+    <h2>&#127959; Inginerie Creativa</h2>
+    <p>Design &amp; Build</p>
+  </div>
+  <div class="sb-proj">
+    <label>Proiect activ</label>
+    <select class="proj-sel" id="projSel" onchange="switchProj(this.value)"></select>
+  </div>
+  <div class="sb-curs">
+    <span>1 EUR =</span>
+    <input type="number" id="cursInput" value="5.09" step="0.01" min="1" onchange="updateCurs(this.value)">
+    <span>RON</span>
+  </div>
+  <div class="sb-nav">
+    <div class="nav-sec">Proiecte</div>
+    <div class="nav-it" id="ni-projects" onclick="nav('projects')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      Toate proiectele
+    </div>
+    <div class="nav-sec">Proiect curent</div>
+    <div class="nav-it active" id="ni-cost" onclick="nav('cost')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 7H6a2 2 0 00-2 2v9a2 2 0 002 2h9a2 2 0 002-2v-3"/><path d="M9 15h3l8.5-8.5a1.5 1.5 0 00-3-3L9 12v3"/></svg>
+      Centru de cost
+    </div>
+    <div class="nav-it" id="ni-centralizator" onclick="nav('centralizator')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v18H3zM3 9h18M3 15h18M9 3v18"/></svg>
+      Centralizator
+    </div>
+    <div class="nav-it" id="ni-deviz" onclick="nav('deviz')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      Deviz general
+    </div>
+        <div class="nav-it" id="ni-gantt" onclick="nav('gantt')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="8" height="3" rx="1"/><rect x="7" y="9" width="10" height="3" rx="1"/><rect x="5" y="14" width="12" height="3" rx="1"/><rect x="9" y="19" width="8" height="3" rx="1"/></svg>
+      Graf. execuție
+    </div>
+    <div class="nav-it" id="ni-cashflow" onclick="nav('cashflow')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+      Cash-flow
+    </div>
+  </div>
+  <div class="sb-bottom" style="flex-direction:column;gap:6px">
+    <button onclick="openLibraryManager()" style="background:#1d4ed8;color:#fff;border-color:#1d4ed8">📚 Bibliotecă materiale</button>
+    <div style="display:flex;gap:6px">
+      <button onclick="exportData()" style="flex:1">&#8659; Export</button>
+      <button onclick="document.getElementById('importFile').click()" style="flex:1">&#8593; Import</button>
+    </div>
+    <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(this)">
+  </div>
+</div>
+
+<div class="main">
+  <div class="topbar">
+    <h1 id="pgTitle">Centru de cost</h1>
+    <div class="topbar-r">
+      <input class="srch hidden" type="text" id="srchInput" placeholder="Caută articole..." oninput="onSearch(this.value)">
+      <button class="btn hidden" id="addCatBtn" onclick="openAddCatModal()" style="margin-right:4px">+ Capitol</button>
+      <button class="btn btn-primary" id="addBtn" onclick="onAddBtn()">+ Adaugă</button>
+    </div>
+  </div>
+
+  <!-- PROJECTS -->
+  <div class="page content" id="pg-projects">
+    <h3 style="margin-bottom:14px;font-size:15px">Proiectele mele</h3>
+    <div id="projList"></div>
+    <button class="btn btn-primary" onclick="openNewProjModal()">+ Proiect nou</button>
+  </div>
+
+  <!-- CENTRU DE COST -->
+  <div class="page active content" id="pg-cost">
+    <div class="stats" id="costStats"></div>
+    <div id="costContent"></div>
+  </div>
+
+  <!-- CENTRALIZATOR -->
+  <div class="page content" id="pg-centralizator">
+    <div class="stats" id="centrStats"></div>
+    <div class="card">
+      <div class="card-hd"><h3>Centralizator capitole de lucrări</h3></div>
+      <div class="card-bd">
+        <table>
+          <thead><tr><th>Cod</th><th>Capitol</th><th class="num">RON fără TVA</th><th class="num">EUR fără TVA</th><th class="num" style="width:110px">Marjă %</th><th class="num" style="color:var(--amber)">Marjă abs. EUR</th><th class="num">RON cu marjă</th><th class="num">EUR cu marjă</th><th class="num">RON+TVA+marjă</th><th class="num">Pondere</th></tr></thead>
+          <tbody id="centrBody"></tbody>
+          <tfoot id="centrFoot"></tfoot>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><h3>Distribuție costuri</h3></div>
+      <div class="card-bd" style="padding:14px" id="centrChart"></div>
+    </div>
+  </div>
+
+  <!-- DEVIZ -->
+  <div class="page content" id="pg-deviz">
+    <div class="stats" id="devizStats"></div>
+    <div class="no-print" style="display:flex;gap:8px;margin-bottom:12px;justify-content:flex-end">
+      <button class="btn" onclick="window.print()">&#128424; Printează</button>
+      <button class="btn btn-primary" onclick="exportDeviz()">&#8659; Export HTML</button>
+    </div>
+    <div id="devizContent"></div>
+  </div>
+
+  <!-- GANTT -->
+  <div class="page" id="pg-gantt">
+    <div id="ganttApp" style="display:flex;flex-direction:column;height:100%;overflow:hidden">
+      <div class="g-topbar">
+        <div>
+          <div class="g-topbar-title" id="gTitle">Grafic de Execuție</div>
+          <div class="g-topbar-sub" id="gSub">—</div>
+        </div>
+        <div class="g-actions">
+          <button class="g-btn" onclick="gOpenProjectSettings()">&#9881; Setări</button>
+          <button class="g-btn" onclick="gOpenSections()">&#9776; Capitole</button>
+          <button class="g-btn" onclick="gOpenTeams()">&#128101; Echipe</button>
+          <button class="g-btn" onclick="gOpenHolidays()">&#128197; Sărbători</button>
+          <button class="g-btn" onclick="gOpenRain()">&#127783; Ploaie</button>
+          <button class="g-btn g-btn-primary" onclick="gOpenAddTask()">+ Etapă</button>
+          <button class="g-btn" onclick="gOpenAddPause()">&#9646; Pauză</button>
+          <button class="g-btn g-btn-warn" onclick="gExportManopera()">&#128203; Manoperă</button>
+          <button class="g-btn" onclick="gPrint()">&#128438; Print</button>
+          <button class="g-btn g-btn-success" onclick="gSave()">&#128190; Salvează</button>
+          <button class="g-btn g-btn-primary" onclick="gRecalc()">&#8635; Recalc</button>
+        </div>
+      </div>
+      <div class="g-stats" id="gStats"></div>
+      <div class="g-split" id="gSplit">
+        <div class="g-left" id="gLeft">
+          <div class="g-left-hdr">
+            <span style="width:18px"></span><span style="width:20px"></span>
+            <span style="flex:1">Etapă / Capitol</span>
+            <span style="width:60px;text-align:center">Ore/Zile</span>
+            <span style="width:100px;text-align:right;padding-right:4px">Start→Sfârșit</span>
+            <span style="width:22px"></span>
+          </div>
+          <div id="gTaskList"></div>
+        </div>
+        <div class="g-divider" id="gDivider"></div>
+        <div class="g-right" id="gRight">
+          <div class="g-gantt-hdr" id="gGanttHdr">
+            <div style="overflow:hidden"><div style="display:flex;flex-direction:column">
+              <div class="g-hdr-months" id="gHdrMonths"></div>
+              <div class="g-hdr-weeks" id="gHdrWeeks"></div>
+              <div class="g-hdr-days" id="gHdrDays"></div>
+            </div></div>
+          </div>
+          <div class="g-gantt-scroll-wrap" id="gGanttScroll">
+            <div class="g-gantt-inner" id="gGanttInner"></div>
+          </div>
+        </div>
+      </div>
+      <div class="g-btab-wrap">
+        <div class="g-btabs">
+          <button class="g-btab active" onclick="gSwitchTab('cost',this)">Costuri</button>
+          <button class="g-btab" onclick="gSwitchTab('rain',this)">Zile ploaie</button>
+          <button class="g-btab" onclick="gSwitchTab('hol',this)">Sărbători</button>
+        </div>
+        <div class="g-btab-content">
+          <div id="gTabCost"></div>
+          <div id="gTabRain" style="display:none"></div>
+          <div id="gTabHol" style="display:none"></div>
+        </div>
+      </div>
+    </div>
+    <div id="gTip" class="g-tip" style="display:none"></div>
+  </div>
+
+    <!-- CASHFLOW -->
+  <div class="page content" id="pg-cashflow">
+    <div class="stats" id="cfStats"></div>
+    <div class="card">
+      <div class="card-hd">
+        <h3>Registru cheltuieli și încasări</h3>
+        <div style="display:flex;gap:6px;align-items:center">
+          <select id="cfCatF" onchange="renderCF()" style="padding:4px 8px;border:1px solid var(--border);border-radius:5px;font-size:12px"></select>
+          <select id="cfTypeF" onchange="renderCF()" style="padding:4px 8px;border:1px solid var(--border);border-radius:5px;font-size:12px">
+            <option value="">Toate</option><option value="in">Intrări</option><option value="out">Ieșiri</option>
+          </select>
+        </div>
+      </div>
+      <div class="card-bd">
+        <table>
+          <thead><tr>
+            <th>Data</th><th>Factură/Bon</th><th>Categorie</th>
+            <th class="num">RON cu TVA</th><th class="num">TVA(21%)</th><th class="num">RON fără TVA</th>
+            <th class="num">Sold</th><th>Status</th><th class="no-print" style="width:90px"></th>
+          </tr></thead>
+          <tbody id="cfBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-bg hidden" id="modalBg">
+  <div class="modal" id="modal">
+    <div class="modal-hd">
+      <h3 id="modalTit"></h3>
+      <button class="modal-x" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-bd" id="modalBd"></div>
+    <div class="modal-ft" id="modalFt">
+      <button class="btn" onclick="closeModal()">Anulează</button>
+      <button class="btn btn-primary" id="modalSave">Salvează</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── INITIAL DATA ────────────────────────────────────────────
+const SEED = {"project": {"name": "Construire locuință P+1", "address": "Str. Merilor 8, sat Vișinești, jud. Dâmbovița", "beneficiar": "Alin Petrișor și Maria Lucia Copoiu", "curs_euro": 5.09, "sup_utila_anvelopa": 0, "sup_construita_desf_anvelopa": 0, "sup_construita_sol": 0, "sup_utila_totala": 121.92, "sup_construita_desf_totala": 179.31, "schedule": {"projectStart": "2026-04-20", "satWork": false, "sections": [{"id": "g0", "label": "ORGANIZARE DE SANTIER", "color": "#c47831"}, {"id": "g1", "label": "INFRASTRUCTURA CASA", "color": "#53ae32"}, {"id": "g2", "label": "SUPRASTRUCTURA", "color": "#2a5cbf"}, {"id": "g3", "label": "III. Instalații", "color": "#c07020"}, {"id": "g4", "label": "IV. Arhitectură", "color": "#7b52cc"}], "tasks": [{"id": 1, "name": "Montare container santier", "sec": "g0", "hours": 4, "deps": [], "status": "notStarted", "workers": [{"name": "Muncitor 1", "rate": 95}], "teamIds": [], "pauseUntil": "2026-04-20", "progress": 0, "note": ""}, {"id": 2, "name": "Balastare drumuri santier", "sec": "g0", "hours": 8, "deps": [], "status": "notStarted", "workers": [{"name": "Muncitor 1", "rate": 95}, {"name": "Muncitor 2", "rate": 92}], "teamIds": [], "pauseUntil": null, "progress": 0, "note": ""}, {"id": 3, "name": "Realizare imprejmuire santier", "sec": "g0", "hours": 8, "deps": [], "status": "notStarted", "workers": [{"name": "Muncitor 1", "rate": 95}], "teamIds": [], "pauseUntil": null, "progress": 0, "note": ""}, {"id": 4, "name": "Instalare camere supraveghere", "sec": "g0", "hours": 4, "deps": [], "status": "notStarted", "workers": [{"name": "Muncitor 1", "rate": 95}], "teamIds": [], "pauseUntil": null, "progress": 0, "note": ""}, {"id": 5, "name": "Balizare", "sec": "g0", "hours": 4, "deps": [], "status": "notStarted", "workers": [{"name": "Muncitor 1", "rate": 95}], "teamIds": [], "pauseUntil": null, "progress": 0, "note": ""}, {"id": 6, "name": "Trasare Axe", "sec": "g0", "hours": 4, "deps": [], "status": "notStarted", "workers": [{"name": "Muncitor 1", "rate": 95}], "teamIds": [], "pauseUntil": null, "progress": 0, "note": ""}, {"id": 7, "name": "Sapaturi mecanizate", "sec": "g1", "hours": 64, "deps": [6], "status": "notStarted", "workers": [{"name": "Operator utilaj", "rate": 120}, {"name": "Muncitor 1", "rate": 95}], "teamIds": [], "pauseUntil": null, "progress": 0, "note": ""}, {"id": 8, "name": "Sapaturi manuale", "sec": "g1", "hours": 8, "deps": [7], "status": "notStarted", "workers": [{"name": "Muncitor 1", "rate": 95}, {"name": "Muncitor 2", "rate": 92}], "teamIds": [], "pauseUntil": null, "progress": 0, "note": ""}, {"id": 9, "name": "Evacuare pamant", "sec": "g1", "hours": 16, "deps": [7], "status": "notStarted", "workers": [{"name": "Muncitor 1", "rate": 95}], "teamIds": [], "pauseUntil": null, "progress": 0, "note": ""}, {"id": 10, "name": "Protectie sapaturi cu folie PE", "sec": "g1", "hours": 2, "deps": [8], "status": "notStarted", "workers": [{"name": "Muncitor 1", "rate": 95}], "teamIds": [], "pauseUntil": null, "progress": 0, "note": ""}, {"id": 11, "name": "Turnare beton simplu in talpi de fundare", "sec": "g1", "hours": 8, "deps": [10], "status": "notStarted", "workers": [{"name": "Muncitor 1", "rate": 95}, {"name": "Muncitor 2", "rate": 92}], "teamIds": [], "pauseUntil": null, "progress": 0, "note": ""}, {"id": 12, "name": "Confectionare carcase armaturi grinzi de fundare", "sec": "g1", "hours": 40, "deps": [11], "status": "notStarted", "workers": [{"name": "Fierar-betonist", "rate": 110}, {"name": "Muncitor 1", "rate": 95}], "teamIds": [], "pauseUntil": null, "progress": 0, "note": ""}, {"id": 13, "name": "Cofrare grinzi de fundare", "sec": "g1", "hours": 32, "deps": [12], "status": "notStarted", "workers": [{"name": "Cofreur", "rate": 100}, {"name": "Muncitor 1", "rate": 95}], "teamIds": [], "pauseUntil": null, "progress": 0, "note": ""}, {"id": 14, "name": "Turnare beton in grinzi de fundare", "sec": "g1", "hours": 8, "deps": [13], "status": "notStarted", "workers": [{"name": "Betonist", "rate": 100}], "teamIds": [], "pauseUntil": null, "progress": 0, "note": ""}, {"id": 15, "name": "Hidroizolatie bituminoasa pensulabila", "sec": "g1", "hours": 8, "deps": [14], "status": "notStarted", "workers": [{"name": "Muncitor 1", "rate": 95}], "teamIds": [], "pauseUntil": null, "progress": 0, "note": ""}, {"id": 16, "name": "Umpluturi pamant interior grinzi fundatii", "sec": "g1", "hours": 16, "deps": [15], "status": "notStarted", "workers": [{"name": "Muncitor 1", "rate": 95}, {"name": "Muncitor 2", "rate": 92}], "teamIds": [], "pauseUntil": null, "progress": 0, "note": ""}, {"id": 17, "name": "Pozare instalatii sub placa", "sec": "g1", "hours": 8, "deps": [16], "status": "notStarted", "workers": [{"name": "Instalator", "rate": 32}], "teamIds": [], "pauseUntil": null, "progress": 0, "note": ""}, {"id": 18, "name": "Turnare beton placa pardoseala", "sec": "g1", "hours": 8, "deps": [17], "status": "notStarted", "workers": [{"name": "Betonist", "rate": 100}, {"name": "Muncitor 1", "rate": 95}], "teamIds": [], "pauseUntil": null, "progress": 0, "note": ""}, {"id": 19, "name": "Structura CLT - montaj", "sec": "g2", "hours": 80, "deps": [18], "status": "notStarted", "workers": [{"name": "Montator CLT", "rate": 130}, {"name": "Montator CLT", "rate": 130}], "teamIds": [], "pauseUntil": null, "progress": 0, "note": ""}, {"id": 20, "name": "Acoperis - structura + invelitoare", "sec": "g2", "hours": 40, "deps": [19], "status": "notStarted", "workers": [{"name": "Dulgher", "rate": 110}, {"name": "Tinichigiu", "rate": 100}], "teamIds": [], "pauseUntil": null, "progress": 0, "note": ""}, {"id": 21, "name": "Montaj tamplarii exterioare", "sec": "g2", "hours": 24, "deps": [19], "status": "notStarted", "workers": [{"name": "Montator tamplarie", "rate": 110}], "teamIds": [], "pauseUntil": null, "progress": 0, "note": ""}, {"id": 22, "name": "Etansare la aer si vapori", "sec": "g2", "hours": 40, "deps": [21], "status": "notStarted", "workers": [{"name": "Muncitor calificat", "rate": 95}], "teamIds": [], "pauseUntil": null, "progress": 0, "note": ""}, {"id": 23, "name": "Termosistem si fatade", "sec": "g2", "hours": 80, "deps": [22], "status": "notStarted", "workers": [{"name": "Tencuitor", "rate": 95}, {"name": "Muncitor 1", "rate": 92}], "teamIds": [], "pauseUntil": null, "progress": 0, "note": ""}, {"id": 24, "name": "Instalatii electrice", "sec": "g3", "hours": 160, "deps": [18], "status": "notStarted", "workers": [{"name": "Electrician", "rate": 35}, {"name": "Electrician", "rate": 35}], "teamIds": [], "pauseUntil": null, "progress": 0, "note": ""}, {"id": 25, "name": "Trasee sanitare + termice + ventilatie", "sec": "g3", "hours": 80, "deps": [18], "status": "notStarted", "workers": [{"name": "Instalator", "rate": 32}, {"name": "Instalator", "rate": 32}], "teamIds": [], "pauseUntil": null, "progress": 0, "note": ""}, {"id": 26, "name": "Turnare sapa", "sec": "g3", "hours": 8, "deps": [24, 25], "status": "notStarted", "workers": [{"name": "Betonist", "rate": 100}], "teamIds": [], "pauseUntil": null, "progress": 0, "note": ""}, {"id": 27, "name": "Gips-carton interior", "sec": "g4", "hours": 40, "deps": [22], "status": "notStarted", "workers": [{"name": "Montator gips-carton", "rate": 95}, {"name": "Muncitor 1", "rate": 92}], "teamIds": [], "pauseUntil": null, "progress": 0, "note": ""}, {"id": 28, "name": "Sapa + termoizolatie pardoseala", "sec": "g4", "hours": 16, "deps": [26], "status": "notStarted", "workers": [{"name": "Muncitor calificat", "rate": 95}], "teamIds": [], "pauseUntil": null, "progress": 0, "note": ""}, {"id": 29, "name": "Finalizare instalatii + PIF", "sec": "g4", "hours": 40, "deps": [27, 28], "status": "notStarted", "workers": [{"name": "Electrician", "rate": 35}, {"name": "Instalator", "rate": 32}], "teamIds": [], "pauseUntil": null, "progress": 0, "note": ""}], "teams": [{"id": "t1", "name": "Echipa structură", "color": "#3266ad", "members": [{"name": "Sef santier", "rate": 155}, {"name": "Muncitor 1", "rate": 95}, {"name": "Muncitor 2", "rate": 92}, {"name": "Muncitor 3", "rate": 92}]}, {"id": "t2", "name": "Echipa instalații", "color": "#c07020", "members": [{"name": "Electrician", "rate": 35}, {"name": "Instalator sanitar", "rate": 32}]}], "rainDays": {"01": 7, "02": 4, "03": 8, "04": 11, "05": 10, "06": 9, "07": 6, "08": 5, "09": 5, "10": 6, "11": 10, "12": 7}, "holidays": []}}, "categories": [{"id": "c1", "code": "A.0.", "name": "ORGANIZARE ȘANTIER", "items": [{"id": "i1", "name": "RTE", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "depinde de diriginte", "furnizor": ""}, {"id": "i2", "name": "Topometrist", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}, {"id": "i3", "name": "Panou santier lucrari", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}, {"id": "i4", "name": "Geotehnician", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}]}, {"id": "c2", "code": "A.1.", "name": "INFRASTRUCTURĂ", "items": [{"id": "i10", "name": "Dislocare utilaje", "cant": 250.3, "um": "km", "pret": 8, "ron": 2002.4, "obs": "", "furnizor": ""}, {"id": "i11", "name": "Excavator 27-32t, combustibil + operator", "cant": 4, "um": "zile", "pret": 3000, "ron": 12000, "obs": "", "furnizor": ""}, {"id": "i12", "name": "Excavator 27-32t stationat", "cant": 6, "um": "zile", "pret": 2000, "ron": 12000, "obs": "700 lei/zi stationar", "furnizor": ""}, {"id": "i13", "name": "Dumper combustibil + operator", "cant": 4, "um": "zile", "pret": 800, "ron": 3200, "obs": "", "furnizor": ""}, {"id": "i14", "name": "Cofraje fundații izolate TEGO", "cant": 82, "um": "mp", "pret": 84.36, "ron": 6917.52, "obs": "", "furnizor": ""}, {"id": "i15", "name": "Manoperă cofraje TEGO", "cant": 82, "um": "mp", "pret": 40, "ron": 3280, "obs": "", "furnizor": ""}, {"id": "i16", "name": "Beton C12/15 egalizare+fundații izolate", "cant": 10.4, "um": "m3", "pret": 360, "ron": 3744, "obs": "", "furnizor": "SC Drupas Constructii SRL"}, {"id": "i17", "name": "Transport beton + diferenta pompa", "cant": 50, "um": "km", "pret": 10, "ron": 500, "obs": "", "furnizor": "SC Drupas Constructii SRL"}, {"id": "i18", "name": "Probe beton laborator", "cant": 2, "um": "buc", "pret": 760, "ron": 1520, "obs": "", "furnizor": ""}, {"id": "i19", "name": "Armături BST500S fasonat", "cant": 1, "um": "buc", "pret": 12067.2, "ron": 12067.2, "obs": "", "furnizor": ""}, {"id": "i20", "name": "Transport armături", "cant": 1, "um": "buc", "pret": 1200, "ron": 1200, "obs": "", "furnizor": ""}, {"id": "i21", "name": "Beton C25/30 grinzi+radier", "cant": 1, "um": "buc", "pret": 13900, "ron": 13900, "obs": "", "furnizor": ""}, {"id": "i22", "name": "Aditiv impermeabilizare", "cant": 1, "um": "buc", "pret": 7339, "ron": 7339, "obs": "", "furnizor": ""}, {"id": "i23", "name": "Hidroizolatie bituminoasa Mapei Plastimul", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}, {"id": "i24", "name": "Cofraje Doka + accesorii", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": "ForfeRed"}, {"id": "i25", "name": "Umpluturi balast optimal", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}, {"id": "i26", "name": "Folie polietilena + Tefond", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}, {"id": "i27", "name": "Trasee instalatii sub casa", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}, {"id": "i28", "name": "Manopera infrastructura", "cant": 1, "um": "buc", "pret": 94449.2, "ron": 94449.2, "obs": "", "furnizor": "ForfeRed"}]}, {"id": "c3", "code": "A.2.", "name": "SUPRASTRUCTURĂ", "items": [{"id": "i30", "name": "Structura CLT Glulam Pfeifer", "cant": 1, "um": "buc", "pret": 39459.24, "ron": 39459.24, "obs": "TVA 19%", "furnizor": "Pfeifer"}, {"id": "i31", "name": "Transport + montaj CLT", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}, {"id": "i32", "name": "Rest plata CLT 60%", "cant": 1, "um": "buc", "pret": 112076.22, "ron": 112076.22, "obs": "", "furnizor": "Pfeifer"}, {"id": "i33", "name": "Manopera suprastructura", "cant": 1, "um": "buc", "pret": 133453.15, "ron": 133453.15, "obs": "", "furnizor": ""}, {"id": "i34", "name": "Grinzi metalice HEA", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}, {"id": "i35", "name": "Scari interioare", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}, {"id": "i36", "name": "Balustrade", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}]}, {"id": "c4", "code": "A.3.", "name": "ETANȘARE", "items": [{"id": "i40", "name": "Folie Intello Plus bariera vapori", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}, {"id": "i41", "name": "Banda etansare Tescon Naideck", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}, {"id": "i42", "name": "Banda etansare ferestre MOLL", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}, {"id": "i43", "name": "Etansare prize/doze/canalizare", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}, {"id": "i44", "name": "Manopera etansare", "cant": 1, "um": "buc", "pret": 32602, "ron": 32602, "obs": "", "furnizor": ""}, {"id": "i45", "name": "Test blower door 1", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}, {"id": "i46", "name": "Test blower door 2", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}]}, {"id": "c5", "code": "A.4.", "name": "ÎNVELITOARE", "items": [{"id": "i50", "name": "Tabla click METIGLA 0.5mm SuperMat 7016", "cant": 1, "um": "buc", "pret": 21936.67, "ron": 21936.67, "obs": "", "furnizor": ""}, {"id": "i51", "name": "Sistem pluvial jgheaburi + burlane", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}, {"id": "i52", "name": "Fibra de lemn suflata acoperis", "cant": 1, "um": "buc", "pret": 12500, "ron": 12500, "obs": "", "furnizor": ""}, {"id": "i53", "name": "Accesorii invelitoare", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}, {"id": "i54", "name": "Manopera invelitoare", "cant": 1, "um": "buc", "pret": 7584.13, "ron": 7584.13, "obs": "", "furnizor": ""}]}, {"id": "c6", "code": "A.5.", "name": "TÂMPLĂRII", "items": [{"id": "i60", "name": "Avans tamplarii 50%", "cant": 1, "um": "buc", "pret": 61710, "ron": 61710, "obs": "", "furnizor": ""}, {"id": "i61", "name": "Rest plata tamplarii 50%", "cant": 1, "um": "buc", "pret": 59279.69, "ron": 59279.69, "obs": "", "furnizor": ""}, {"id": "i62", "name": "Manopera montaj tamplarii", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}]}, {"id": "c7", "code": "A.6.", "name": "TERMOSISTEM ȘI FAȚADE", "items": [{"id": "i70", "name": "XPS 300 200mm soclu exterior", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}, {"id": "i71", "name": "EPS 200 20cm sub bariera vapori", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}, {"id": "i72", "name": "Vata bazaltica Rockwool Frontrock 200mm", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}, {"id": "i73", "name": "Adeziv Baumit Duo Contact", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}, {"id": "i74", "name": "Tencuiala decorativa", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}, {"id": "i75", "name": "Manopera termosistem + fatade", "cant": 1, "um": "buc", "pret": 126409.74, "ron": 126409.74, "obs": "", "furnizor": ""}]}, {"id": "c8", "code": "A.7.", "name": "SUBSTRUCTURA TERASĂ", "items": [{"id": "i80", "name": "Grinzi substructura terasa lemn", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}, {"id": "i81", "name": "Manopera substructura", "cant": 1, "um": "buc", "pret": 2970, "ron": 2970, "obs": "", "furnizor": ""}]}, {"id": "c9", "code": "A.9.", "name": "GIPS CARTON", "items": [{"id": "i90", "name": "Placi gips carton GKB/GKBI/GKF", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}, {"id": "i91", "name": "Profile metalice CD/UD", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}, {"id": "i92", "name": "Vata minerala acustica", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}, {"id": "i93", "name": "Materiale auxiliare + banda rost glet", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}, {"id": "i94", "name": "Manopera gips carton", "cant": 1, "um": "buc", "pret": 43271.64, "ron": 43271.64, "obs": "", "furnizor": ""}]}, {"id": "c10", "code": "A.10.", "name": "INSTALAȚII INTERIOARE", "items": [{"id": "i100", "name": "Sistem ventilatie Zehnder Comfoair FIT 100", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}, {"id": "i101", "name": "Instalatie sanitara interioara fara obiecte", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": "Pipe Life"}, {"id": "i102", "name": "Incalzire in pardoseala tevi PEX", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}, {"id": "i103", "name": "Distribuitor incalzire + pompa caldura", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}, {"id": "i104", "name": "Avans instalatii 20%", "cant": 1, "um": "buc", "pret": 26419.72, "ron": 26419.72, "obs": "", "furnizor": ""}, {"id": "i105", "name": "Manopera instalatii interioare", "cant": 1, "um": "buc", "pret": 99141.78, "ron": 99141.78, "obs": "", "furnizor": ""}]}, {"id": "c11", "code": "A.11.", "name": "INSTALAȚII ELECTRICE", "items": [{"id": "i110", "name": "Tablou electric principal", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}, {"id": "i111", "name": "Cabluri electrice CYY/NYM", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}, {"id": "i112", "name": "Prize, intrerupatoare, doze", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}, {"id": "i113", "name": "Priza la pamant + camere CCTV", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}, {"id": "i114", "name": "Avans electrician", "cant": 1, "um": "buc", "pret": 2100, "ron": 2100, "obs": "", "furnizor": ""}, {"id": "i115", "name": "Manopera electrice", "cant": 1, "um": "buc", "pret": 80947.71, "ron": 80947.71, "obs": "", "furnizor": ""}]}, {"id": "c12", "code": "A.12.", "name": "ȘAPĂ + TERMOIZOLAȚIE", "items": [{"id": "i120", "name": "Sapa autonivelanta 6cm", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}, {"id": "i121", "name": "Termoizolatie EPS 10cm", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}, {"id": "i122", "name": "Fonoizolatie + folie vapori", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}, {"id": "i123", "name": "Manopera sapa + termoizolatie", "cant": 1, "um": "buc", "pret": 33983.43, "ron": 33983.43, "obs": "", "furnizor": ""}]}, {"id": "c13", "code": "A.13.", "name": "INSTALAȚII EXTERIOARE", "items": [{"id": "i130", "name": "Conducte canalizare exterioara", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}, {"id": "i131", "name": "Camine vizitare + fosa septica", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}, {"id": "i132", "name": "Bransament electric exterior", "cant": 1, "um": "buc", "pret": 0, "ron": 0, "obs": "", "furnizor": ""}, {"id": "i133", "name": "Avans instalatii exterioare", "cant": 1, "um": "buc", "pret": 4831.23, "ron": 4831.23, "obs": "", "furnizor": ""}, {"id": "i134", "name": "Manopera instalatii exterioare", "cant": 1, "um": "buc", "pret": 44574.53, "ron": 44574.53, "obs": "", "furnizor": ""}]}, {"id": "c14", "code": "A.14.", "name": "PROJECT MANAGEMENT", "items": [{"id": "i140", "name": "PM 30% avans", "cant": 1, "um": "buc", "pret": 16546.95, "ron": 16546.95, "obs": "", "furnizor": ""}, {"id": "i141", "name": "PM rest", "cant": 1, "um": "buc", "pret": 36793.05, "ron": 36793.05, "obs": "", "furnizor": ""}, {"id": "i142", "name": "Indirecte santier (cazare, deplasare)", "cant": 1, "um": "buc", "pret": 11168.96, "ron": 11168.96, "obs": "", "furnizor": ""}, {"id": "i143", "name": "Consumabile santier", "cant": 1, "um": "buc", "pret": 3054.82, "ron": 3054.82, "obs": "", "furnizor": ""}, {"id": "i144", "name": "Combustibil", "cant": 1, "um": "buc", "pret": 1533.24, "ron": 1533.24, "obs": "", "furnizor": ""}, {"id": "i145", "name": "Scule si utilaje", "cant": 1, "um": "buc", "pret": 489, "ron": 489, "obs": "", "furnizor": ""}]}], "cashflow": [{"id": "cf1", "date": "2026-03-13", "desc": "Avans tranșa 1/4", "categorie": "Intrări", "ron_cu_tva": 76500, "tva": 13276.86, "ron_fara_tva": 63223.14, "status": true, "file": null}, {"id": "cf2", "date": "2026-03-16", "desc": "Avans tâmplării", "categorie": "Tâmplării", "ron_cu_tva": -61710, "tva": -10710, "ron_fara_tva": -51000, "status": true, "file": null}, {"id": "cf3", "date": "2026-03-18", "desc": "Armături fundații - ForfeRed", "categorie": "Infrastructură", "ron_cu_tva": -14601, "tva": -2534.06, "ron_fara_tva": -12066.94, "status": true, "file": null}, {"id": "cf4", "date": "2026-03-19", "desc": "Cazare echipă, 1 săptămână", "categorie": "Indirecte", "ron_cu_tva": -1742.4, "tva": -302.4, "ron_fara_tva": -1440, "status": true, "file": null}, {"id": "cf5", "date": "2026-03-19", "desc": "Lemn santier balizare", "categorie": "Organizare șantier", "ron_cu_tva": -359.37, "tva": -62.37, "ron_fara_tva": -297, "status": true, "file": null}, {"id": "cf6", "date": "2026-03-20", "desc": "Tranșa 1/5 integral", "categorie": "Intrări", "ron_cu_tva": 290404.79, "tva": 50400.83, "ron_fara_tva": 240003.96, "status": true, "file": null}, {"id": "cf7", "date": "2026-03-20", "desc": "Scule echipament Hornbach", "categorie": "Consumabile", "ron_cu_tva": -2817.82, "tva": -489.04, "ron_fara_tva": -2328.78, "status": true, "file": null}, {"id": "cf8", "date": "2026-03-20", "desc": "Full tâmplării - rest 50%", "categorie": "Tâmplării", "ron_cu_tva": -65290, "tva": -11331.32, "ron_fara_tva": -53958.68, "status": true, "file": null}, {"id": "cf9", "date": "2026-03-21", "desc": "Combustibil B88NZB", "categorie": "Combustibil", "ron_cu_tva": -269.69, "tva": -46.81, "ron_fara_tva": -222.88, "status": true, "file": null}, {"id": "cf10", "date": "2026-03-23", "desc": "OSB 3 cofraje - Hornbach", "categorie": "Infrastructură", "ron_cu_tva": -2980, "tva": -517.19, "ron_fara_tva": -2462.81, "status": true, "file": null}, {"id": "cf11", "date": "2026-03-24", "desc": "40% avans CLT - Pfeifer", "categorie": "Suprastructură", "ron_cu_tva": -90500, "tva": -15706.61, "ron_fara_tva": -74793.39, "status": true, "file": null}, {"id": "cf12", "date": "2026-03-24", "desc": "Plată parțială ForfeRed cofraje", "categorie": "Infrastructură", "ron_cu_tva": -15734.4, "tva": -2730.76, "ron_fara_tva": -13003.64, "status": true, "file": null}, {"id": "cf13", "date": "2026-03-25", "desc": "Aditiv impermeabilizare beton", "categorie": "Infrastructură", "ron_cu_tva": -7339, "tva": -1273.71, "ron_fara_tva": -6065.29, "status": true, "file": null}, {"id": "cf14", "date": "2026-03-26", "desc": "Armături fasonat BST500S", "categorie": "Infrastructură", "ron_cu_tva": -11534.79, "tva": -2002.57, "ron_fara_tva": -9532.22, "status": true, "file": null}, {"id": "cf15", "date": "2026-03-27", "desc": "RTE diriginte santier", "categorie": "Organizare șantier", "ron_cu_tva": -1500, "tva": -260.33, "ron_fara_tva": -1239.67, "status": true, "file": null}, {"id": "cf16", "date": "2026-03-27", "desc": "Topometrie trasare axe", "categorie": "Organizare șantier", "ron_cu_tva": -2000, "tva": -347.11, "ron_fara_tva": -1652.89, "status": true, "file": null}, {"id": "cf17", "date": "2026-03-27", "desc": "Avans electrician", "categorie": "Electrice", "ron_cu_tva": -2100, "tva": -364.46, "ron_fara_tva": -1735.54, "status": true, "file": null}, {"id": "cf18", "date": "2026-03-28", "desc": "Studiu geotehnic + PV", "categorie": "Organizare șantier", "ron_cu_tva": -300, "tva": -52.07, "ron_fara_tva": -247.93, "status": true, "file": null}, {"id": "cf19", "date": "2026-03-31", "desc": "Beton C12/15 fundatii - Drupas", "categorie": "Infrastructură", "ron_cu_tva": -13900, "tva": -2413.39, "ron_fara_tva": -11486.61, "status": true, "file": null}, {"id": "cf20", "date": "2026-04-02", "desc": "Avans instalatii exterioare", "categorie": "Instalații exterioare", "ron_cu_tva": -4831.23, "tva": -838.48, "ron_fara_tva": -3992.75, "status": true, "file": null}, {"id": "cf21", "date": "2026-04-03", "desc": "Avans instalatii interioare 20%", "categorie": "Instalații interioare", "ron_cu_tva": -20000, "tva": -3471.07, "ron_fara_tva": -16528.93, "status": true, "file": null}, {"id": "cf22", "date": "2026-04-07", "desc": "Rest infrastructura - ForfeRed", "categorie": "Infrastructură", "ron_cu_tva": -13196.08, "tva": -2290.64, "ron_fara_tva": -10905.44, "status": true, "file": null}, {"id": "cf23", "date": "2026-04-08", "desc": "Invelitoare avans 50% - Metigla", "categorie": "Învelitoare", "ron_cu_tva": -10968.34, "tva": -1903.53, "ron_fara_tva": -9064.81, "status": true, "file": null}, {"id": "cf24", "date": "2026-04-15", "desc": "PM avans 30%", "categorie": "PM", "ron_cu_tva": -16546.95, "tva": -2872.42, "ron_fara_tva": -13674.53, "status": true, "file": null}, {"id": "cf25", "date": "2026-04-15", "desc": "Etansare materiale + manopera", "categorie": "Etanșare", "ron_cu_tva": -35932.66, "tva": -6238.59, "ron_fara_tva": -29694.07, "status": false, "file": null}]};
+
+// ── STATE ────────────────────────────────────────────────────
+let projects = [];
+let pid = null;
+const STORAGE_KEY = 'constructii_v3';
+const TVA = 0.21;function proj() { return projects.find(p=>p.id===pid) || projects[0]; }
+function curs() { return parseFloat(proj()?.curs_euro)||5.09; }
+
+function save() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(projects)); } catch(e){}
+}
+function load() {
+  try {
+    const s = localStorage.getItem(STORAGE_KEY);
+    if (s) { projects = JSON.parse(s); return true; }
+  } catch(e){}
+  return false;
+}
+
+function uid() { return '_'+Math.random().toString(36).slice(2,9); }
+
+// ── BOOT ─────────────────────────────────────────────────────
+
+// ── MATERIALS / ACTIVITIES LIBRARY ───────────────────────────
+let matLibrary = []; // [{id, type:'material'|'activity', name, um, pret, furnizor, obs}]
+const LIB_KEY = 'constructii_library_v1';
+
+function libSave() {
+  try { localStorage.setItem(LIB_KEY, JSON.stringify(matLibrary)); } catch(e) {}
+}
+function libLoad() {
+  try {
+    const s = localStorage.getItem(LIB_KEY);
+    if (s) { matLibrary = JSON.parse(s); return; }
+  } catch(e) {}
+  // Default items
+  matLibrary = [
+    {id:'m1',type:'material',name:'Beton C12/15',um:'m3',pret:320,furnizor:'',obs:''},
+    {id:'m2',type:'material',name:'Beton C25/30',um:'m3',pret:380,furnizor:'',obs:''},
+    {id:'m3',type:'material',name:'Armătură BST500S ø10-ø25',um:'kg',pret:6.5,furnizor:'',obs:''},
+    {id:'m4',type:'material',name:'Cofraj TEGO',um:'mp',pret:85,furnizor:'',obs:''},
+    {id:'m5',type:'material',name:'OSB 18mm',um:'mp',pret:38,furnizor:'',obs:''},
+    {id:'m6',type:'material',name:'Polistiren EPS 10cm',um:'mp',pret:22,furnizor:'',obs:''},
+    {id:'m7',type:'material',name:'XPS 200mm',um:'mp',pret:65,furnizor:'',obs:''},
+    {id:'m8',type:'material',name:'Vată bazaltică Rockwool 200mm',um:'mp',pret:80,furnizor:'',obs:''},
+    {id:'m9',type:'material',name:'Hidroizolație bituminoasă',um:'mp',pret:25,furnizor:'',obs:''},
+    {id:'m10',type:'material',name:'Folie polietilenă',um:'mp',pret:3,furnizor:'',obs:''},
+    {id:'a1',type:'activity',name:'Manoperă cofrare',um:'mp',pret:40,furnizor:'',obs:''},
+    {id:'a2',type:'activity',name:'Manoperă armare',um:'kg',pret:1.5,furnizor:'',obs:''},
+    {id:'a3',type:'activity',name:'Manoperă betonare',um:'m3',pret:80,furnizor:'',obs:''},
+    {id:'a4',type:'activity',name:'Manoperă zidărie',um:'mp',pret:55,furnizor:'',obs:''},
+    {id:'a5',type:'activity',name:'Manoperă tencuială',um:'mp',pret:35,furnizor:'',obs:''},
+    {id:'a6',type:'activity',name:'Manoperă montaj gips-carton',um:'mp',pret:45,furnizor:'',obs:''},
+    {id:'a7',type:'activity',name:'Manoperă montaj CLT',um:'mp',pret:130,furnizor:'',obs:''},
+    {id:'a8',type:'activity',name:'Manoperă instalații electrice',um:'mp',pret:35,furnizor:'',obs:''},
+    {id:'a9',type:'activity',name:'Manoperă instalații sanitare',um:'mp',pret:32,furnizor:'',obs:''},
+    {id:'a10',type:'activity',name:'Manoperă termosistem',um:'mp',pret:45,furnizor:'',obs:''},
+    {id:'a11',type:'activity',name:'Excavator 27-32t (operator+combustibil)',um:'zile',pret:3000,furnizor:'',obs:''},
+    {id:'a12',type:'activity',name:'Transport beton (pompa)',um:'m3',pret:25,furnizor:'',obs:''},
+  ];
+  libSave();
+}
+function libUid() { return 'lib_'+Math.random().toString(36).slice(2,8); }
+
+// ── LIBRARY MODAL ─────────────────────────────────────────────
+function openLibraryManager() {
+  const types = [{v:'material',l:'Materiale'},{v:'activity',l:'Activități/Manoperă'}];
+  function renderLibRows(filter) {
+    const items = matLibrary.filter(x => !filter || x.type === filter);
+    if (!items.length) return '<p style="color:var(--gray);font-size:12px;padding:8px">Niciun element.</p>';
+    return items.map(item => `
+      <div style="display:grid;grid-template-columns:80px 1fr 70px 80px 1fr 36px;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid #f1f5f9">
+        <span class="badge ${item.type==='material'?'bb':'bgn'}" style="font-size:10px">${item.type==='material'?'Material':'Activitate'}</span>
+        <input type="text" value="${esc(item.name)}" onchange="libUpdateField('${item.id}','name',this.value)" style="padding:4px 7px;border:1px solid var(--border);border-radius:5px;font-size:12px">
+        <select onchange="libUpdateField('${item.id}','um',this.value)" style="padding:4px 6px;border:1px solid var(--border);border-radius:5px;font-size:12px">
+          ${['buc','mp','mc','m','kg','zile','luni','ans'].map(u=>`<option ${item.um===u?'selected':''}>${u}</option>`).join('')}
+        </select>
+        <input type="number" value="${item.pret}" onchange="libUpdateField('${item.id}','pret',parseFloat(this.value)||0)" placeholder="Preț/UM" style="padding:4px 7px;border:1px solid var(--border);border-radius:5px;font-size:12px">
+        <input type="text" value="${esc(item.furnizor||'')}" onchange="libUpdateField('${item.id}','furnizor',this.value)" placeholder="Furnizor" style="padding:4px 7px;border:1px solid var(--border);border-radius:5px;font-size:12px">
+        <button class="btn btn-sm" style="color:var(--red)" onclick="libDelete('${item.id}')">✕</button>
+      </div>`).join('');
+  }
+  openModal('📚 Bibliotecă materiale și activități',`
+    <div style="display:flex;gap:8px;margin-bottom:14px">
+      <button class="btn btn-sm btn-green" onclick="libAddNew('material')">+ Material</button>
+      <button class="btn btn-sm btn-primary" onclick="libAddNew('activity')">+ Activitate</button>
+      <div style="flex:1"></div>
+      <input type="text" id="libSearch" placeholder="Caută..." style="padding:5px 10px;border:1px solid var(--border);border-radius:5px;font-size:12px;width:160px" oninput="libRefresh()">
+    </div>
+    <div style="display:grid;grid-template-columns:80px 1fr 70px 80px 1fr 36px;gap:6px;padding:4px 0 6px;border-bottom:2px solid var(--border);font-size:11px;font-weight:600;color:var(--gray)">
+      <span>Tip</span><span>Denumire</span><span>UM</span><span>Preț/UM</span><span>Furnizor</span><span></span>
+    </div>
+    <div id="libRows" style="max-height:350px;overflow-y:auto">${renderLibRows('')}</div>
+  `, null);
+  // Hide save button - library saves automatically
+  document.getElementById('modalSave').style.display='none';
+  window._libRenderRows = renderLibRows;
+}
+
+function libRefresh() {
+  const q = document.getElementById('libSearch')?.value?.toLowerCase()||'';
+  const el = document.getElementById('libRows');
+  if (!el) return;
+  const items = matLibrary.filter(x => !q || x.name.toLowerCase().includes(q) || (x.furnizor||'').toLowerCase().includes(q));
+  if (!items.length) { el.innerHTML='<p style="color:var(--gray);font-size:12px;padding:8px">Niciun rezultat.</p>'; return; }
+  el.innerHTML = items.map(item => `
+    <div style="display:grid;grid-template-columns:80px 1fr 70px 80px 1fr 36px;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid #f1f5f9">
+      <span class="badge ${item.type==='material'?'bb':'bgn'}" style="font-size:10px">${item.type==='material'?'Material':'Activitate'}</span>
+      <input type="text" value="${esc(item.name)}" onchange="libUpdateField('${item.id}','name',this.value)" style="padding:4px 7px;border:1px solid var(--border);border-radius:5px;font-size:12px">
+      <select onchange="libUpdateField('${item.id}','um',this.value)" style="padding:4px 6px;border:1px solid var(--border);border-radius:5px;font-size:12px">
+        ${['buc','mp','mc','m','kg','zile','luni','ans'].map(u=>`<option ${item.um===u?'selected':''}>${u}</option>`).join('')}
+      </select>
+      <input type="number" value="${item.pret}" onchange="libUpdateField('${item.id}','pret',parseFloat(this.value)||0)" placeholder="Preț/UM" style="padding:4px 7px;border:1px solid var(--border);border-radius:5px;font-size:12px">
+      <input type="text" value="${esc(item.furnizor||'')}" onchange="libUpdateField('${item.id}','furnizor',this.value)" placeholder="Furnizor" style="padding:4px 7px;border:1px solid var(--border);border-radius:5px;font-size:12px">
+      <button class="btn btn-sm" style="color:var(--red)" onclick="libDelete('${item.id}')">✕</button>
+    </div>`).join('');
+}
+
+function libUpdateField(id, field, val) {
+  const item = matLibrary.find(x=>x.id===id);
+  if (item) { item[field]=val; libSave(); }
+}
+function libAddNew(type) {
+  matLibrary.unshift({id:libUid(),type,name:'Element nou',um:'buc',pret:0,furnizor:'',obs:''});
+  libSave();
+  openLibraryManager();
+}
+function libDelete(id) {
+  matLibrary = matLibrary.filter(x=>x.id!==id);
+  libSave();
+  libRefresh();
+}
+
+// ── LIBRARY PICKER (used in add/edit item modal) ─────────────
+function libPickerHTML(selectedId) {
+  const opts = matLibrary.map(x=>`<option value="${x.id}" ${x.id===selectedId?'selected':''}>[${x.type==='material'?'Mat':'Act'}] ${esc(x.name)} — ${x.um} — ${x.pret>0?x.pret+' RON/'+x.um:''}</option>`).join('');
+  return `<option value="">— Selectează din bibliotecă (opțional) —</option>${opts}`;
+}
+function libApplyPick(selEl) {
+  const id = selEl.value;
+  if (!id) return;
+  const item = matLibrary.find(x=>x.id===id);
+  if (!item) return;
+  const nameEl = document.getElementById('fi_name');
+  const umEl = document.getElementById('fi_um');
+  const pretEl = document.getElementById('fi_pret');
+  const furnEl = document.getElementById('fi_furn');
+  if (nameEl && !nameEl.value) nameEl.value = item.name;
+  else if (nameEl) nameEl.value = item.name;
+  if (umEl) {
+    const opts=['buc','mp','mc','ans','m','kg','zile','luni'];
+    if (opts.includes(item.um)) umEl.value=item.um;
+  }
+  if (pretEl) { pretEl.value=item.pret; calcTotal(); }
+  if (furnEl && item.furnizor) furnEl.value=item.furnizor;
+}
+
+function init() {
+  libLoad();
+  if (!load()) {
+    const p = {id:'copoiu_2026', ...SEED.project, categories: JSON.parse(JSON.stringify(SEED.categories)), cashflow: JSON.parse(JSON.stringify(SEED.cashflow)), created:'2026-02-06'};
+    projects = [p];
+    pid = p.id;
+    save();
+  } else { pid = projects[0]?.id; }
+  refreshProjSel();
+  nav('cost');
+}
+
+function refreshProjSel() {
+  const sel = document.getElementById('projSel');
+  sel.innerHTML = projects.map(p=>`<option value="${p.id}" ${p.id===pid?'selected':''}>${p.name}</option>`).join('');
+  const p = proj();
+  if (p) document.getElementById('cursInput').value = p.curs_euro||5.09;
+}
+function switchProj(id){ pid=id; refreshProjSel(); nav(curPage()); }
+function updateCurs(v){ if(proj()){ proj().curs_euro=parseFloat(v)||5.09; save(); redrawCurrent(); } }
+
+function curPage(){
+  const a=document.querySelector('.page.active');
+  return a?a.id.replace('pg-',''):'cost';
+}
+
+// ── NAVIGATION ───────────────────────────────────────────────
+function nav(page) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-it').forEach(n=>n.classList.remove('active'));
+  document.getElementById('pg-'+page)?.classList.add('active');
+  document.getElementById('ni-'+page)?.classList.add('active');
+  const titles={cost:'Centru de cost',centralizator:'Centralizator',deviz:'Deviz general',cashflow:'Cash-flow',projects:'Proiecte',gantt:'Grafic de execuție'};
+  document.getElementById('pgTitle').textContent=titles[page]||page;
+  const addBtn=document.getElementById('addBtn');
+  const srch=document.getElementById('srchInput');
+  addBtn.style.display='block'; srch.classList.add('hidden');
+  const catBtn=document.getElementById('addCatBtn');
+  if(catBtn) catBtn.classList.add('hidden');
+  const lbl={cost:'+ Articol',centralizator:'+ Capitol',cashflow:'+ Înregistrare',projects:'+ Proiect nou',deviz:'',gantt:'+ Etapă'};
+  addBtn.textContent=lbl[page]||'+ Adaugă';
+  if(page==='deviz') addBtn.style.display='none';
+  if(page==='gantt') addBtn.style.display='none';
+  if(page==='cost') srch.classList.remove('hidden');
+  if(page==='cost'&&catBtn) catBtn.classList.remove('hidden');
+  if(page==='cost') renderCost();
+  else if(page==='centralizator') renderCentralizator();
+  else if(page==='cashflow') renderCF();
+  else if(page==='deviz') renderDeviz();
+  else if(page==='projects') renderProjects();
+  else if(page==='gantt') renderGantt();
+}
+function redrawCurrent(){ nav(curPage()); }
+function onAddBtn(){
+  const p=curPage();
+  if(p==='cost') openAddItemModal();
+  else if(p==='centralizator') openAddCatModal();
+  else if(p==='cashflow') openCFModal();
+  else if(p==='gantt') openAddTaskModal();
+}
+let searchQ='';
+function onSearch(v){ searchQ=v.toLowerCase(); renderCost(); }
+
+// ── CENTRU DE COST ───────────────────────────────────────────
+let openCats={};
+let openSubcats={}; // key: catId+'::'+subcatName
+
+// ── CATEGORY DRAG & DROP ─────────────────────────────────────
+let _catDragId = null;
+function catDragStart(e, catId) {
+  _catDragId = catId;
+  e.stopPropagation();
+  setTimeout(() => {
+    const el = e.currentTarget;
+    if(el) el.style.opacity = '0.5';
+  }, 0);
+}
+function catDragOver(e) {
+  e.preventDefault(); e.stopPropagation();
+  e.currentTarget.style.borderTop = '3px solid var(--blue)';
+}
+function catDragLeave(e) {
+  e.currentTarget.style.borderTop = '';
+}
+function catDrop(e, targetCatId) {
+  e.preventDefault(); e.stopPropagation();
+  e.currentTarget.style.borderTop = '';
+  if (!_catDragId || _catDragId === targetCatId) { _catDragId = null; return; }
+  const p = proj(); if (!p) return;
+  const cats = p.categories;
+  const fromIdx = cats.findIndex(c => c.id === _catDragId);
+  const toIdx = cats.findIndex(c => c.id === targetCatId);
+  if (fromIdx < 0 || toIdx < 0) { _catDragId = null; return; }
+  const [moved] = cats.splice(fromIdx, 1);
+  cats.splice(toIdx, 0, moved);
+  _catDragId = null;
+  save();
+  renderCost();
+}
+
+
+// ── SUBCAPITOLE ───────────────────────────────────────────────
+function renderSubcatOpts(selectedSubcat) {
+  const catId = document.getElementById('fi_cat')?.value;
+  const p = proj(); if(!p||!catId) return;
+  const cat = p.categories.find(c=>c.id===catId);
+  const subcats = cat?.subcats || [];
+  const sel = document.getElementById('fi_subcat');
+  if(!sel) return;
+  sel.innerHTML = '<option value="">— Fără subcapitol —</option>' +
+    subcats.map(s=>`<option value="${esc(s)}" ${s===selectedSubcat?'selected':''}>${esc(s)}</option>`).join('');
+}
+
+function openManageSubcats(catId) {
+  const p=proj(); if(!p) return;
+  const cat=p.categories.find(c=>c.id===catId);
+  if(!cat) return;
+  if(!cat.subcats) cat.subcats=[];
+  window._scCatId=catId;
+  openModal('Subcapitole — '+cat.code+' '+cat.name,`
+    <p style="font-size:12px;color:var(--gray);margin-bottom:10px">Definește subcapitolele pentru acest capitol. La adăugarea unui articol poți selecta subcapitolul.</p>
+    <div id="scList"></div>
+    <button class="btn" style="margin-top:10px;width:100%" onclick="scAdd()">+ Subcapitol nou</button>
+  `,()=>{
+    const p2=proj(); const cat2=p2.categories.find(c=>c.id===window._scCatId);
+    if(!cat2) return;
+    cat2.subcats=Array.from(document.querySelectorAll('.sc-inp')).map(i=>i.value.trim()).filter(Boolean);
+    save(); renderSubcatOpts();
+  });
+  setTimeout(scRender,0);
+}
+
+function scRender(){
+  const p=proj(); if(!p) return;
+  const cat=p.categories.find(c=>c.id===window._scCatId);
+  if(!cat) return;
+  const list=document.getElementById('scList');
+  if(!list) return;
+  if(!cat.subcats||!cat.subcats.length){
+    list.innerHTML='<p style="color:var(--gray);font-size:12px;padding:8px 0">Niciun subcapitol. Apasă butonul de mai jos pentru a adăuga.</p>';
+    return;
+  }
+  list.innerHTML=cat.subcats.map((s,i)=>`
+    <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #f1f5f9">
+      <input class="sc-inp" type="text" value="${esc(s)}" placeholder="Denumire subcapitol"
+        style="flex:1;padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px">
+      <button class="btn" style="color:var(--red);padding:4px 10px;font-size:12px" onclick="scDel(${i})">✕ Șterge</button>
+    </div>`).join('');
+}
+
+function scAdd(){
+  const p=proj(); const cat=p.categories.find(c=>c.id===window._scCatId);
+  if(!cat) return;
+  if(!cat.subcats) cat.subcats=[];
+  // Read current values from inputs first
+  Array.from(document.querySelectorAll('.sc-inp')).forEach((inp,i)=>{if(cat.subcats[i]!==undefined) cat.subcats[i]=inp.value.trim();});
+  cat.subcats.push('');
+  save(); scRender();
+  // Focus the new input
+  setTimeout(()=>{const inputs=document.querySelectorAll('.sc-inp');if(inputs.length) inputs[inputs.length-1].focus();},50);
+}
+
+function scDel(idx){
+  const p=proj(); const cat=p.categories.find(c=>c.id===window._scCatId);
+  if(!cat||!cat.subcats) return;
+  const scName=cat.subcats[idx]||'subcapitol';
+  if(!confirm('Ștergi subcapitolul "'+scName+'"?\nArticolele din acest subcapitol rămân în capitol fără subcapitol.')) return;
+  // Read current values first
+  Array.from(document.querySelectorAll('.sc-inp')).forEach((inp,i)=>{if(cat.subcats[i]!==undefined) cat.subcats[i]=inp.value.trim();});
+  cat.subcats.splice(idx,1);
+  save(); scRender();
+}
+
+
+
+// ── ITEM DRAG & DROP ─────────────────────────────────────────────
+let _iDragCat=null, _iDragId=null;
+
+function itemDragStart(e,catId,itemId){
+  _iDragCat=catId; _iDragId=itemId;
+  e.stopPropagation();
+  e.dataTransfer.effectAllowed='move';
+  setTimeout(()=>e.target.classList.add('dragging-row'),0);
+}
+function itemDragOver(e){
+  e.preventDefault(); e.stopPropagation();
+  e.dataTransfer.dropEffect='move';
+  document.querySelectorAll('.drag-over-row').forEach(el=>el.classList.remove('drag-over-row'));
+  e.currentTarget.classList.add('drag-over-row');
+}
+function itemDragLeave(e){
+  e.currentTarget.classList.remove('drag-over-row');
+}
+function itemDrop(e,toCatId,toItemId){
+  e.preventDefault(); e.stopPropagation();
+  e.currentTarget.classList.remove('drag-over-row');
+  document.querySelectorAll('.dragging-row').forEach(el=>el.classList.remove('dragging-row'));
+  if(!_iDragCat||!_iDragId||_iDragId===toItemId){_iDragCat=null;_iDragId=null;return;}
+  const p=proj();
+  const fromCat=p.categories.find(c=>c.id===_iDragCat);
+  const toCat=p.categories.find(c=>c.id===toCatId);
+  if(!fromCat||!toCat) return;
+  const fromIdx=fromCat.items.findIndex(i=>i.id===_iDragId);
+  if(fromIdx<0) return;
+  const [moved]=fromCat.items.splice(fromIdx,1);
+  // If moving to different cat, update subcat to target cat's context
+  if(_iDragCat!==toCatId) moved.subcat='';
+  const toIdx=toCat.items.findIndex(i=>i.id===toItemId);
+  toCat.items.splice(toIdx<0?toCat.items.length:toIdx,0,moved);
+  // Renumber both cats
+  fromCat.items.forEach((it,i)=>it.nr=String(i+1));
+  if(_iDragCat!==toCatId) toCat.items.forEach((it,i)=>it.nr=String(i+1));
+  _iDragCat=null; _iDragId=null;
+  save(); renderCost();
+}
+
+// ── SUBCAT DRAG & DROP ────────────────────────────────────────────
+let _scDragCat=null, _scDragName=null;
+
+function scDragStart(e,catId,sg){
+  _scDragCat=catId; _scDragName=sg;
+  e.stopPropagation();
+  e.dataTransfer.effectAllowed='move';
+  setTimeout(()=>e.target.classList.add('dragging-row'),0);
+}
+function scDragOver(e){
+  e.preventDefault(); e.stopPropagation();
+  e.dataTransfer.dropEffect='move';
+  document.querySelectorAll('.drag-over-row').forEach(el=>el.classList.remove('drag-over-row'));
+  e.currentTarget.classList.add('drag-over-row');
+}
+function scDragLeave(e){
+  e.currentTarget.classList.remove('drag-over-row');
+}
+function scDropOnSc(e,catId,targetSg){
+  e.preventDefault(); e.stopPropagation();
+  e.currentTarget.classList.remove('drag-over-row');
+  document.querySelectorAll('.dragging-row').forEach(el=>el.classList.remove('dragging-row'));
+  if(!_scDragCat||!_scDragName||_scDragName===targetSg){_scDragCat=null;_scDragName=null;return;}
+  if(_scDragCat!==catId){_scDragCat=null;_scDragName=null;return;} // only within same cat
+  const p=proj();
+  const cat=p.categories.find(c=>c.id===catId);
+  if(!cat||!cat.subcats) return;
+  const fromIdx=cat.subcats.indexOf(_scDragName);
+  const toIdx=cat.subcats.indexOf(targetSg);
+  if(fromIdx<0||toIdx<0) return;
+  // Reorder subcats array
+  const [moved]=cat.subcats.splice(fromIdx,1);
+  cat.subcats.splice(toIdx,0,moved);
+  // Reorder items to match new subcat order
+  const reordered=[];
+  cat.subcats.forEach(sg=>{
+    cat.items.filter(i=>i.subcat===sg).forEach(i=>reordered.push(i));
+  });
+  // Add items without subcat at end
+  cat.items.filter(i=>!i.subcat).forEach(i=>reordered.push(i));
+  cat.items=reordered;
+  cat.items.forEach((it,i)=>it.nr=String(i+1));
+  _scDragCat=null; _scDragName=null;
+  save(); renderCost();
+}
+
+
+function itemObsHtml(obs){ return obs?'<div class="muted">'+esc(obs)+'</div>':''; }
+
+function incClass(inc){ return inc?'class="item-incomplete"':''; }
+function itemPretCell(item,inc){
+  if(inc) return '<td class="num" style="color:#92680a">-</td>';
+  return '<td class="num">'+(item.pret>0?fm(item.pret):'-')+'</td>';
+}
+function itemRonCell(item,inc){
+  if(inc) return '<td class="num fw7" style="color:#92680a;font-weight:700">&#9651; de completat</td>';
+  return '<td class="num fw7">'+fm(item.ron)+'</td>';
+}
+
+function renderCost(){
+  const p=proj(); if(!p) return;
+  const e=curs();
+  const cats=p.categories||[];
+  let totRon=0; cats.forEach(c=>c.items.forEach(i=>totRon+=(i.ron||0)));
+  document.getElementById('costStats').innerHTML=`
+    <div class="stat blue"><div class="stat-lbl">Total buget</div><div class="stat-val">${fm(totRon)} RON</div><div class="stat-sub">${fm(totRon/e)} EUR</div></div>
+    <div class="stat"><div class="stat-lbl">Capitole</div><div class="stat-val">${cats.length}</div><div class="stat-sub">categorii de lucrări</div></div>
+    <div class="stat"><div class="stat-lbl">Articole</div><div class="stat-val">${cats.reduce((a,c)=>a+c.items.length,0)}</div><div class="stat-sub">poziții bugetate</div></div>
+    <div class="stat amber"><div class="stat-lbl">TVA total (21%)</div><div class="stat-val">${fm(totRon*TVA)} RON</div><div class="stat-sub">Total cu TVA: ${fm(totRon*(1+TVA))}</div></div>
+  `;
+  let html='';
+  cats.forEach((cat,ci)=>{
+    const catTot=cat.items.reduce((a,i)=>a+(i.ron||0),0);
+    const filtered=searchQ?cat.items.filter(i=>i.name.toLowerCase().includes(searchQ)||(i.obs||'').toLowerCase().includes(searchQ)||(i.furnizor||'').toLowerCase().includes(searchQ)):cat.items;
+    if(searchQ&&filtered.length===0) return;
+    const isOpen=openCats[cat.id]!==false;
+    html+=`<div class="cat-sec">
+      <div class="cat-hd" draggable="true" ondragstart="catDragStart(event,'${cat.id}')" ondragover="catDragOver(event)" ondragleave="catDragLeave(event)" ondrop="catDrop(event,'${cat.id}')" onclick="toggleCat('${cat.id}')">
+        <span class="cat-title"><span style="background:rgba(255,255,255,.15);color:#e2e8f0;font-size:11px;font-weight:800;padding:2px 8px;border-radius:4px;letter-spacing:.03em;font-family:monospace">${cat.code}</span><span style="color:#f1f5f9;font-size:14px;font-weight:700">${cat.name}</span></span>
+        <div class="cat-actions">
+          <span class="cat-total">${fm(catTot)} RON</span>
+          <span class="muted">${fm(catTot/e)} EUR</span>
+          <button class="btn btn-sm no-print" style="font-size:11px" onclick="event.stopPropagation();openManageSubcats('${cat.id}')" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);color:#e2e8f0">☰ Subcapitole</button>
+          <button class="btn btn-sm no-print" style="font-size:11px" onclick="event.stopPropagation();openEditCatModal('${cat.id}')" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);color:#e2e8f0">✎ Capitol</button>
+          <span style="color:#94a3b8;font-size:12px">${isOpen?'▲':'▼'}</span>
+        </div>
+      </div>
+      ${isOpen?`<div class="cat-body"><table>
+        <thead><tr><th style="width:36px">Nr</th><th>Denumire</th><th>Furnizor</th><th class="num" style="width:80px">Cant.</th><th style="width:50px">UM</th><th class="num" style="width:100px">Preț UM</th><th class="num" style="width:110px">RON fără TVA</th><th class="no-print" style="width:70px"></th></tr></thead>
+        <tbody>${(()=>{
+          const groups={},order=[];
+          filtered.forEach(item=>{const sg=item.subcat||'';if(!groups[sg]){groups[sg]=[];order.push(sg);}groups[sg].push(item);});
+          let rows='';
+          order.forEach(sg=>{
+            if(sg){
+              const sgTot=groups[sg].reduce((a,i)=>a+(i.ron||0),0);
+              const scKey=cat.id+'::'+sg;
+              const scOpen=openSubcats[scKey]!==false;
+              rows+=`<tr style="background:#e8f0fe;cursor:pointer" draggable="true"
+                ondragstart="scDragStart(event,'${cat.id}','${esc(sg).replace(/'/g,"\\'")}')"
+                ondragover="scDragOver(event)"
+                ondragleave="scDragLeave(event)"
+                ondrop="scDropOnSc(event,'${cat.id}','${esc(sg).replace(/'/g,"\\'")}')"
+                onclick="toggleSubcat('${cat.id}','${esc(sg).replace(/'/g,"\\'")}')">
+                <td colspan="5" style="padding:5px 10px 5px 14px;font-size:11px;font-weight:700;color:#1e3a8a;border-bottom:1px solid #c7d7f7;border-top:1px solid #c7d7f7;user-select:none">
+                  <span style="margin-right:5px;font-size:10px">${scOpen?'▼':'▶'}</span>${esc(sg)}
+                  <span style="font-weight:400;color:#64748b;margin-left:6px">${groups[sg].length} articole</span>
+                </td>
+                <td class="num" style="padding:5px 10px;font-size:11px;font-weight:700;color:#1e3a8a;border-bottom:1px solid #c7d7f7;border-top:1px solid #c7d7f7">${fm(sgTot)}</td>
+                <td class="num" style="padding:5px 10px;font-size:11px;color:#64748b;border-bottom:1px solid #c7d7f7;border-top:1px solid #c7d7f7">${fm(sgTot/e)} EUR</td>
+                <td class="no-print" style="border-bottom:1px solid #c7d7f7;border-top:1px solid #c7d7f7"></td>
+              </tr>`;
+              if(!scOpen) return;
+            }
+            groups[sg].forEach(item=>{
+              const _isIncomplete=(!item.pret||item.pret===0)&&(!item.ron||item.ron===0);
+              rows+=`<tr${sg?' style="background:#fafbff"':''} ${incClass(_isIncomplete)} draggable="true"
+                  ondragstart="itemDragStart(event,'${cat.id}','${item.id}')"
+                  ondragover="itemDragOver(event)"
+                  ondragleave="itemDragLeave(event)"
+                  ondrop="itemDrop(event,'${cat.id}','${item.id}')">
+                <td class="muted" style="${sg?'padding-left:18px':''}">
+                  <span class="drag-handle" title="Trage pentru a reordona">⠿</span>
+                </td>
+                <td>${esc(item.name)}${itemObsHtml(item.obs)}</td>
+                <td class="muted">${esc(item.furnizor||'')}</td>
+                <td class="num">${item.cant}</td><td class="muted">${esc(item.um)}</td>
+                ${itemPretCell(item,_isIncomplete,e)}
+                ${itemRonCell(item,_isIncomplete)}
+                <td class="no-print" style="white-space:nowrap">
+                  <button class="btn btn-sm btn-icon" title="Editează" onclick="event.stopPropagation();openEditItemModal('${cat.id}','${item.id}')">✎</button>
+                  <button class="btn btn-sm btn-icon" title="Duplicează" onclick="event.stopPropagation();dupItem('${cat.id}','${item.id}')">⧉</button>
+                  <button class="btn btn-sm btn-icon" style="color:var(--red)" title="Șterge" onclick="event.stopPropagation();delItem('${cat.id}','${item.id}')">✕</button>
+                </td>
+              </tr>`;
+            });
+          });
+          return rows;
+        })()}
+        <tr style="background:#f8fafc">
+          <td colspan="6" class="num" style="font-size:12px;color:var(--gray);font-weight:600">TOTAL ${cat.code}</td>
+          <td class="num fw7" style="color:var(--blue)">${fm(catTot)}</td><td></td>
+        </tr></tbody>
+      </table>
+      <div style="padding:6px 10px" class="no-print">
+        <button class="btn btn-sm btn-green" onclick="openAddItemModal('${cat.id}')">+ Articol în ${cat.code}</button>
+      </div></div>`:''}
+    </div>`;
+  });
+  document.getElementById('costContent').innerHTML=html||'<p style="color:var(--gray);padding:20px">Niciun capitol. Adaugă cu butonul + Articol.</p>';
+}
+function toggleCat(id){ openCats[id]=openCats[id]===false?true:false; renderCost(); }
+function toggleSubcat(catId,sg){ const k=catId+'::'+sg; openSubcats[k]=openSubcats[k]===false?true:false; renderCost(); }
+
+function umSelect(val){
+  const opts=['buc','mp','mc','ans','m','kg','zile','luni'];
+  return`<select id="fi_um">${opts.map(u=>`<option value="${u}" ${u===val?'selected':''}>${u}</option>`).join('')}<option value="other" ${!opts.includes(val)&&val?'selected':''}>altul...</option></select>`;
+}
+function onUmChange(){
+  const v=document.getElementById('fi_um').value;
+  const cust=document.getElementById('fi_um_custom');
+  if(cust) cust.style.display=v==='other'?'block':'none';
+}
+function getUmVal(){
+  const v=document.getElementById('fi_um').value;
+  if(v==='other'){const c=document.getElementById('fi_um_custom');return c?c.value:'';}
+  return v;
+}
+function calcTotal(){
+  // Only updates hidden fi_ron total — does NOT touch price unit fields
+  const cant=parseFloat(document.getElementById('fi_cant')?.value)||0;
+  const pret=parseFloat(document.getElementById('fi_pret')?.value)||0;
+  const ronEl=document.getElementById('fi_ron');
+  if(ronEl) ronEl.value=(cant*pret).toFixed(2);
+}
+function calcPretRon(){
+  const pret=parseFloat(document.getElementById('fi_pret')?.value)||0;
+  const e=curs();
+  const el=document.getElementById('fi_pret_eur');
+  if(el) el.value=pret>0?(pret/e).toFixed(2):'';
+  calcTotal();
+}
+function calcPretEur(){
+  const pretEur=parseFloat(document.getElementById('fi_pret_eur')?.value)||0;
+  const e=curs();
+  const pretEl=document.getElementById('fi_pret');
+  if(pretEl) pretEl.value=pretEur>0?(pretEur*e).toFixed(2):'';
+  // Update hidden total
+  const cant=parseFloat(document.getElementById('fi_cant')?.value)||1;
+  const ronEl=document.getElementById('fi_ron');
+  if(ronEl) ronEl.value=(cant*pretEur*e).toFixed(2);
+}
+function calcFromRon(){calcPretRon();}
+function calcFromEur(){calcPretEur();}
+
+function openAddItemModal(catId){
+  const p=proj();
+  const catOpts=p.categories.map(c=>`<option value="${c.id}" ${c.id===catId?'selected':''}>${c.code} ${c.name}</option>`).join('');
+  openModal('Articol nou',`
+    <div class="fg"><label>Capitol</label><select id="fi_cat" onchange="renderSubcatOpts()">${catOpts}</select></div>
+    <div class="fg"><label>Subcapitol <span style="color:var(--gray);font-size:11px">(opțional)</span></label><select id="fi_subcat" style="width:100%"><option value="">— Fără subcapitol —</option></select></div>
+    <div class="fg">
+      <label>Selectează din bibliotecă <span style="color:var(--gray);font-size:11px">(completează automat câmpurile)</span></label>
+      <div style="display:flex;gap:6px">
+        <select id="fi_lib" onchange="libApplyPick(this)" style="flex:1">${libPickerHTML('')}</select>
+        <button type="button" class="btn btn-sm" onclick="closeModal();setTimeout(openLibraryManager,50)" style="white-space:nowrap;font-size:11px">✏️ Editează bibliotecă</button>
+      </div>
+    </div>
+    <div class="fg"><label>Denumire</label><input id="fi_name" placeholder="ex: Beton C25/30"></div>
+    <div class="frow frow-2">
+      <div class="fg"><label>Cantitate</label><input type="number" id="fi_cant" value="1" step="0.01" oninput="calcTotal()"></div>
+      <div class="fg"><label>Unitate măsură</label>${umSelect('buc')}<input id="fi_um_custom" placeholder="UM personalizat" style="display:none;margin-top:4px" oninput=""></div>
+    </div>
+    <div class="frow frow-2">
+      <div class="fg"><label>Preț/UM (RON) <small style="color:var(--gray);font-weight:400">— sau completează EUR →</small></label><input type="number" id="fi_pret" value="" placeholder="ex: 468" step="any" oninput="calcPretRon()"></div>
+      <div class="fg"><label>Preț/UM (EUR) <small style="color:var(--gray)">la ${fm(curs())} RON/€</small></label><input type="number" id="fi_pret_eur" value="" placeholder="ex: 92" step="any" oninput="calcPretEur()"></div>
+    </div>
+    <input type="hidden" id="fi_ron" value="0">
+    <input type="hidden" id="fi_eur" value="0">
+    <div class="frow frow-2">
+      <div class="fg"><label>Furnizor</label><input id="fi_furn"></div>
+      <div class="fg"><label>Observații</label><input id="fi_obs"></div>
+    </div>
+  `,()=>{
+    const ci=document.getElementById('fi_cat').value;
+    const cat=p.categories.find(c=>c.id===ci);
+    if(!cat) return;
+    const cant=parseFloat(document.getElementById('fi_cant').value)||0;
+    const pret=parseFloat(document.getElementById('fi_pret').value)||0;
+    const ronM=parseFloat(document.getElementById('fi_ron').value)||0;
+    const subcat=document.getElementById('fi_subcat')?.value||'';cat.items.push({id:uid(),nr:String(cat.items.length+1),name:document.getElementById('fi_name').value,cant,um:getUmVal(),pret,ron:ronM||(cant*pret),furnizor:document.getElementById('fi_furn').value,obs:document.getElementById('fi_obs').value,subcat});
+    save(); closeModal(); renderCost();
+  });
+  // attach change listener after modal renders
+  setTimeout(()=>{ renderSubcatOpts(''); const s=document.getElementById('fi_um'); if(s) s.addEventListener('change',onUmChange); },50);
+}
+
+function openEditItemModal(catId,itemId){
+  const p=proj();
+  const cat=p.categories.find(c=>c.id===catId);
+  const item=cat?.items.find(i=>i.id===itemId);
+  if(!item) return;
+  const opts=['buc','mp','mc','ans','m','kg','zile','luni'];
+  const isCustom=item.um&&!opts.includes(item.um);
+  const subcatOpts='<option value="">— Fără subcapitol —</option>'
+    +(cat.subcats||[]).map(function(s){return '<option value="'+esc(s)+'"'+(s===item.subcat?' selected':'')+'>'+esc(s)+'</option>';}).join('');
+  const umOpts=umSelect(isCustom?'other':item.um);
+  const pretEur=item.pret>0?fm2(item.pret/curs()):'0';
+  const pretRon=item.pret||0;
+  const body=''
+    +'<div class="fg"><label>Subcapitol <span style="color:var(--gray);font-size:11px">(opțional)</span></label>'
+    +'<select id="fi_subcat" style="width:100%">'+subcatOpts+'</select></div>'
+    +'<div class="fg"><label>Denumire</label><input id="fi_name" value="'+esc(item.name)+'"></div>'
+    +'<div class="frow frow-2">'
+    +'<div class="fg"><label>Cantitate</label><input type="number" id="fi_cant" value="'+item.cant+'" step="0.01" oninput="calcTotal()"></div>'
+    +'<div class="fg"><label>Unitate măsură</label>'+umOpts+'<input id="fi_um_custom" value="'+(isCustom?esc(item.um):'')+'" placeholder="UM personalizat" style="display:'+(isCustom?'block':'none')+';margin-top:4px"></div>'
+    +'</div>'
+    +'<div class="frow frow-2">'
+    +'<div class="fg"><label>Preț/UM (RON)</label><input type="number" id="fi_pret" value="'+pretRon+'" step="any" oninput="calcPretRon()"></div>'
+    +'<div class="fg"><label>Preț/UM (EUR) <small style="color:var(--gray)">la '+fm(curs())+' RON/€</small></label><input type="number" id="fi_pret_eur" value="'+pretEur+'" step="any" oninput="calcPretEur()"></div>'
+    +'</div>'
+    +'<input type="hidden" id="fi_ron" value="'+(item.ron||0)+'">'
+    +'<div class="frow frow-2">'
+    +'<div class="fg"><label>Furnizor</label><input id="fi_furn" value="'+esc(item.furnizor||'')+'"></div>'
+    +'<div class="fg"><label>Observații</label><input id="fi_obs" value="'+esc(item.obs||'')+'"></div>'
+    +'</div>';
+  openModal('Editează articol',body,function(){
+    item.name=document.getElementById('fi_name').value;
+    item.cant=parseFloat(document.getElementById('fi_cant').value)||0;
+    item.um=getUmVal();
+    item.pret=parseFloat(document.getElementById('fi_pret').value)||0;
+    item.ron=(item.cant*item.pret)||parseFloat(document.getElementById('fi_ron').value)||0;
+    item.furnizor=document.getElementById('fi_furn').value;
+    item.obs=document.getElementById('fi_obs').value;
+    item.subcat=document.getElementById('fi_subcat')?.value||'';
+    save(); closeModal(); renderCost();
+  });
+  setTimeout(function(){ var s=document.getElementById('fi_um'); if(s) s.addEventListener('change',onUmChange); },50);
+}
+
+function dupItem(catId, itemId){
+  const p=proj();
+  const cat=p.categories.find(c=>c.id===catId);
+  if(!cat) return;
+  const orig=cat.items.find(i=>i.id===itemId);
+  if(!orig) return;
+  const copy={...orig, id:uid(), nr:String(cat.items.length+1), name:'[Copie] '+orig.name};
+  const origIdx=cat.items.findIndex(i=>i.id===itemId);
+  cat.items.splice(origIdx+1, 0, copy);
+  // Renumber
+  cat.items.forEach((it,i)=>it.nr=String(i+1));
+  save(); renderCost();
+}
+
+function delItem(catId,itemId){
+  const itemName=proj().categories.find(cc=>cc.id===catId)?.items.find(i=>i.id===itemId)?.name||'articol';
+  if(!confirm('Ștergi articolul "'+itemName+'"?')) return;
+  const cat=proj().categories.find(c=>c.id===catId);
+  if(cat) cat.items=cat.items.filter(i=>i.id!==itemId);
+  save(); renderCost();
+}
+
+function openAddCatModal(){
+  openModal('Capitol nou de lucrări',`
+    <div class="frow frow-2">
+      <div class="fg"><label>Cod (ex: A.15.)</label><input id="cc_code" placeholder="A.15."></div>
+      <div class="fg"><label>Marjă implicită %</label><input type="number" id="cc_marja" value="5" step="0.5"></div>
+    </div>
+    <div class="fg"><label>Denumire capitol</label><input id="cc_name" placeholder="ex: FINISAJE INTERIOARE"></div>
+  `,()=>{
+    proj().categories.push({id:uid(),code:document.getElementById('cc_code').value,name:document.getElementById('cc_name').value,marja:parseFloat(document.getElementById('cc_marja').value)/100||0,items:[]});
+    save(); closeModal(); renderCost();
+  });
+}
+
+function openEditCatModal(catId){
+  const cat=proj().categories.find(c=>c.id===catId);
+  if(!cat) return;
+  openModal('Editează capitol',`
+    <div class="frow frow-2">
+      <div class="fg"><label>Cod</label><input id="cc_code" value="${esc(cat.code)}"></div>
+      <div class="fg"><label>Marjă %</label><input type="number" id="cc_marja" value="${((cat.marja||0)*100).toFixed(1)}" step="0.5"></div>
+    </div>
+    <div class="fg"><label>Denumire</label><input id="cc_name" value="${esc(cat.name)}"></div>
+    <hr style="margin:10px 0;border-color:var(--border)">
+    <button class="btn" style="color:var(--red);font-size:12px" onclick="delCat('${catId}')">🗑 Șterge capitolul (și toate articolele)</button>
+  `,()=>{
+    cat.code=document.getElementById('cc_code').value;
+    cat.name=document.getElementById('cc_name').value;
+    cat.marja=parseFloat(document.getElementById('cc_marja').value)/100||0;
+    save(); closeModal(); renderCost();
+  });
+}
+
+function delCat(catId){
+  const catDel=proj().categories.find(cc=>cc.id===catId);
+  if(!catDel) return;
+  if(!confirm('Ștergi capitolul "'+catDel.code+' '+catDel.name+'" și toate cele '+catDel.items.length+' articole din el?\nAceastă acțiune nu poate fi anulată!')) return;
+  const p=proj(); p.categories=p.categories.filter(c=>c.id!==catId);
+  save(); closeModal(); renderCost();
+}
+
+// ── CENTRALIZATOR ────────────────────────────────────────────
+function renderCentralizator(){
+  const p=proj(); if(!p) return;
+  const e=curs();
+  // Build from categories
+  const cats=p.categories||[];
+  let totRon=0,totMarjat=0;
+  const rows=cats.map(cat=>{
+    const ron=cat.items.reduce((a,i)=>a+(i.ron||0),0);
+    const marja=cat.marja||0;
+    const ronM=ron*(1+marja);
+    const eurM=ronM/e;
+    totRon+=ron; totMarjat+=ronM;
+    return{cat,ron,marja,ronM,eurM};
+  });
+  document.getElementById('centrStats').innerHTML=`
+    <div class="stat blue"><div class="stat-lbl">Total fără marjă</div><div class="stat-val">${fm(totRon)} RON</div><div class="stat-sub">${fm(totRon/e)} EUR</div></div>
+    <div class="stat green"><div class="stat-lbl">Total cu marjă</div><div class="stat-val">${fm(totMarjat)} RON</div><div class="stat-sub">${fm(totMarjat/e)} EUR</div></div>
+    <div class="stat amber"><div class="stat-lbl">Total cu marjă+TVA</div><div class="stat-val">${fm(totMarjat*(1+TVA))} RON</div><div class="stat-sub">TVA 21%</div></div>
+    <div class="stat"><div class="stat-lbl">Marjă medie</div><div class="stat-val">${totRon>0?((totMarjat/totRon-1)*100).toFixed(1):0}%</div><div class="stat-sub">medie ponderată</div></div>
+  `;
+  document.getElementById('centrBody').innerHTML=rows.map(({cat,ron,marja,ronM,eurM})=>`<tr>
+    <td class="muted">${cat.code}</td>
+    <td>${esc(cat.name)}</td>
+    <td class="num">${fm(ron)}</td>
+    <td class="num">${fm(ron/e)}</td>
+    <td class="num">
+      <input type="number" class="inp-sm" value="${(marja*100).toFixed(1)}" min="0" max="100" step="0.5" onchange="setMarja('${cat.id}',this.value)">%
+    </td>
+    <td class="num fw7" style="color:var(--amber)">${fm((ronM-ron)/e)}</td>
+    <td class="num fw7" style="color:var(--blue)">${fm(ronM)}</td>
+    <td class="num">${fm(eurM)}</td>
+    <td class="num">${fm(ronM*(1+TVA))}</td>
+    <td class="num">${totRon>0?(ron/totRon*100).toFixed(1)+'%':'-'}</td>
+  </tr>`).join('');
+  document.getElementById('centrFoot').innerHTML=`<tr style="background:#1e293b;color:#fff">
+    <td colspan="2" style="padding:9px 10px;font-weight:700">TOTAL</td>
+    <td class="num" style="padding:9px 10px;font-weight:700">${fm(totRon)}</td>
+    <td class="num" style="padding:9px 10px">${fm(totRon/e)}</td>
+    <td></td>
+    <td class="num" style="padding:9px 10px;font-weight:700;color:#fbbf24">${fm((totMarjat-totRon)/e)}</td>
+    <td class="num" style="padding:9px 10px;font-weight:700;color:#fbbf24">${fm((totMarjat-totRon)/e)} €</td>
+    <td class="num" style="padding:9px 10px;font-weight:700;color:#93c5fd">${fm(totMarjat)}</td>
+    <td class="num" style="padding:9px 10px">${fm(totMarjat/e)}</td>
+    <td class="num" style="padding:9px 10px;font-weight:700;color:#fbbf24">${fm(totMarjat*(1+TVA))}</td>
+    <td class="num" style="padding:9px 10px">100%</td>
+  </tr>`;
+  const mx=Math.max(...rows.map(r=>r.ron));
+  document.getElementById('centrChart').innerHTML=rows.filter(r=>r.ron>0).sort((a,b)=>b.ron-a.ron).map(({cat,ron})=>`
+    <div class="bar-row">
+      <div class="bar-lbl" title="${cat.name}">${cat.code} ${cat.name.substring(0,24)}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${mx>0?(ron/mx*100).toFixed(1):0}%"></div></div>
+      <div class="bar-val">${fm(ron)} RON</div>
+    </div>`).join('');
+}
+function setMarja(catId,v){
+  const cat=proj().categories.find(c=>c.id===catId);
+  if(cat){ cat.marja=parseFloat(v)/100||0; save(); renderCentralizator(); }
+}
+
+// ── DEVIZ GENERAL ─────────────────────────────────────────────
+function renderDeviz(){
+  const p=proj(); if(!p) return;
+  const e=curs();
+  const cats=p.categories||[];
+  let totRon=0;
+  const rows=cats.map(cat=>{
+    const ron=cat.items.reduce((a,i)=>a+(i.ron||0),0);
+    const marja=cat.marja||0;
+    const ronM=ron*(1+marja);
+    totRon+=ronM;
+    return{cat,ron,ronM,eur:ronM/e};
+  });
+  document.getElementById('devizStats').innerHTML=`
+    <div class="stat blue"><div class="stat-lbl">Total fără TVA</div><div class="stat-val">${fm(totRon)} RON</div><div class="stat-sub">${fm(totRon/e)} EUR</div></div>
+    <div class="stat amber"><div class="stat-lbl">TVA 21%</div><div class="stat-val">${fm(totRon*TVA)} RON</div><div class="stat-sub">${fm(totRon*TVA/e)} EUR</div></div>
+    <div class="stat green"><div class="stat-lbl">Total cu TVA</div><div class="stat-val">${fm(totRon*(1+TVA))} RON</div><div class="stat-sub">${fm(totRon*(1+TVA)/e)} EUR</div></div>
+    ${p.sup_utila_totala?`<div class="stat"><div class="stat-lbl">Cost / mp util</div><div class="stat-val">${fm(totRon*(1+TVA)/e/p.sup_utila_totala)}</div><div class="stat-sub">EUR/mp (inc. TVA)</div></div>`:''}
+  `;
+  const letterCode=(i)=>String.fromCharCode(65+i)+'.';
+  let html=`<div id="devizPrint">
+  <div class="deviz-print-hd">
+    <h2>DEVIZ GENERAL</h2>
+    <p style="margin:5px 0;font-size:14px">${esc(p.name)}</p>
+    <p style="margin:3px 0;font-size:13px;color:#475569">${esc(p.beneficiar||'')}</p>
+    <p style="margin:3px 0;font-size:12px;color:#6b7280">${esc(p.address||'')}</p>
+    ${p.sup_utila_totala?`<p style="margin:3px 0;font-size:12px;color:#6b7280">Suprafață utilă: ${p.sup_utila_totala} mp | Construită desfășurată: ${p.sup_construita_desf_totala||'-'} mp</p>`:''}
+    <p style="margin:5px 0;font-size:12px;color:#6b7280">Curs: 1 EUR = ${e} RON | TVA: 21%</p>
+  </div>
+  <div class="card"><div class="card-bd">
+  <table>
+    <thead><tr><th>Cod</th><th>Denumire capitol / lucrare</th><th class="num">RON fără TVA</th><th class="num">EUR fără TVA</th><th class="num">RON cu TVA</th></tr></thead>
+    <tbody>`;
+  rows.forEach(({cat,ronM,eur},idx)=>{
+    html+=`<tr style="background:#f8fafc">
+      <td style="font-weight:700">${letterCode(idx)}</td>
+      <td style="font-weight:700">${esc(cat.name)}</td>
+      <td class="num fw7" style="color:var(--blue)">${ronM>0?fm(ronM):'-'}</td>
+      <td class="num">${eur>0?fm(eur):'-'}</td>
+      <td class="num">${ronM>0?fm(ronM*(1+TVA)):'-'}</td>
+    </tr>`;
+    cat.items.filter(i=>i.ron>0).forEach(item=>{
+      html+=`<tr><td class="muted" style="padding-left:20px"></td><td style="padding-left:20px;color:#374151;font-size:12px">• ${esc(item.name)}</td><td class="num muted">${fm(item.ron)}</td><td class="num muted">${fm(item.ron/e)}</td><td></td></tr>`;
+    });
+  });
+  html+=`</tbody><tfoot>
+    <tr style="background:#1e293b;color:#fff"><td colspan="2" style="padding:10px;font-weight:700">TOTAL FĂRĂ TVA</td><td class="num" style="padding:10px;font-weight:700;color:#93c5fd">${fm(totRon)}</td><td class="num" style="padding:10px">${fm(totRon/e)}</td><td></td></tr>
+    <tr style="background:#334155;color:#e2e8f0"><td colspan="2" style="padding:8px 10px">TVA 21%</td><td class="num" style="padding:8px 10px">${fm(totRon*TVA)}</td><td class="num" style="padding:8px 10px">${fm(totRon*TVA/e)}</td><td></td></tr>
+    <tr style="background:#1d4ed8;color:#fff"><td colspan="2" style="padding:10px;font-weight:700;font-size:14px">TOTAL CU TVA</td><td class="num" style="padding:10px;font-weight:700;font-size:15px;color:#fff">${fm(totRon*(1+TVA))}</td><td class="num" style="padding:10px;font-weight:700">${fm(totRon*(1+TVA)/e)}</td><td class="num" style="padding:10px;font-weight:700">${fm(totRon*(1+TVA))}</td></tr>
+  </tfoot></table></div></div></div>`;
+  document.getElementById('devizContent').innerHTML=html;
+}
+function exportDeviz(){
+  const p=proj();
+  const c=document.getElementById('devizPrint')?.innerHTML||'';
+  const html=`<!DOCTYPE html><html lang="ro"><head><meta charset="UTF-8"><title>Deviz - ${esc(p.name)}</title><style>body{font-family:Arial,sans-serif;padding:28px;max-width:900px;margin:auto}table{width:100%;border-collapse:collapse}th,td{padding:7px 10px;text-align:left;border-bottom:1px solid #e5e7eb}th{background:#f8fafc;font-weight:600;font-size:11px;text-transform:uppercase}.num{text-align:right}.fw7{font-weight:700}.muted{color:#6b7280;font-size:12px}</style></head><body>${c}</body></html>`;
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([html],{type:'text/html'}));
+  a.download=`Deviz_${p.name.replace(/\s+/g,'_')}.html`;
+  a.click();
+}
+
+// ── GANTT ─────────────────────────────────────────────────────
+const GANTT_COLORS=['#2563eb','#16a34a','#d97706','#dc2626','#7c3aed','#0891b2','#059669','#b45309','#be185d','#4338ca','#0f766e','#b91c1c'];
+
+function getGanttTasks(){return proj()?.gantt||[];}
+
+// ── CASH-FLOW ─────────────────────────────────────────────────
+function renderCF(){
+  const p=proj(); if(!p) return;
+  const e=curs();
+  const entries=p.cashflow||[];
+  const catF=document.getElementById('cfCatF')?.value||'';
+  const typeF=document.getElementById('cfTypeF')?.value||'';
+  const cats=[...new Set(entries.map(x=>x.categorie).filter(Boolean))].sort();
+  const cfCatEl=document.getElementById('cfCatF');
+  const curCat=cfCatEl.value;
+  cfCatEl.innerHTML='<option value="">Toate categoriile</option>'+cats.map(c=>`<option value="${c}" ${c===curCat?'selected':''}>${c}</option>`).join('');
+  if(curCat) cfCatEl.value=curCat;
+  const totIn=entries.filter(x=>x.ron_cu_tva>0).reduce((a,x)=>a+x.ron_cu_tva,0);
+  const totOut=entries.filter(x=>x.ron_cu_tva<0).reduce((a,x)=>a+x.ron_cu_tva,0);
+  const sold=entries.reduce((a,x)=>a+x.ron_cu_tva,0);
+  document.getElementById('cfStats').innerHTML=`
+    <div class="stat green"><div class="stat-lbl">Încasări</div><div class="stat-val">${fm(totIn)}</div><div class="stat-sub">${fm(totIn/e)} EUR</div></div>
+    <div class="stat red"><div class="stat-lbl">Cheltuieli</div><div class="stat-val">${fm(Math.abs(totOut))}</div><div class="stat-sub">${fm(Math.abs(totOut)/e)} EUR</div></div>
+    <div class="stat ${sold>=0?'blue':'amber'}"><div class="stat-lbl">Sold curent</div><div class="stat-val">${fm(sold)}</div><div class="stat-sub">${fm(sold/e)} EUR</div></div>
+    <div class="stat"><div class="stat-lbl">Înregistrări</div><div class="stat-val">${entries.length}</div><div class="stat-sub">${entries.filter(x=>x.status).length} confirmate</div></div>
+  `;
+  let bal=0;
+  const withBal=entries.map(x=>{bal+=x.ron_cu_tva;return{...x,bal};});
+  const filtered=withBal.filter(x=>{
+    if(catF&&x.categorie!==catF) return false;
+    if(typeF==='in'&&x.ron_cu_tva<=0) return false;
+    if(typeF==='out'&&x.ron_cu_tva>=0) return false;
+    return true;
+  });
+  document.getElementById('cfBody').innerHTML=filtered.map(x=>{
+    const isIn=x.ron_cu_tva>0;
+    const fileBtn=x.file?`<button class="btn btn-sm btn-icon" title="Deschide document" onclick="openFile('${x.id}')">📎</button>`:'';
+    return `<tr>
+      <td style="white-space:nowrap">${x.date}</td>
+      <td>
+        ${x.fact_nr?`<span class="muted" style="font-size:11px">${esc(x.fact_nr)}</span><br>`:''}
+        ${esc(x.desc)}
+        ${x.is_partial?`<br><span class="badge ba" style="font-size:10px">Parțial ${x.pct_achitat||0}% — rest ${fm(x.rest_plata)} RON</span>`:''}
+        ${x.file?`<div style="display:flex;align-items:center;gap:4px;margin-top:2px"><span class="badge bg" style="font-size:10px">📎 ${esc(x.file.name||'doc')}</span></div>`:''}
+      </td>
+      <td><span class="badge ${catBadge(x.categorie)}">${esc(x.categorie||'-')}</span></td>
+      <td class="num ${isIn?'cf-in':'cf-out'}">${isIn?'+':''}${fm(x.ron_cu_tva)}</td>
+      <td class="num muted">${fm(Math.abs(x.tva))}</td>
+      <td class="num muted">${fm(Math.abs(x.ron_fara_tva))}</td>
+      <td class="num fw7" style="color:${x.bal>=0?'var(--blue)':'var(--red)'}">${fm(x.bal)}</td>
+      <td><span class="badge ${x.status?'bgn':'bg'}">${x.status?'✓ OK':'Pend.'}</span></td>
+      <td class="no-print" style="white-space:nowrap">
+        ${fileBtn}
+        <button class="btn btn-sm btn-icon" onclick="openCFModal('${x.id}')">✎</button>
+        <button class="btn btn-sm btn-icon" style="color:var(--red)" onclick="delCF('${x.id}')">✕</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+function catBadge(c){const m={'Intrări':'bgn','Infrastructură':'ba','Suprastructură':'bb','Tâmplării':'bb','Combustibil':'bg','Indirecte':'bg','Consumabile':'bg','Învelitoare':'bp'};return m[c]||'bg';}
+
+function openCFModal(editId){
+  const p=proj();
+  const item=editId?p.cashflow.find(x=>x.id===editId):null;
+  const cats=[...(new Set([...( p.cashflow||[]).map(x=>x.categorie),'Intrări','Infrastructură','Suprastructură','Tâmplării','Instalații interioare','Instalații exterioare','Electrice','Învelitoare','Etanșare','Combustibil','Indirecte','Consumabile','Organizare șantier','PM'].filter(Boolean)))].sort();
+  const catOpts=cats.map(c=>`<option value="${c}" ${item?.categorie===c?'selected':''}>${c}</option>`).join('');
+  openModal(item?'Editează înregistrare':'Înregistrare nouă cash-flow',`
+    <div class="frow frow-2">
+      <div class="fg"><label>Data</label><input type="date" id="cf_date" value="${item?.date||new Date().toISOString().slice(0,10)}"></div>
+      <div class="fg"><label>Categorie</label><select id="cf_cat">${catOpts}</select></div>
+    </div>
+    <div class="fg">
+      <label>Factură / Bon <span class="ai-badge">AI</span> — atașează PDF/imagine pentru extragere automată</label>
+      <div class="file-drop" id="fileDrop" onclick="document.getElementById('cfFileInput').click()" ondragover="event.preventDefault();this.classList.add('over')" ondragleave="this.classList.remove('over')" ondrop="handleFileDrop(event)">
+        <input type="file" id="cfFileInput" accept=".pdf,image/*" onchange="handleFileSelect(this)">
+        <div id="fileDropTxt">${item?.file?`📎 ${esc(item.file.name)} — <a href="#" onclick="event.stopPropagation();openFile('${item?.id||''}');return false">Deschide</a>`:'<span style="font-size:22px">📄</span><br>Trage fișierul aici sau click pentru a selecta<br><small>PDF sau imagine (JPG, PNG)</small>'}</div>
+      </div>
+    </div>
+    <div class="fg" id="aiStatusRow" style="display:none">
+      <div class="loading"><div class="spin"></div> <span id="aiStatusTxt">Se procesează factura cu AI...</span></div>
+    </div>
+    <div class="fg"><label>Descriere (furnizor, ce conține factura/bonul)</label><input id="cf_desc" value="${esc(item?.desc||'')}" placeholder="ex: Beton C25/30 - SC Drupas SRL, Factură nr. 1234"></div>
+    <div class="frow frow-2">
+      <div class="fg"><label>Valoare factură totală cu TVA (RON)</label><input type="number" id="cf_fact_total" value="${item?.fact_total||Math.abs(item?.ron_cu_tva||0)||''}" step="0.01" placeholder="0.00" oninput="onFactTotalChange()"></div>
+      <div class="fg"><label>Nr. factură / bon</label><input id="cf_factnr" value="${esc(item?.fact_nr||'')}" placeholder="ex: FAC-2026-0042"></div>
+    </div>
+    <div class="fg" style="background:#f8fafc;border:1px solid var(--border);border-radius:6px;padding:10px;margin-bottom:4px">
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:600">
+        <input type="checkbox" id="cf_partial" ${item?.is_partial?'checked':''} onchange="togglePartial()">
+        Plată parțială (suma plătită ≠ valoarea facturii)
+      </label>
+      <div style="margin-top:10px">
+        <div class="frow frow-2">
+          <div class="fg">
+            <label id="cf_ron_lbl">${item?.is_partial?'Sumă plătită cu TVA (RON)':'RON cu TVA'} <small style="color:var(--gray)">(+ încasare / − cheltuială)</small></label>
+            <input type="number" id="cf_ron" value="${item?.ron_cu_tva||0}" step="0.01" oninput="autoTVA()">
+          </div>
+          <div class="fg"><label>TVA 21% — calculat automat</label><input type="number" id="cf_tva" value="${item?.tva||0}" step="0.01" readonly style="background:#f8fafc"></div>
+        </div>
+        <div id="partialFields" style="display:${item?.is_partial?'block':'none'}">
+          <div class="frow frow-2" style="margin-top:6px">
+            <div class="fg"><label>Rest de plătit (RON) — calculat</label><input type="number" id="cf_rest" value="${item?.rest_plata||0}" step="0.01" readonly style="background:#fef3c7;color:var(--amber);font-weight:700"></div>
+            <div class="fg"><label>% din factură achitat</label><input type="number" id="cf_pct" value="${item?.pct_achitat||0}" step="1" min="0" max="100" oninput="onPctChange()" placeholder="ex: 40"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="fg"><label><input type="checkbox" id="cf_stat" ${item?.status?'checked':''}> Confirmat / plătit</label></div>
+  `,()=>{
+    const ronV=parseFloat(document.getElementById('cf_ron').value)||0;
+    const tvaV=ronV - ronV/(1+TVA);
+    const isPartial=document.getElementById('cf_partial').checked;
+    const factTotal=parseFloat(document.getElementById('cf_fact_total').value)||Math.abs(ronV);
+    const restPlata=isPartial?parseFloat(document.getElementById('cf_rest').value)||0:0;
+    const pctAchitat=isPartial?parseFloat(document.getElementById('cf_pct').value)||0:100;
+    const pendingFile=window._pendingCFFile;
+    const entry={
+      id:item?.id||uid(),date:document.getElementById('cf_date').value,
+      desc:document.getElementById('cf_desc').value,
+      fact_nr:document.getElementById('cf_factnr').value,
+      fact_total:factTotal,
+      is_partial:isPartial,
+      pct_achitat:pctAchitat,
+      rest_plata:restPlata,
+      categorie:document.getElementById('cf_cat').value,
+      ron_cu_tva:ronV,tva:parseFloat(tvaV.toFixed(2)),
+      ron_fara_tva:parseFloat((ronV-tvaV).toFixed(2)),
+      status:document.getElementById('cf_stat').checked,
+      file:pendingFile||item?.file||null
+    };
+    if(item){const idx=p.cashflow.indexOf(item);p.cashflow[idx]=entry;}
+    else{p.cashflow.push(entry);p.cashflow.sort((a,b)=>a.date.localeCompare(b.date));}
+    window._pendingCFFile=null;
+    save(); closeModal(); renderCF();
+  });
+  window._pendingCFFile=null;
+}
+
+function autoTVA(){
+  const ron=parseFloat(document.getElementById('cf_ron')?.value)||0;
+  const tva=ron - ron/(1+TVA);
+  const el=document.getElementById('cf_tva');
+  if(el) el.value=tva.toFixed(2);
+  updateRest();
+}
+
+function togglePartial(){
+  const isP=document.getElementById('cf_partial').checked;
+  document.getElementById('partialFields').style.display=isP?'block':'none';
+  const lbl=document.getElementById('cf_ron_lbl');
+  if(lbl) lbl.innerHTML=isP?'Sumă plătită cu TVA (RON) <small style="color:var(--gray)">(+ încasare / − cheltuială)</small>':'RON cu TVA <small style="color:var(--gray)">(+ încasare / − cheltuială)</small>';
+  updateRest();
+}
+
+function onFactTotalChange(){
+  const pctEl=document.getElementById('cf_pct');
+  if(pctEl&&pctEl.value) onPctChange();
+  else updateRest();
+}
+
+function onPctChange(){
+  const total=parseFloat(document.getElementById('cf_fact_total')?.value)||0;
+  const pct=parseFloat(document.getElementById('cf_pct')?.value)||0;
+  const platit=parseFloat((total*pct/100).toFixed(2));
+  const ronEl=document.getElementById('cf_ron');
+  // preserve sign from existing value or default negative (cheltuiala)
+  const sign=ronEl&&parseFloat(ronEl.value)>0?1:-1;
+  if(ronEl) ronEl.value=(sign*platit).toFixed(2);
+  autoTVA();
+}
+
+function updateRest(){
+  const total=parseFloat(document.getElementById('cf_fact_total')?.value)||0;
+  const platit=Math.abs(parseFloat(document.getElementById('cf_ron')?.value)||0);
+  const restEl=document.getElementById('cf_rest');
+  if(restEl) restEl.value=(total-platit).toFixed(2);
+  // update pct
+  const pctEl=document.getElementById('cf_pct');
+  if(pctEl&&total>0) pctEl.value=Math.round(platit/total*100);
+}
+
+function handleFileDrop(e){
+  e.preventDefault();
+  document.getElementById('fileDrop').classList.remove('over');
+  const f=e.dataTransfer.files[0];
+  if(f) processUploadedFile(f);
+}
+function handleFileSelect(input){
+  const f=input.files[0];
+  if(f) processUploadedFile(f);
+}
+
+async function processUploadedFile(file){
+  const maxB=4*1024*1024;
+  document.getElementById('fileDropTxt').innerHTML=`📎 ${esc(file.name)} <span style="color:var(--green)">✓ atașat</span>`;
+  document.getElementById('aiStatusRow').style.display='block';
+  document.getElementById('aiStatusTxt').textContent='Se procesează cu AI... (câteva secunde)';
+  try {
+    const b64=await fileToB64(file);
+    const isImg=file.type.startsWith('image/');
+    const isPDF=file.type==='application/pdf';
+    if(!isImg&&!isPDF){document.getElementById('aiStatusRow').style.display='none';window._pendingCFFile={name:file.name,data:b64,type:file.type};return;}
+    if(file.size>maxB){document.getElementById('aiStatusTxt').textContent='Fișier prea mare pentru AI. Completează manual.';window._pendingCFFile={name:file.name,data:b64,type:file.type};return;}
+    const content=isImg?[{type:'image',source:{type:'base64',media_type:file.type,data:b64}},{type:'text',text:'Ești un asistent de contabilitate. Analizează această factură sau bon și extrage: furnizorul (compania), descrierea produselor/serviciilor (maxim 80 caractere), data facturii (format YYYY-MM-DD), suma totală cu TVA (cifră), suma TVA (cifră). Răspunde DOAR cu JSON valid: {"furnizor":"...","descriere":"...","data":"YYYY-MM-DD","total_cu_tva":0,"tva":0}. Dacă nu găsești un câmp, pune null.'}]:[{type:'document',source:{type:'base64',media_type:'application/pdf',data:b64}},{type:'text',text:'Ești un asistent de contabilitate. Analizează această factură sau bon și extrage: furnizorul (compania), descrierea produselor/serviciilor (maxim 80 caractere), data facturii (format YYYY-MM-DD), suma totală cu TVA (cifră), suma TVA (cifră). Răspunde DOAR cu JSON valid: {"furnizor":"...","descriere":"...","data":"YYYY-MM-DD","total_cu_tva":0,"tva":0}. Dacă nu găsești un câmp, pune null.'}];
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:400,messages:[{role:'user',content}]})});
+    const data=await resp.json();
+    const txt=(data.content||[]).find(x=>x.type==='text')?.text||'';
+    const clean=txt.replace(/```json|```/g,'').trim();
+    const parsed=JSON.parse(clean);
+    // Fill form
+    if(parsed.descriere){const d=document.getElementById('cf_desc');if(d&&!d.value)d.value=(parsed.furnizor?parsed.furnizor+' — ':'')+parsed.descriere;}
+    if(parsed.data){const dt=document.getElementById('cf_date');if(dt)dt.value=parsed.data;}
+    if(parsed.total_cu_tva){const r=document.getElementById('cf_ron');if(r)r.value=parsed.total_cu_tva;autoTVA();}
+    document.getElementById('aiStatusTxt').innerHTML='<span style="color:var(--green)">✓ Date extrase automat</span>';
+    window._pendingCFFile={name:file.name,data:b64,type:file.type};
+  } catch(err){
+    document.getElementById('aiStatusTxt').textContent='Nu s-au putut extrage datele automat. Completează manual.';
+    window._pendingCFFile={name:file.name,data:null,type:file.type};
+  }
+}
+
+function fileToB64(file){
+  return new Promise((res,rej)=>{
+    const r=new FileReader();
+    r.onload=()=>res(r.result.split(',')[1]);
+    r.onerror=rej;
+    r.readAsDataURL(file);
+  });
+}
+
+function openFile(cfId){
+  const p=proj();
+  const cf=p.cashflow.find(x=>x.id===cfId);
+  if(!cf?.file?.data) return;
+  const url=`data:${cf.file.type};base64,${cf.file.data}`;
+  window.open(url,'_blank');
+}
+
+function delCF(id){
+  if(!confirm('Ștergi înregistrarea?')) return;
+  const p=proj(); p.cashflow=p.cashflow.filter(x=>x.id!==id);
+  save(); renderCF();
+}
+
+// ── PROJECTS ─────────────────────────────────────────────────
+function renderProjects(){
+  document.getElementById('projList').innerHTML=projects.map(p=>{
+    const totRon=(p.categories||[]).reduce((a,c)=>c.items.reduce((b,i)=>b+(i.ron||0),a),0);
+    const e=p.curs_euro||5.09;
+    return`<div class="proj-card ${p.id===pid?'sel':''}" onclick="selectProj('${p.id}')">
+      <div style="display:flex;justify-content:space-between;align-items:start">
+        <div>
+          <h3 style="font-size:14px;margin-bottom:3px">${esc(p.name)}</h3>
+          <p class="muted">${esc(p.beneficiar||'')}</p>
+          <p class="muted" style="margin-top:2px">${esc(p.address||'')} ${p.address?`<a href="https://www.google.com/maps/search/${encodeURIComponent(p.address)}" target="_blank" style="color:var(--blue);font-size:11px;text-decoration:none">📍</a>`:''}</p>
+        </div>
+        <div style="text-align:right;flex-shrink:0;padding-left:12px">
+          <div class="muted">${p.created||''}</div>
+          <div style="font-size:13px;font-weight:700;color:var(--blue);margin:4px 0">${fm(totRon)} RON</div>
+          <div style="display:flex;gap:4px;justify-content:flex-end;margin-top:4px">
+            <button class="btn btn-sm" onclick="event.stopPropagation();openEditProjModal('${p.id}')">✎ Editează</button>
+            <button class="btn btn-sm" style="color:var(--red)" onclick="event.stopPropagation();delProj('${p.id}')">✕</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openMaps(){
+  const adr=document.getElementById('np_adr')?.value||'';
+  if(!adr){alert('Introdu mai întâi adresa.');return;}
+  window.open('https://www.google.com/maps/search/'+encodeURIComponent(adr),'_blank');
+}
+function updateMapsPreview(){}
+
+function selectProj(id){ pid=id; refreshProjSel(); nav('cost'); }
+
+function projFormFields(p){
+  return`
+    <div class="fg"><label>Denumire proiect *</label><input id="np_name" value="${esc(p?.name||'')}" placeholder="ex: Construire casă P+1"></div>
+    <div class="fg"><label>Beneficiar</label><input id="np_ben" value="${esc(p?.beneficiar||'')}"></div>
+    <div class="fg"><label>Adresă</label>
+      <div style="display:flex;gap:6px">
+        <input id="np_adr" value="${esc(p?.address||'')}" placeholder="ex: Str. Merilor 8, Vișinești, Dâmbovița" style="flex:1" oninput="updateMapsPreview()">
+        <button type="button" class="btn btn-sm" id="mapsBtn" onclick="openMaps()" title="Deschide în Google Maps" style="flex-shrink:0;white-space:nowrap">📍 Maps</button>
+      </div>
+    </div>
+    <div class="frow frow-2">
+      <div class="fg"><label>Data start</label><input type="date" id="np_date" value="${p?.created||new Date().toISOString().slice(0,10)}"></div>
+      <div class="fg"><label>Curs EUR (RON)</label><input type="number" id="np_curs" value="${p?.curs_euro||5.09}" step="0.01"></div>
+    </div>
+    <hr style="margin:10px 0;border-color:var(--border)">
+    <p style="font-size:12px;color:var(--gray);margin-bottom:8px;font-weight:600">SUPRAFEȚE (mp)</p>
+    <div class="frow frow-2">
+      <div class="fg"><label>Suprafață utilă în anvelopa (mp)</label><input type="number" id="np_su_anv" value="${p?.sup_utila_anvelopa||''}" step="0.01" placeholder="0.00"></div>
+      <div class="fg"><label>Suprafață construită desfășurată în anvelopa (mp)</label><input type="number" id="np_scd_anv" value="${p?.sup_construita_desf_anvelopa||''}" step="0.01" placeholder="0.00"></div>
+    </div>
+    <div class="frow frow-2">
+      <div class="fg"><label>Suprafață construită la sol (mp)</label><input type="number" id="np_scs" value="${p?.sup_construita_sol||''}" step="0.01" placeholder="0.00"></div>
+      <div class="fg"><label>Suprafață utilă totală (mp)</label><input type="number" id="np_sut" value="${p?.sup_utila_totala||''}" step="0.01" placeholder="0.00"></div>
+    </div>
+    <div class="fg"><label>Suprafață construită desfășurată totală (mp)</label><input type="number" id="np_scdt" value="${p?.sup_construita_desf_totala||''}" step="0.01" placeholder="0.00"></div>
+  `;
+}
+function readProjForm(existing){
+  const o=existing||{};
+  o.name=document.getElementById('np_name').value||'Proiect nou';
+  o.beneficiar=document.getElementById('np_ben').value;
+  o.address=document.getElementById('np_adr').value;
+  o.created=document.getElementById('np_date').value;
+  o.curs_euro=parseFloat(document.getElementById('np_curs').value)||5.09;
+  o.sup_utila_anvelopa=parseFloat(document.getElementById('np_su_anv').value)||0;
+  o.sup_construita_desf_anvelopa=parseFloat(document.getElementById('np_scd_anv').value)||0;
+  o.sup_construita_sol=parseFloat(document.getElementById('np_scs').value)||0;
+  o.sup_utila_totala=parseFloat(document.getElementById('np_sut').value)||0;
+  o.sup_construita_desf_totala=parseFloat(document.getElementById('np_scdt').value)||0;
+  return o;
+}
+
+function openNewProjModal(){
+  openModal('Proiect nou',projFormFields(null),()=>{
+    const np={id:uid(),categories:[{id:uid(),code:'A.0.',name:'ORGANIZARE ȘANTIER',marja:0,items:[]},{id:uid(),code:'A.1.',name:'INFRASTRUCTURĂ',marja:0.05,items:[]},{id:uid(),code:'A.2.',name:'SUPRASTRUCTURĂ',marja:0.08,items:[]}],cashflow:[],schedule:null};
+    readProjForm(np);
+    projects.push(np); pid=np.id; save(); closeModal(); refreshProjSel(); renderProjects();
+  },'lg');
+}
+
+function openEditProjModal(id){
+  const p=projects.find(x=>x.id===id);
+  if(!p) return;
+  openModal('Editează proiect',projFormFields(p),()=>{
+    readProjForm(p);
+    if(pid===id) document.getElementById('cursInput').value=p.curs_euro;
+    save(); closeModal(); refreshProjSel(); renderProjects();
+  },'lg');
+}
+
+function delProj(id){
+  if(projects.length<=1){alert('Nu poți șterge singurul proiect!');return;}
+  if(!confirm('Ștergi proiectul complet? Acțiunea este ireversibilă!')) return;
+  projects=projects.filter(p=>p.id!==id);
+  if(pid===id) pid=projects[0].id;
+  save(); refreshProjSel(); renderProjects();
+}
+
+// ── GRAFIC EXECUTIE (GANTT) ───────────────────────────────────
+function renderGantt(){
+  const p=proj(); if(!p) return;
+  const tasks=p.tasks||[];
+  const view=document.getElementById('ganttView')?.value||'both';
+
+  // Stats
+  const total=tasks.length, done=tasks.filter(t=>t.status==='done').length;
+  const today=new Date(); today.setHours(0,0,0,0);
+  const late=tasks.filter(t=>t.status!=='done'&&t.end&&new Date(t.end)<today).length;
+  const inProg=tasks.filter(t=>t.status==='progress').length;
+  document.getElementById('ganttStats').innerHTML=`
+    <div class="stat"><div class="stat-lbl">Total etape</div><div class="stat-val">${total}</div><div class="stat-sub">${tasks.filter(t=>t.linkedCat).length} legate de capitole</div></div>
+    <div class="stat green"><div class="stat-lbl">Finalizate</div><div class="stat-val">${done}</div><div class="stat-sub">${total?Math.round(done/total*100):0}% din total</div></div>
+    <div class="stat blue"><div class="stat-lbl">În execuție</div><div class="stat-val">${inProg}</div></div>
+    <div class="stat ${late?'red':''}"><div class="stat-lbl">Întârziate</div><div class="stat-val">${late}</div></div>
+  `;
+
+  if(!tasks.length){
+    document.getElementById('ganttContent').innerHTML=`<div style="text-align:center;padding:40px;color:var(--gray)"><p style="font-size:15px;margin-bottom:12px">Nicio etapă definită</p><button class="btn btn-primary" onclick="openAddTaskModal()">+ Adaugă prima etapă</button></div>`;
+    return;
+  }
+
+  // List view
+  let html='';
+  if(view==='both'||view==='list'){
+    html+=`<div class="card" style="margin-bottom:14px"><div class="card-hd"><h3>Lista etapelor</h3></div><div class="card-bd">
+    <table>
+      <thead><tr><th>Nr</th><th>Etapă</th><th>Capitol legat</th><th>Start</th><th>Final</th><th class="num">Durată (zile)</th><th>Status</th><th>Responsabil</th><th class="no-print" style="width:70px"></th></tr></thead>
+      <tbody>${tasks.map((t,i)=>{
+        const sd=t.start?new Date(t.start):null, ed=t.end?new Date(t.end):null;
+        const dur=sd&&ed?Math.round((ed-sd)/(1000*60*60*24))+1:'-';
+        const isLate=t.status!=='done'&&ed&&ed<today;
+        const linkedCat=p.categories.find(c=>c.id===t.linkedCat);
+        const statusMap={plan:'Planificat',progress:'În execuție',done:'Finalizat',pause:'Suspendat'};
+        const dotCls={plan:'sd-plan',progress:'sd-plan',done:'sd-done',pause:'sd-pause'};
+        return`<tr class="${isLate?'task-late':''}">
+          <td class="muted">${i+1}</td>
+          <td><strong>${esc(t.name)}</strong>${t.obs?`<div class="muted">${esc(t.obs)}</div>`:''}</td>
+          <td class="muted">${linkedCat?`<span class="badge bb" style="font-size:11px">${linkedCat.code}</span> ${linkedCat.name.substring(0,20)}`:'-'}</td>
+          <td>${t.start||'-'}</td><td>${t.end||'-'}</td>
+          <td class="num">${dur}</td>
+          <td><span class="status-dot ${dotCls[t.status]||'sd-plan'}"></span>${statusMap[t.status]||t.status}${isLate?' ⚠️':''}</td>
+          <td class="muted">${esc(t.responsabil||'')}</td>
+          <td class="no-print" style="white-space:nowrap">
+            <button class="btn btn-sm btn-icon" onclick="openEditTaskModal('${t.id}')">✎</button>
+            <button class="btn btn-sm btn-icon" style="color:var(--red)" onclick="delTask('${t.id}')">✕</button>
+          </td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table></div></div>`;
+  }
+
+  // Gantt chart
+  if(view==='both'||view==='gantt'){
+    // find date range
+    const dates=tasks.flatMap(t=>[t.start,t.end].filter(Boolean)).map(d=>new Date(d));
+    if(!dates.length){ html+=`<div class="card"><div class="card-bd" style="padding:20px;color:var(--gray)">Adaugă date start/final la etape pentru a vedea diagrama Gantt.</div></div>`; }
+    else {
+      let minD=new Date(Math.min(...dates)); minD.setDate(minD.getDate()-2);
+      let maxD=new Date(Math.max(...dates)); maxD.setDate(maxD.getDate()+2);
+      const totalDays=Math.round((maxD-minD)/(1000*60*60*24))+1;
+      const todayOff=Math.round((today-minD)/(1000*60*60*24));
+
+      // Build month headers
+      const months=[];
+      let cur=new Date(minD);
+      while(cur<=maxD){
+        const m=cur.getMonth(), y=cur.getFullYear();
+        const start=Math.round((cur-minD)/(1000*60*60*24));
+        let end=new Date(y, m+1, 0); if(end>maxD) end=new Date(maxD);
+        const span=Math.round((end-cur)/(1000*60*60*24))+1;
+        months.push({label:cur.toLocaleDateString('ro-RO',{month:'short',year:'numeric'}), span, pct:(span/totalDays*100).toFixed(2)});
+        cur=new Date(y, m+1, 1);
+      }
+
+      const LABEL_W=200;
+      html+=`<div class="card"><div class="card-hd"><h3>Diagrama Gantt</h3><span class="muted" style="font-size:12px">${minD.toLocaleDateString('ro-RO')} — ${maxD.toLocaleDateString('ro-RO')} (${totalDays} zile)</span></div>
+      <div style="overflow-x:auto;padding:0">
+      <div style="min-width:${LABEL_W+600}px">
+        <div style="display:flex;border-bottom:2px solid var(--border)">
+          <div style="width:${LABEL_W}px;flex-shrink:0;padding:7px 10px;background:#1e293b;color:#94a3b8;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em">Etapă</div>
+          <div style="flex:1;display:flex;background:#1e293b">
+            ${months.map(m=>`<div style="width:${m.pct}%;padding:7px 6px;color:#94a3b8;font-size:11px;font-weight:600;border-left:1px solid #334155;white-space:nowrap;overflow:hidden">${m.label}</div>`).join('')}
+          </div>
+        </div>
+        ${tasks.map(t=>{
+          const sd=t.start?new Date(t.start):null, ed=t.end?new Date(t.end):null;
+          if(!sd||!ed) return`<div style="display:flex;border-bottom:1px solid #f1f5f9"><div style="width:${LABEL_W}px;flex-shrink:0;padding:6px 10px;font-size:12px">${esc(t.name)}</div><div style="flex:1;padding:6px 10px;color:var(--gray);font-size:12px;font-style:italic">Fără date</div></div>`;
+          const off=Math.max(0,Math.round((sd-minD)/(1000*60*60*24)));
+          const dur=Math.max(1,Math.round((ed-sd)/(1000*60*60*24))+1);
+          const left=(off/totalDays*100).toFixed(2);
+          const width=(dur/totalDays*100).toFixed(2);
+          const isLate=t.status!=='done'&&ed<today;
+          const colors={plan:'#2563eb',progress:'#0ea5e9',done:'#16a34a',pause:'#d97706'};
+          const col=isLate?'#dc2626':(colors[t.status]||'#2563eb');
+          const todayPct=todayOff>=0&&todayOff<=totalDays?(todayOff/totalDays*100).toFixed(2):null;
+          return`<div style="display:flex;border-bottom:1px solid #f1f5f9;align-items:center">
+            <div style="width:${LABEL_W}px;flex-shrink:0;padding:5px 10px;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(t.name)}">${esc(t.name)}</div>
+            <div style="flex:1;padding:4px 0;position:relative">
+              ${todayPct?`<div style="position:absolute;left:${todayPct}%;top:0;bottom:0;width:2px;background:#ef444460;z-index:1"></div>`:''}
+              <div style="height:22px;position:relative">
+                <div style="position:absolute;left:${left}%;width:${width}%;height:22px;background:${col};border-radius:4px;display:flex;align-items:center;padding:0 6px;box-sizing:border-box;min-width:4px">
+                  <span style="font-size:10px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden">${dur>3?esc(t.name.substring(0,18)):''}</span>
+                </div>
+              </div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div></div></div>`;
+    }
+  }
+
+  document.getElementById('ganttContent').innerHTML=html;
+}
+
+function openAddTaskModal(editId){
+  const p=proj();
+  const task=editId?p.tasks?.find(t=>t.id===editId):null;
+  const catOpts=`<option value="">— Fără legătură —</option>`+p.categories.map(c=>`<option value="${c.id}" ${task?.linkedCat===c.id?'selected':''}>${c.code} ${c.name}</option>`).join('');
+  const statOpts=['plan','progress','done','pause'].map(s=>{const l={plan:'Planificat',progress:'În execuție',done:'Finalizat',pause:'Suspendat'};return`<option value="${s}" ${(task?.status||'plan')===s?'selected':''}>${l[s]}</option>`;}).join('');
+  openModal(task?'Editează etapă':'Etapă nouă',`
+    <div class="fg"><label>Denumire etapă *</label><input id="tk_name" value="${esc(task?.name||'')}" placeholder="ex: Turnare fundații"></div>
+    <div class="frow frow-2">
+      <div class="fg"><label>Data start</label><input type="date" id="tk_start" value="${task?.start||''}"></div>
+      <div class="fg"><label>Data final</label><input type="date" id="tk_end" value="${task?.end||''}"></div>
+    </div>
+    <div class="frow frow-2">
+      <div class="fg"><label>Capitol legat (opțional)</label><select id="tk_cat">${catOpts}</select></div>
+      <div class="fg"><label>Status</label><select id="tk_stat">${statOpts}</select></div>
+    </div>
+    <div class="frow frow-2">
+      <div class="fg"><label>Responsabil</label><input id="tk_resp" value="${esc(task?.responsabil||'')}" placeholder="Nume"></div>
+      <div class="fg"><label>% realizat</label><input type="number" id="tk_pct" value="${task?.pctDone||0}" min="0" max="100" step="5"></div>
+    </div>
+    <div class="fg"><label>Observații</label><input id="tk_obs" value="${esc(task?.obs||'')}"></div>
+  `,()=>{
+    if(!p.tasks) p.tasks=[];
+    const entry={
+      id:task?.id||uid(),
+      name:document.getElementById('tk_name').value,
+      start:document.getElementById('tk_start').value,
+      end:document.getElementById('tk_end').value,
+      linkedCat:document.getElementById('tk_cat').value||null,
+      status:document.getElementById('tk_stat').value,
+      responsabil:document.getElementById('tk_resp').value,
+      pctDone:parseInt(document.getElementById('tk_pct').value)||0,
+      obs:document.getElementById('tk_obs').value
+    };
+    if(task){const idx=p.tasks.indexOf(task);p.tasks[idx]=entry;}
+    else p.tasks.push(entry);
+    p.tasks.sort((a,b)=>(a.start||'').localeCompare(b.start||''));
+    save(); closeModal(); renderGantt();
+  });
+}
+function openEditTaskModal(id){ openAddTaskModal(id); }
+function delTask(id){
+  if(!confirm('Ștergi etapa?')) return;
+  const p=proj(); p.tasks=(p.tasks||[]).filter(t=>t.id!==id);
+  save(); renderGantt();
+}
+
+// ── EXPORT / IMPORT ──────────────────────────────────────────
+function exportData(){
+  const blob=new Blob([JSON.stringify(projects,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`bugetare_constructii_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+}
+function importData(input){
+  const f=input.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=e=>{
+    try{
+      const data=JSON.parse(e.target.result);
+      if(!Array.isArray(data)) throw new Error('Format invalid');
+      if(!confirm(`Importezi ${data.length} proiect(e)? Datele existente vor fi înlocuite.`)) return;
+      projects=data; pid=projects[0]?.id;
+      save(); refreshProjSel(); nav('cost');
+    } catch(err){ alert('Fișier invalid: '+err.message); }
+  };
+  r.readAsText(f);
+  input.value='';
+}
+
+// ── MODAL ────────────────────────────────────────────────────
+function openModal(title,body,onSave,size){
+  document.getElementById('modalTit').textContent=title;
+  document.getElementById('modalBd').innerHTML=body;
+  const saveBtn=document.getElementById('modalSave');
+  saveBtn.onclick=onSave;
+  saveBtn.style.display=onSave?'':'none';
+  document.getElementById('modal').className='modal'+(size?' '+size:'');
+  document.getElementById('modalBg').classList.remove('hidden');
+}
+function closeModal(){
+  document.getElementById('modalBg').classList.add('hidden');
+  window._pendingCFFile=null;
+}
+// Click în afara modalului NU închide (protecție pierdere date)
+
+// ── UTILS ────────────────────────────────────────────────────
+function fm(n){if(n==null||isNaN(n))return'-';return Math.round(n).toLocaleString('ro-RO');}
+function fm2(n){return((+n)||0).toFixed(2);}
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+
+function openMaps(){
+  const adr=document.getElementById('np_adr')?.value||'';
+  if(!adr){alert('Introdu mai întâi adresa.');return;}
+  window.open('https://www.google.com/maps/search/'+encodeURIComponent(adr),'_blank');
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// GRAFIC DE EXECUȚIE — Gantt module
+// ═══════════════════════════════════════════════════════════════════
+
+var gTasks=[], gSections=[], gTeams=[], gComputed=[], gHolidays=[];
+var gRainDays={'01':7,'02':4,'03':8,'04':11,'05':10,'06':9,'07':6,'08':5,'09':5,'10':6,'11':10,'12':7};
+var gProjectStart=new Date(), gSatWork=false;
+var gPX=18, gOrigin=null, gEnd=null;
+var _gInit=false;
+
+function gGetData(){return proj()?.schedule||null;}
+function gSetData(d){const p=proj();if(p){if(!p.schedule)p.schedule={};Object.assign(p.schedule,d);save();}}
+
+function gLoad(){
+  const p=proj(); if(!p) return;
+  const d=p.schedule||{};
+  gProjectStart=d.projectStart?new Date(d.projectStart):new Date();
+  gSatWork=d.satWork||false;
+  gSections=d.sections&&d.sections.length?d.sections:[
+    {id:'g0',label:'Organizare șantier',color:'#c47831'},
+    {id:'g1',label:'Infrastructură',color:'#27873c'},
+    {id:'g2',label:'Suprastructură',color:'#2a5cbf'},
+    {id:'g3',label:'Instalații',color:'#c07020'},
+    {id:'g4',label:'Arhitectură / Finisaje',color:'#7b52cc'},
+  ];
+  gTeams=d.teams&&d.teams.length?d.teams:[
+    {id:'t1',name:'Echipa structură',color:'#3266ad',members:[{name:'Sef santier',rate:155},{name:'Muncitor 1',rate:95},{name:'Muncitor 2',rate:92}]},
+    {id:'t2',name:'Instalații',color:'#c07020',members:[{name:'Electrician',rate:35},{name:'Instalator',rate:32}]},
+  ];
+  gTasks=d.tasks?d.tasks.map(t=>({...t})):[];
+  gHolidays=d.holidays||[];
+  gRainDays=d.rainDays||gRainDays;
+}
+
+function gSave(){
+  gSetData({projectStart:gFmtISO(gProjectStart),satWork:gSatWork,sections:gSections,teams:gTeams,tasks:gTasks,holidays:gHolidays,rainDays:gRainDays});
+  gShowToast('✓ Grafic salvat!');
+}
+
+// ── DATE HELPERS ────────────────────────────────────────────────
+function gFmt(d){return d.getDate().toString().padStart(2,'0')+'.'+(d.getMonth()+1).toString().padStart(2,'0')+'.'+(d.getFullYear()%100).toString().padStart(2,'0');}
+function gFmtFull(d){return d.getDate().toString().padStart(2,'0')+'.'+(d.getMonth()+1).toString().padStart(2,'0')+'.'+d.getFullYear();}
+function gFmtISO(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function gAdd(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r;}
+function gDiff(a,b){return Math.round((b-a)/86400000);}
+function gISOWeek(d){const dd=new Date(d);dd.setHours(0,0,0,0);dd.setDate(dd.getDate()+3-(dd.getDay()+6)%7);const w1=new Date(dd.getFullYear(),0,4);return 1+Math.round(((dd-w1)/86400000-3+(w1.getDay()+6)%7)/7);}
+
+function gIsWorkDay(d){
+  const w=d.getDay();
+  if(w===0) return false;
+  if(w===6&&!gSatWork) return false;
+  if(gIsHoliday(d)) return false;
+  return true;
+}
+function gIsHoliday(d){
+  const k=gFmtISO(d);
+  return gHolidays.some(h=>h.date===k&&h.blocked!==false);
+}
+function gNextWork(d){const r=new Date(d);while(!gIsWorkDay(r))r.setDate(r.getDate()+1);return r;}
+function gAddWork(d,days){
+  if(days<=0)return new Date(d);
+  let r=new Date(d),added=0;
+  while(added<days){r.setDate(r.getDate()+1);if(gIsWorkDay(r))added++;}
+  return r;
+}
+function gWorkDays(a,b){
+  let c=0,d=new Date(a);d.setDate(d.getDate()+1);
+  while(d<=b){if(gIsWorkDay(d))c++;d.setDate(d.getDate()+1);}
+  return c;
+}
+function gRainBuf(start,end){
+  let total=0,d=new Date(start);
+  while(d<=end){
+    const mo=String(d.getMonth()+1).padStart(2,'0');
+    const r=gRainDays[mo]||0;
+    const dim=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();
+    if(gIsWorkDay(d))total+=r/dim;
+    d.setDate(d.getDate()+1);
+  }
+  return Math.round(total);
+}
+
+// ── RECALC ────────────────────────────────────────────────────
+function gRecalc(){
+  gBuildHolidays();
+  const map={};gTasks.forEach(t=>map[t.id]=t);
+  gComputed=[];
+  const endMap={};
+  function calc(t){
+    if(endMap[t.id]!==undefined)return;
+    let depEnd=new Date(gProjectStart);depEnd.setDate(depEnd.getDate()-1);
+    for(const dep of(t.deps||[])){
+      if(endMap[dep]===undefined&&map[dep])calc(map[dep]);
+      if(endMap[dep]&&endMap[dep]>depEnd)depEnd=new Date(endMap[dep]);
+    }
+    let start=gAdd(depEnd,1);start=gNextWork(start);
+    if(t.pauseUntil){const pu=new Date(t.pauseUntil);if(pu>=start)start=gNextWork(new Date(pu));}
+    if(t.isPause){
+      const pe=new Date(t.resumeDate||gFmtISO(gAdd(start,1)));
+      endMap[t.id]=pe;
+      gComputed.push({id:t.id,name:t.name,sec:t.sec,start,end:pe,hours:0,workDays:0,rainDays:0,deps:t.deps||[],status:'pause',isPause:true,workers:[],cost:0,progress:0});
+      return;
+    }
+    const bd=Math.ceil((t.hours||8)/8);
+    const tempEnd=gAddWork(start,bd-1);
+    const rb=gRainBuf(start,tempEnd);
+    const end=gAddWork(start,bd+rb-1);
+    endMap[t.id]=end;
+    gComputed.push({id:t.id,name:t.name,sec:t.sec,start,end,hours:t.hours||8,workDays:bd,rainDays:rb,deps:t.deps||[],status:t.status||'notStarted',isPause:false,workers:t.workers||[],teamIds:t.teamIds||[],cost:gTaskCost(t),progress:t.progress||0,note:t.note||''});
+  }
+  gTasks.forEach(t=>calc(t));
+  gComputed.sort((a,b)=>{const ia=gTasks.findIndex(t=>t.id===a.id),ib=gTasks.findIndex(t=>t.id===b.id);return ia-ib;});
+  gUpdateStats();gRenderLeft();gRenderGantt();gRenderBTabs();
+}
+
+function gTaskCost(t){
+  let c=0;
+  (t.workers||[]).forEach(w=>c+=(w.rate||0)*(t.hours||8));
+  (t.teamIds||[]).forEach(tid=>{const tm=gTeams.find(x=>x.id===tid);if(tm)tm.members.forEach(m=>c+=(m.rate||0)*(t.hours||8));});
+  return c;
+}
+
+function gSecColor(id){return gSections.find(s=>s.id===id)?.color||'#888';}
+function gSecLabel(id){return gSections.find(s=>s.id===id)?.label||id;}
+
+function gBuildHolidays(){
+  if(!gComputed.length)return;
+  const first=gComputed.reduce((m,c)=>c.start<m?c.start:m,new Date('2099-01-01'));
+  const last=gComputed.reduce((m,c)=>c.end>m?c.end:m,new Date(0));
+  const years=new Set();
+  for(let y=first.getFullYear();y<=last.getFullYear();y++)years.add(y);
+  const existing=new Set(gHolidays.map(h=>h.date));
+  years.forEach(y=>{
+    gGetOrthodoxHolidays(y).forEach(h=>{if(!existing.has(h.date)){gHolidays.push({...h,blocked:true});existing.add(h.date);}});
+  });
+  gHolidays.sort((a,b)=>a.date.localeCompare(b.date));
+}
+
+function gGetOrthodoxHolidays(year){
+  const a=year%4,b=year%7,c=year%19;
+  const d=(19*c+15)%30,e=(2*a+4*b-d+34)%7;
+  const f=Math.floor((d+e+114)/31),g=(d+e+114)%31+1;
+  const jul=new Date(year,f-1,g);
+  const eas=new Date(jul.getTime()+13*86400000);
+  const ad=n=>{const r=new Date(eas);r.setDate(r.getDate()+n);return r;};
+  const fi=d=>{return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
+  return[
+    {date:year+'-01-01',name:'Anul Nou'},{date:year+'-01-02',name:'Anul Nou 2'},{date:year+'-01-24',name:'Unirea Principatelor'},
+    {date:year+'-05-01',name:'Ziua Muncii'},{date:fi(ad(-2)),name:'Vinerea Mare'},{date:fi(eas),name:'Paștele Ortodox'},
+    {date:fi(ad(1)),name:'A 2-a zi Paști'},{date:fi(ad(39)),name:'Înălțarea'},{date:fi(ad(49)),name:'Rusalii'},
+    {date:fi(ad(50)),name:'A 2-a zi Rusalii'},{date:year+'-06-01',name:'Ziua Copilului'},{date:year+'-08-15',name:'Sf. Maria'},
+    {date:year+'-11-30',name:'Sf. Andrei'},{date:year+'-12-01',name:'Ziua Națională'},{date:year+'-12-25',name:'Crăciunul 1'},{date:year+'-12-26',name:'Crăciunul 2'},
+  ];
+}
+
+// ── STATS ─────────────────────────────────────────────────────
+function gUpdateStats(){
+  const el=document.getElementById('gStats');if(!el)return;
+  const p=proj();
+  if(!gComputed.length){el.innerHTML='<div class="g-stat"><div class="g-stat-lbl">Etape</div><div class="g-stat-val">0</div></div>';return;}
+  const last=gComputed.reduce((m,c)=>c.end>m?c.end:m,new Date(0));
+  const first=gComputed.reduce((m,c)=>c.start<m?c.start:m,new Date('2099-01-01'));
+  const grand=gComputed.reduce((s,c)=>s+c.cost,0);
+  const totalRain=gComputed.filter(c=>!c.isPause).reduce((s,c)=>s+c.rainDays,0);
+  const blocked=gHolidays.filter(h=>h.blocked!==false).length;
+  el.innerHTML=`
+    <div class="g-stat"><div class="g-stat-lbl">Etape</div><div class="g-stat-val">${gTasks.filter(t=>!t.isPause).length}</div></div>
+    <div class="g-stat"><div class="g-stat-lbl">Capitole</div><div class="g-stat-val">${gSections.length}</div></div>
+    <div class="g-stat"><div class="g-stat-lbl">Total zile lucrătoare</div><div class="g-stat-val">${gWorkDays(first,last)}</div></div>
+    <div class="g-stat"><div class="g-stat-lbl">Total zile calendaristice</div><div class="g-stat-val">${gDiff(first,last)+1}</div></div>
+    <div class="g-stat"><div class="g-stat-lbl">Zile ploaie est.</div><div class="g-stat-val">${totalRain}</div></div>
+    <div class="g-stat"><div class="g-stat-lbl">Sărbători blocate</div><div class="g-stat-val">${blocked}</div></div>
+    <div class="g-stat"><div class="g-stat-lbl">Finalizare est.</div><div class="g-stat-val" style="font-size:12px">${gFmtFull(last)}</div></div>
+    ${grand>0?`<div class="g-stat"><div class="g-stat-lbl">Cost manoperă</div><div class="g-stat-val" style="font-size:12px">${Math.round(grand).toLocaleString('ro-RO')} RON</div></div>`:''}
+  `;
+  const sub=document.getElementById('gSub');
+  if(sub&&p)sub.textContent=`${p.name} · Start: ${gFmtFull(gProjectStart)} · Fin: ${gFmtFull(last)} · ${p.address||''}`;
+  const title=document.getElementById('gTitle');
+  if(title&&p)title.textContent=p.name+' - Grafic execuție';
+}
+
+// ── RENDER LEFT PANEL ─────────────────────────────────────────
+function gRenderLeft(){
+  const body=document.getElementById('gTaskList');if(!body)return;
+  let html='';
+  const secsDone=new Set();
+  gComputed.forEach(c=>{
+    if(!c.isPause&&!secsDone.has(c.sec)){
+      secsDone.add(c.sec);
+      const col=gSecColor(c.sec);
+      const secTasks=gTasks.filter(t=>t.sec===c.sec&&!t.isPause);
+      const secHours=secTasks.reduce((s,t)=>s+(t.hours||8),0);
+      const secComp=gComputed.filter(x=>x.sec===c.sec&&!x.isPause);
+      const secFirst=secComp.reduce((m,x)=>x.start<m?x.start:m,new Date('2099-01-01'));
+      const secLast=secComp.reduce((m,x)=>x.end>m?x.end:m,new Date(0));
+      const calDays=secComp.length?gDiff(secFirst,secLast)+1:0;
+      const wdDays=secComp.length?gWorkDays(secFirst,secLast)+1:0;
+      html+=`<div class="g-row sec-hdr" style="padding-left:6px;border-left:3px solid ${col};min-height:28px">
+        <span style="width:18px;flex-shrink:0"></span><span style="width:20px;flex-shrink:0"></span>
+        <span class="g-row-name" style="font-weight:700;color:${col}">${gSecLabel(c.sec)}<span style="font-size:9px;color:#888;font-weight:400;margin-left:4px">${secHours}h · ${wdDays}zl · ${calDays}zc${secComp.length?' · '+gFmt(secFirst)+' → '+gFmt(secLast):''}</span></span>
+        <span style="display:flex;gap:3px;flex-shrink:0;padding-right:4px">
+          <button class="g-btn" style="padding:1px 6px;font-size:10px;background:#27873c;color:#fff;border-color:#27873c" onclick="gOpenAddTaskInSec('${c.sec}')">+</button>
+          <button class="g-btn" style="padding:1px 5px;font-size:10px" onclick="gEditSection('${c.sec}')">✎</button>
+        </span>
+      </div>`;
+    }
+    if(c.isPause){
+      html+=`<div class="g-row" draggable="true" data-id="${c.id}" ondragstart="gDragStart(event,${c.id})" ondragover="gDragOver(event)" ondragleave="gDragLeave(event)" ondrop="gDrop(event,${c.id})" style="background:#f0f8f0">
+        <span class="g-drag">⠿</span><span style="width:20px;flex-shrink:0;font-size:9px;color:#aaa"></span>
+        <span class="g-row-name" style="color:#27873c;font-style:italic">⏸ ${c.name}</span>
+        <span class="g-row-meta">${gFmt(c.start)}→${gFmt(c.end)}</span>
+        <span style="width:22px;flex-shrink:0"><button class="g-btn" style="padding:1px 4px;font-size:10px" onclick="gEditTask(${c.id})">✎</button></span>
+      </div>`;
+      return;
+    }
+    const isDone=c.status==='done',isIP=c.status==='inProgress';
+    const prog=isDone?100:isIP?(c.progress||0):0;
+    const si={done:'✓',inProgress:'⟳',notStarted:''}[c.status]||'';
+    const siC={done:'#27873c',inProgress:'#c07020',notStarted:'#aaa'}[c.status];
+    const num=gTasks.filter(t=>!t.isPause).findIndex(t=>t.id===c.id)+1;
+    html+=`<div class="g-row" draggable="true" data-id="${c.id}" ondragstart="gDragStart(event,${c.id})" ondragover="gDragOver(event)" ondragleave="gDragLeave(event)" ondrop="gDrop(event,${c.id})">
+      <span class="g-drag">⠿</span>
+      <span style="font-size:9px;color:#aaa;width:20px;text-align:right;padding-right:3px;flex-shrink:0;font-weight:700">${num}</span>
+      <span class="g-row-name" style="display:flex;flex-direction:column;gap:1px">
+        <span style="${isDone?'color:#666':''}; overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${c.name.replace(/"/g,'&quot;')}">
+          ${si?`<span style="font-size:9px;color:${siC};margin-right:2px">${si}</span>`:''}${c.name}
+        </span>
+        ${isIP&&prog>0?`<div class="g-prog-wrap"><div class="g-prog-fill" style="width:${prog}%"></div></div>`:''}
+      </span>
+      <span class="g-row-meta" style="display:flex;flex-direction:column;align-items:flex-end">
+        <span style="font-size:10px;font-weight:700">${c.hours}h / ${c.workDays}zl</span>
+        <span style="font-size:9px">${gFmt(c.start)}</span>
+        <span style="font-size:9px">${gFmt(c.end)}</span>
+      </span>
+      <span style="width:22px;flex-shrink:0"><button class="g-btn" style="padding:1px 4px;font-size:10px" onclick="gEditTask(${c.id})">✎</button></span>
+    </div>`;
+  });
+  body.innerHTML=html||'<div style="padding:20px;color:#888;text-align:center">Nicio etapă.<br>Apasă <b>+ Etapă</b> pentru a adăuga.</div>';
+}
+
+// ── RENDER GANTT ──────────────────────────────────────────────
+function gRenderGantt(){
+  if(!gComputed.length){document.getElementById('gGanttInner').innerHTML='';return;}
+  gOrigin=gComputed.reduce((m,c)=>c.start<m?c.start:m,new Date('2099-01-01'));
+  gEnd=gComputed.reduce((m,c)=>c.end>m?c.end:m,new Date(0));
+  gEnd=gAdd(gEnd,7);
+  gRenderGanttHeader();
+  gRenderGanttBars();
+  gSyncScroll();
+}
+
+function gDayX(d){return gDiff(gOrigin,d)*gPX;}
+function gTotalDays(){return gDiff(gOrigin,gEnd)+1;}
+
+function gRenderGanttHeader(){
+  const totalW=gTotalDays()*gPX;
+  const hdrEl=document.getElementById('gGanttHdr');
+  const mWrap=document.getElementById('gHdrMonths');
+  const wWrap=document.getElementById('gHdrWeeks');
+  const dWrap=document.getElementById('gHdrDays');
+  if(!mWrap)return;
+  [mWrap,wWrap,dWrap].forEach(el=>{el.style.width=totalW+'px';el.innerHTML='';});
+  // Months
+  let mc=new Date(gOrigin.getFullYear(),gOrigin.getMonth(),1);
+  while(mc<=gEnd){
+    const mEnd=new Date(mc.getFullYear(),mc.getMonth()+1,0);
+    const s=Math.max(mc,gOrigin),e=Math.min(mEnd,gEnd);
+    const w=(gDiff(s,e)+1)*gPX;
+    const cell=document.createElement('div');
+    cell.className='g-hdr-month';cell.style.width=w+'px';cell.style.flexShrink='0';
+    cell.textContent=mc.toLocaleString('ro-RO',{month:'short',year:'2-digit'});
+    mWrap.appendChild(cell);
+    mc=new Date(mc.getFullYear(),mc.getMonth()+1,1);
+  }
+  // Weeks
+  let wc=new Date(gOrigin);
+  const dow=wc.getDay();wc.setDate(wc.getDate()-(dow===0?6:dow-1));
+  while(wc<=gEnd){
+    const ws=new Date(Math.max(wc,gOrigin));
+    const we=new Date(wc);we.setDate(we.getDate()+6);
+    const we2=new Date(Math.min(we,gEnd));
+    const ww=(gDiff(ws,we2)+1)*gPX;
+    const cell=document.createElement('div');
+    cell.className='g-hdr-week';cell.style.width=ww+'px';cell.style.flexShrink='0';
+    cell.textContent='S'+gISOWeek(wc);
+    wWrap.appendChild(cell);
+    wc.setDate(wc.getDate()+7);
+  }
+  // Days
+  let dc=new Date(gOrigin);
+  while(dc<=gEnd){
+    const ddow=dc.getDay();
+    const isWknd=ddow===0||(ddow===6&&!gSatWork);
+    const isHol=gIsHoliday(dc);
+    const cell=document.createElement('div');
+    cell.className='g-hdr-day';cell.style.width=gPX+'px';cell.style.flexShrink='0';
+    cell.textContent=dc.getDate();
+    if(isHol){cell.style.background='#fffbe6';cell.style.color='#b8860b';cell.style.fontWeight='bold';}
+    else if(isWknd){cell.style.background='#f0f0ec';cell.style.color='#bbb';}
+    else cell.style.color='#999';
+    dWrap.appendChild(cell);
+    dc.setDate(dc.getDate()+1);
+  }
+}
+
+function gRenderGanttBars(){
+  const totalW=gTotalDays()*gPX;
+  const rowH=26;
+  const inner=document.getElementById('gGanttInner');if(!inner)return;
+  inner.style.width=totalW+'px';
+  inner.style.height=(gComputed.length*rowH+40)+'px';
+  inner.innerHTML='';
+  // Weekend / holiday bands
+  let d=new Date(gOrigin);
+  while(d<=gEnd){
+    const ddow=d.getDay();
+    const isWknd=ddow===0||(ddow===6&&!gSatWork);
+    const isHol=gIsHoliday(d);
+    if(isWknd||isHol){
+      const v=document.createElement('div');
+      v.style.cssText=`position:absolute;top:0;bottom:0;left:${gDayX(d)}px;width:${gPX}px;z-index:1;pointer-events:none;`;
+      v.style.background=isHol?'rgba(245,197,24,.12)':'rgba(0,0,0,.04)';
+      inner.appendChild(v);
+    }
+    d.setDate(d.getDate()+1);
+  }
+  // Today line
+  const today=new Date();today.setHours(0,0,0,0);
+  if(today>=gOrigin&&today<=gEnd){
+    const tl=document.createElement('div');
+    tl.className='g-today';tl.style.left=gDayX(today)+'px';
+    inner.appendChild(tl);
+  }
+  // Bars
+  gComputed.forEach((c,i)=>{
+    const row=document.createElement('div');
+    row.className='g-gantt-row'+(c.isPause?' sec-row':'');
+    if(c.sec&&!c.isPause){
+      const secComps=gComputed.filter(x=>x.sec===c.sec);
+      if(secComps[0]?.id===c.id) row.classList.add('sec-row');
+    }
+    row.style.top=(i*rowH)+'px';row.style.height=rowH+'px';
+    // Section header row
+    const ci=gComputed.findIndex(x=>x.id===c.id);
+    const prev=gComputed[ci-1];
+    if(!c.isPause&&(!prev||prev.sec!==c.sec)){
+      row.style.background=gSecColor(c.sec)+'11';
+    }
+    inner.appendChild(row);
+    if(c.isPause){
+      const bar=document.createElement('div');
+      const x=gDayX(c.start),w=Math.max(1,gDiff(c.start,c.end))*gPX;
+      bar.style.cssText=`position:absolute;left:${x}px;width:${w}px;top:6px;height:14px;border-radius:3px;background:repeating-linear-gradient(45deg,#27873c22,#27873c22 3px,transparent 3px,transparent 6px);border:1px dashed #27873c;z-index:3;cursor:pointer;`;
+      bar.title=c.name;bar.onclick=()=>gEditTask(c.id);
+      inner.appendChild(bar);
+      return;
+    }
+    const col=gSecColor(c.sec);
+    const x=gDayX(c.start),w=Math.max(gPX*.5,gWorkDays(c.start,c.end)*gPX);
+    // Main bar
+    const bar=document.createElement('div');
+    const isDone=c.status==='done',isIP=c.status==='inProgress';
+    const opacity=isDone?.6:1;
+    bar.style.cssText=`position:absolute;left:${x}px;width:${w}px;top:6px;height:14px;border-radius:3px;background:${col};opacity:${opacity};z-index:3;cursor:pointer;box-sizing:border-box;`;
+    bar.title=`${c.name}\n${gFmtFull(c.start)} → ${gFmtFull(c.end)}\n${c.hours}h · ${c.workDays} zile lucr.`;
+    if(isIP&&c.progress>0){
+      bar.style.background=`linear-gradient(to right, ${col} ${c.progress}%, ${col}88 ${c.progress}%)`;
+    }
+    bar.onmouseenter=e=>gShowTip(e,bar.title);
+    bar.onmouseleave=gHideTip;
+    bar.onclick=()=>gEditTask(c.id);
+    inner.appendChild(bar);
+    // Rain buffer
+    if(c.rainDays>0){
+      const rx=x+w,rw=c.rainDays*gPX;
+      const rain=document.createElement('div');
+      rain.className='g-bar-rain';rain.style.cssText=`position:absolute;left:${rx}px;width:${rw}px;top:6px;height:14px;z-index:2;`;
+      rain.title=`+${c.rainDays} zile ploaie estimate`;
+      inner.appendChild(rain);
+    }
+  });
+}
+
+// Sync left scroll with gantt scroll
+function gSyncScroll(){
+  const left=document.getElementById('gLeft');
+  const gs=document.getElementById('gGanttScroll');
+  const mw=document.getElementById('gHdrMonths')?.parentElement?.parentElement;
+  if(!left||!gs)return;
+  gs.onscroll=function(){
+    if(mw){mw.scrollLeft=gs.scrollLeft;}
+  };
+}
+
+// ── DRAG & DROP ───────────────────────────────────────────────
+let _gDragId=null;
+function gDragStart(e,id){_gDragId=id;e.currentTarget.classList.add('dragging');}
+function gDragOver(e){e.preventDefault();e.currentTarget.classList.add('drag-over');}
+function gDragLeave(e){e.currentTarget.classList.remove('drag-over');}
+function gDrop(e,targetId){
+  e.currentTarget.classList.remove('drag-over');
+  if(_gDragId===null||_gDragId===targetId)return;
+  const fromIdx=gTasks.findIndex(t=>t.id===_gDragId);
+  const toIdx=gTasks.findIndex(t=>t.id===targetId);
+  if(fromIdx<0||toIdx<0)return;
+  const [moved]=gTasks.splice(fromIdx,1);
+  gTasks.splice(toIdx,0,moved);
+  _gDragId=null;
+  gRecalc();
+}
+
+// ── TABS ──────────────────────────────────────────────────────
+function gSwitchTab(tab,el){
+  document.querySelectorAll('.g-btab').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('gTabCost').style.display=tab==='cost'?'':'none';
+  document.getElementById('gTabRain').style.display=tab==='rain'?'':'none';
+  document.getElementById('gTabHol').style.display=tab==='hol'?'':'none';
+}
+
+function gRenderBTabs(){
+  // Cost tab
+  const grand=gComputed.filter(c=>!c.isPause).reduce((s,c)=>s+c.cost,0);
+  let costHtml=`<table style="width:100%;border-collapse:collapse;font-size:11px"><thead><tr style="background:#f5f5f3"><th style="padding:4px 7px;text-align:left">Capitol</th><th style="padding:4px 7px;text-align:right">Etape</th><th style="padding:4px 7px;text-align:right">Cost RON</th><th style="padding:4px 7px;text-align:right">%</th></tr></thead><tbody>`;
+  gSections.forEach(s=>{
+    const rows=gComputed.filter(c=>c.sec===s.id&&!c.isPause);
+    if(!rows.length)return;
+    const secCost=rows.reduce((a,c)=>a+c.cost,0);
+    costHtml+=`<tr><td style="padding:3px 7px;border-bottom:1px solid #f0f0ec"><span style="display:inline-block;width:8px;height:8px;background:${s.color};border-radius:50%;margin-right:4px"></span>${s.label}</td><td style="padding:3px 7px;border-bottom:1px solid #f0f0ec;text-align:right">${rows.length}</td><td style="padding:3px 7px;border-bottom:1px solid #f0f0ec;text-align:right;font-weight:700">${Math.round(secCost).toLocaleString('ro-RO')}</td><td style="padding:3px 7px;border-bottom:1px solid #f0f0ec;text-align:right">${grand>0?Math.round(secCost/grand*100):0}%</td></tr>`;
+  });
+  costHtml+=`<tr style="background:#f0f0ec"><td colspan="2" style="padding:4px 7px;font-weight:700">TOTAL</td><td style="padding:4px 7px;text-align:right;font-weight:700">${Math.round(grand).toLocaleString('ro-RO')} RON</td><td></td></tr></tbody></table>`;
+  const costEl=document.getElementById('gTabCost');if(costEl)costEl.innerHTML=costHtml;
+  // Rain tab
+  const mn=['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Nov','Dec'];
+  let rainHtml='<div style="display:flex;flex-wrap:wrap;gap:6px">';
+  Object.entries(gRainDays).forEach(([mo,v])=>{
+    rainHtml+=`<div style="background:#e8f0ff;border-radius:5px;padding:5px 10px;font-size:11px"><b>${mn[parseInt(mo)-1]}</b>: ${v} zile</div>`;
+  });
+  rainHtml+='</div>';
+  const rainEl=document.getElementById('gTabRain');if(rainEl)rainEl.innerHTML=rainHtml;
+  // Holidays tab
+  let holHtml='';
+  const visible=gHolidays.filter(h=>gOrigin&&new Date(h.date)>=gOrigin&&gEnd&&new Date(h.date)<=gEnd);
+  if(visible.length){
+    holHtml=`<div style="display:flex;flex-wrap:wrap;gap:4px">${visible.map(h=>`<span style="background:${h.blocked!==false?'#fff8e8':'#f3f4f6'};border:1px solid ${h.blocked!==false?'#fac775':'#e5e7eb'};border-radius:8px;padding:2px 8px;font-size:10px">${h.date.slice(5)} ${h.name}</span>`).join('')}</div>`;
+  } else holHtml='<span style="color:#888;font-size:11px">Nicio sărbătoare pe durata proiectului.</span>';
+  const holEl=document.getElementById('gTabHol');if(holEl)holEl.innerHTML=holHtml;
+}
+
+// ── TOOLTIP ───────────────────────────────────────────────────
+function gShowTip(e,text){
+  const tip=document.getElementById('gTip');if(!tip)return;
+  tip.textContent=text;tip.style.display='block';
+  tip.style.left=Math.min(e.clientX+12,window.innerWidth-300)+'px';
+  tip.style.top=Math.min(e.clientY+12,window.innerHeight-100)+'px';
+}
+function gHideTip(){const tip=document.getElementById('gTip');if(tip)tip.style.display='none';}
+
+// ── MODALS ────────────────────────────────────────────────────
+function gModal(html){
+  const old=document.getElementById('gModalEl');if(old)old.remove();
+  const d=document.createElement('div');d.id='gModalEl';d.className='g-modal';
+  d.innerHTML=html;document.body.appendChild(d);
+}
+function gCloseModal(){const el=document.getElementById('gModalEl');if(el)el.remove();}
+
+function gNextId(){return Math.max(0,...gTasks.map(t=>t.id||0))+1;}
+
+// ── ADD/EDIT TASK ─────────────────────────────────────────────
+function gOpenAddTask(secId){gOpenTaskModal(null,secId);}
+function gOpenAddTaskInSec(secId){gOpenTaskModal(null,secId);}
+function gEditTask(id){gOpenTaskModal(id,null);}
+function gDeleteTask(id){if(!confirm('Ștergi etapa?'))return;gTasks=gTasks.filter(t=>t.id!==id);gRecalc();}
+
+function gOpenTaskModal(editId,forceSec){
+  const t=editId!=null?gTasks.find(x=>x.id===editId):null;
+  const id=editId!=null?editId:gNextId();
+  const secOpts=gSections.map(s=>`<option value="${s.id}" ${(t?.sec||forceSec||gSections[0]?.id)===s.id?'selected':''}>${s.label}</option>`).join('');
+  const depOpts=gTasks.filter(x=>!x.isPause&&x.id!==id).map(x=>`<option value="${x.id}" ${(t?.deps||[]).includes(x.id)?'selected':''}>${x.id}: ${x.name}</option>`).join('');
+  const statusOpts=[['notStarted','Neînceput'],['inProgress','⟳ În lucru'],['done','✓ Finalizat']].map(([v,l])=>`<option value="${v}" ${(t?.status||'notStarted')===v?'selected':''}>${l}</option>`).join('');
+  const teamOpts=gTeams.map(tm=>`<label style="display:flex;align-items:center;gap:4px;padding:3px 7px;border:1px solid ${(t?.teamIds||[]).includes(tm.id)?tm.color:'#ccc'};border-radius:4px;cursor:pointer;font-size:11px"><input type="checkbox" value="${tm.id}" ${(t?.teamIds||[]).includes(tm.id)?'checked':''} style="width:auto"> ${tm.name}</label>`).join('');
+  const wRows=(t?.workers||[]).map((w,i)=>`<div class="g-worker-row"><input type="text" value="${w.name}" placeholder="Rol"><input type="number" value="${w.rate}" min="0" step="1" oninput="gCalcWT(${id})"><span style="font-size:10px;color:#888">${Math.round(w.rate*(t?.hours||8))} RON</span><button class="g-btn" style="padding:1px 4px" onclick="this.parentElement.remove();gCalcWT(${id})">✕</button></div>`).join('');
+  gModal(`<div class="g-modal-box">
+    <div style="display:flex;justify-content:space-between;margin-bottom:12px"><b style="font-size:14px">${t?'Editare etapă':'Etapă nouă'}</b><button class="g-btn" onclick="gCloseModal()">✕</button></div>
+    <div class="g-fr"><label>Denumire *</label><input id="gtN" value="${t?.name||''}"></div>
+    <div class="g-fr"><label>Capitol</label><select id="gtS">${secOpts}</select></div>
+    <div class="g-fr2">
+      <div class="g-fr"><label>Ore</label><input type="number" id="gtH" value="${t?.hours||8}" min="1" step="1" oninput="document.getElementById('gtDl').textContent=Math.ceil(this.value/8)+' zile';gCalcWT(${id})"></div>
+      <div class="g-fr"><label>Zile</label><input type="number" id="gtDi" value="${Math.ceil((t?.hours||8)/8)}" min="0.5" step="0.5" oninput="const h=Math.round(this.value*8);document.getElementById('gtH').value=h;document.getElementById('gtDl').textContent=this.value+' zile';gCalcWT(${id})"><span id="gtDl" style="font-size:10px;color:#888">${Math.ceil((t?.hours||8)/8)} zile</span></div>
+    </div>
+    <div class="g-fr"><label>Nu poate începe înainte de</label><input type="date" id="gtP" value="${t?.pauseUntil||''}"></div>
+    <div class="g-fr"><label>Status</label><select id="gtSt" onchange="gToggleProgress()">${statusOpts}</select></div>
+    <div id="gtProgRow" style="display:${t?.status==='inProgress'?'block':'none'}">
+      <div class="g-fr"><label>Progres (%)</label><div style="display:flex;align-items:center;gap:8px"><input type="range" id="gtProg" min="0" max="100" step="5" value="${t?.progress||0}" style="flex:1" oninput="document.getElementById('gtProgV').textContent=this.value+'%'"><span id="gtProgV" style="font-size:12px;font-weight:700;min-width:34px">${t?.progress||0}%</span></div></div>
+    </div>
+    <div class="g-fr"><label>Dependențe (Ctrl+click = multiple)</label><select id="gtDeps" multiple style="height:80px">${depOpts}</select></div>
+    <div class="g-fr"><label>Echipe alocate</label><div style="display:flex;flex-wrap:wrap;gap:4px" id="gtTeams">${teamOpts}</div></div>
+    <div class="g-fr">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px"><label>Persoane individuale</label><button class="g-btn" style="padding:1px 8px;font-size:10px" onclick="gAddWorker(${id})">+ Adaugă</button></div>
+      <div style="display:grid;grid-template-columns:1fr 90px 80px 24px;gap:4px;margin-bottom:4px"><span style="font-size:10px;color:#888">Rol</span><span style="font-size:10px;color:#888">RON/h</span><span style="font-size:10px;color:#888">Total</span><span></span></div>
+      <div id="gtWorkers">${wRows}</div>
+      <div id="gtWT" style="margin-top:8px;font-size:12px;font-weight:700;padding:6px;background:#f5f5f3;border-radius:4px"></div>
+    </div>
+    <div class="g-fr"><label>Note</label><textarea id="gtNote" rows="2">${t?.note||''}</textarea></div>
+    <div style="display:flex;justify-content:flex-end;gap:6px;margin-top:12px">
+      ${t?`<button class="g-btn" style="color:#dc2626;border-color:#dc2626" onclick="gDeleteTask(${id});gCloseModal()">Șterge</button>`:''}
+      <button class="g-btn" onclick="gCloseModal()">Anulare</button>
+      <button class="g-btn g-btn-primary" onclick="gSaveTask(${id},${t?'true':'false'})">Salvează</button>
+    </div>
+  </div>`);
+  gCalcWT(id);
+}
+
+function gToggleProgress(){
+  const st=document.getElementById('gtSt')?.value;
+  const row=document.getElementById('gtProgRow');
+  if(row)row.style.display=st==='inProgress'?'block':'none';
+}
+
+function gAddWorker(id){
+  const list=document.getElementById('gtWorkers');if(!list)return;
+  const div=document.createElement('div');div.className='g-worker-row';
+  div.innerHTML=`<input type="text" placeholder="Rol"><input type="number" value="25" min="0" step="1" oninput="gCalcWT(${id})"><span style="font-size:10px;color:#888">—</span><button class="g-btn" style="padding:1px 4px" onclick="this.parentElement.remove();gCalcWT(${id})">✕</button>`;
+  list.appendChild(div);
+}
+
+function gCalcWT(id){
+  const h=parseInt(document.getElementById('gtH')?.value)||8;
+  let tot=0;
+  document.getElementById('gtTeams')?.querySelectorAll('input:checked').forEach(cb=>{
+    const tm=gTeams.find(x=>x.id===cb.value);
+    if(tm)tm.members.forEach(m=>tot+=(m.rate||0)*h);
+  });
+  document.getElementById('gtWorkers')?.querySelectorAll('.g-worker-row').forEach(row=>{
+    const r=parseFloat(row.querySelector('input[type=number]')?.value)||0;
+    tot+=r*h;
+    const sp=row.querySelectorAll('span')[0];
+    if(sp)sp.textContent=Math.round(r*h)+' RON';
+  });
+  const wtEl=document.getElementById('gtWT');
+  if(wtEl)wtEl.textContent=tot>0?`Cost manoperă estimat: ${Math.round(tot).toLocaleString('ro-RO')} RON`:'';
+}
+
+function gSaveTask(id,isEdit){
+  const name=document.getElementById('gtN')?.value?.trim();
+  if(!name){alert('Introduceți un nume.');return;}
+  const hours=parseInt(document.getElementById('gtH')?.value)||8;
+  const deps=Array.from(document.getElementById('gtDeps')?.selectedOptions||[]).map(o=>parseInt(o.value));
+  const workers=[];
+  document.getElementById('gtWorkers')?.querySelectorAll('.g-worker-row').forEach(row=>{
+    const n=row.querySelector('input[type=text]')?.value?.trim();
+    const r=parseFloat(row.querySelector('input[type=number]')?.value)||0;
+    if(n)workers.push({name:n,rate:r});
+  });
+  const teamIds=Array.from(document.getElementById('gtTeams')?.querySelectorAll('input:checked')||[]).map(cb=>cb.value);
+  const status=document.getElementById('gtSt')?.value||'notStarted';
+  const progress=parseInt(document.getElementById('gtProg')?.value)||0;
+  const task={id,name,sec:document.getElementById('gtS')?.value||gSections[0]?.id,hours,deps,workers,teamIds,status,progress,pauseUntil:document.getElementById('gtP')?.value||null,note:document.getElementById('gtNote')?.value||''};
+  if(isEdit==='true'||isEdit===true){const idx=gTasks.findIndex(t=>t.id===id);if(idx>=0)gTasks[idx]=task;else gTasks.push(task);}
+  else{const secIdx=gTasks.reduce((m,t,i)=>t.sec===task.sec?i:m,-1);if(secIdx>=0)gTasks.splice(secIdx+1,0,task);else gTasks.push(task);}
+  gCloseModal();gRecalc();
+}
+
+// ── ADD PAUSE ─────────────────────────────────────────────────
+function gOpenAddPause(){
+  const id=gNextId();
+  const depOpts=gTasks.filter(x=>!x.isPause).map(x=>`<option value="${x.id}">${x.id}: ${x.name}</option>`).join('');
+  gModal(`<div class="g-modal-box">
+    <div style="display:flex;justify-content:space-between;margin-bottom:12px"><b>Adaugă pauză</b><button class="g-btn" onclick="gCloseModal()">✕</button></div>
+    <div class="g-fr"><label>Denumire pauză</label><input id="gpN" placeholder="ex: Concediu, Livrare materiale..."></div>
+    <div class="g-fr"><label>Reluare lucru de la data (inclusiv)</label><input type="date" id="gpR"></div>
+    <div class="g-fr"><label>Dependențe (etapele care așteaptă pauza)</label><select id="gpDeps" multiple style="height:80px">${depOpts}</select></div>
+    <div class="g-fr"><label>Note</label><textarea id="gpNote" rows="2"></textarea></div>
+    <div style="display:flex;justify-content:flex-end;gap:6px;margin-top:10px">
+      <button class="g-btn" onclick="gCloseModal()">Anulare</button>
+      <button class="g-btn g-btn-primary" onclick="gSavePause(${id})">Adaugă pauză</button>
+    </div>
+  </div>`);
+}
+function gSavePause(id){
+  const name=document.getElementById('gpN')?.value?.trim()||'Pauză';
+  const rd=document.getElementById('gpR')?.value;
+  if(!rd){alert('Introduceți data de reluare.');return;}
+  const deps=Array.from(document.getElementById('gpDeps')?.selectedOptions||[]).map(o=>parseInt(o.value));
+  gTasks.push({id,name,sec:gSections[0]?.id||'g0',hours:0,deps,status:'pause',workers:[],isPause:true,resumeDate:rd,pauseUntil:null,note:document.getElementById('gpNote')?.value||''});
+  deps.forEach(depId=>{const dt=gTasks.find(t=>t.id===depId);if(dt)dt.pauseUntil=rd;});
+  gCloseModal();gRecalc();
+}
+
+// ── SECTIONS MODAL ────────────────────────────────────────────
+function gOpenSections(){
+  const rows=gSections.map((s,i)=>`<div class="g-sec-row">
+    <input type="color" value="${s.color}" onchange="gSections[${i}].color=this.value" style="width:26px;height:22px;padding:1px;border-radius:3px;cursor:pointer;border:1px solid #ccc">
+    <span style="font-size:9px;font-weight:700;padding:1px 4px;border-radius:2px;color:#fff;background:${s.color}">${s.id}</span>
+    <input type="text" value="${s.label}" onchange="gSections[${i}].label=this.value" style="padding:4px 7px;border:1px solid #ccc;border-radius:4px;font-size:11px;width:100%">
+    <button class="g-btn" style="padding:1px 4px;font-size:10px;color:#dc2626" onclick="gDelSection('${s.id}')">✕</button>
+  </div>`).join('');
+  gModal(`<div class="g-modal-box">
+    <div style="display:flex;justify-content:space-between;margin-bottom:10px"><b>Capitole de lucrări</b><button class="g-btn" onclick="gCloseModal()">✕</button></div>
+    <div style="display:grid;grid-template-columns:28px 36px 1fr 24px;gap:5px;margin-bottom:5px;padding-bottom:4px;border-bottom:1px solid #eee"><span style="font-size:10px;color:#888">Col.</span><span style="font-size:10px;color:#888">ID</span><span style="font-size:10px;color:#888">Denumire</span><span></span></div>
+    <div id="gSecList">${rows}</div>
+    <button class="g-btn" onclick="gAddSection()" style="margin-top:8px">+ Capitol nou</button>
+    <div style="display:flex;justify-content:flex-end;gap:6px;margin-top:12px"><button class="g-btn" onclick="gCloseModal()">Anulare</button><button class="g-btn g-btn-primary" onclick="gCloseModal();gRecalc()">Aplică</button></div>
+  </div>`);
+}
+function gAddSection(){
+  const COLORS=['#c47831','#27873c','#2a5cbf','#c07020','#7b52cc','#b03060','#0e7d8a'];
+  const newId='g'+Date.now().toString(36).slice(-4);
+  const col=COLORS[gSections.length%COLORS.length];
+  gSections.push({id:newId,label:'Capitol nou',color:col});
+  gOpenSections();
+}
+function gDelSection(id){
+  const cnt=gTasks.filter(t=>t.sec===id).length;
+  if(cnt>0&&!confirm(`Acest capitol are ${cnt} etape. Ștergi tot?`))return;
+  if(cnt>0)gTasks=gTasks.filter(t=>t.sec!==id);
+  gSections=gSections.filter(s=>s.id!==id);
+  gCloseModal();gRecalc();
+}
+function gEditSection(id){gOpenSections();}
+
+// ── TEAMS MODAL ───────────────────────────────────────────────
+function gOpenTeams(){
+  const rows=gTeams.map((tm,ti)=>`<div style="border:1px solid #e0e0da;border-radius:6px;padding:10px;margin-bottom:8px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+      <input type="color" value="${tm.color}" onchange="gTeams[${ti}].color=this.value" style="width:26px;height:22px;padding:1px;border:1px solid #ccc;border-radius:3px;cursor:pointer">
+      <input type="text" value="${tm.name}" onchange="gTeams[${ti}].name=this.value" style="flex:1;padding:5px 8px;border:1px solid #ccc;border-radius:4px;font-size:12px;font-weight:600">
+      <button class="g-btn" style="color:#dc2626;font-size:11px" onclick="gTeams.splice(${ti},1);gOpenTeams()">Șterge</button>
+    </div>
+    ${tm.members.map((m,mi)=>`<div class="g-worker-row">
+      <input type="text" value="${m.name}" onchange="gTeams[${ti}].members[${mi}].name=this.value" placeholder="Rol">
+      <input type="number" value="${m.rate}" onchange="gTeams[${ti}].members[${mi}].rate=parseFloat(this.value)||0" min="0" step="1">
+      <span style="font-size:10px;color:#888">RON/h</span>
+      <button class="g-btn" style="padding:1px 4px;font-size:10px" onclick="gTeams[${ti}].members.splice(${mi},1);gOpenTeams()">✕</button>
+    </div>`).join('')}
+    <button class="g-btn" style="margin-top:4px;font-size:10px" onclick="gTeams[${ti}].members.push({name:'',rate:25});gOpenTeams()">+ Persoană</button>
+  </div>`).join('');
+  gModal(`<div class="g-modal-box">
+    <div style="display:flex;justify-content:space-between;margin-bottom:10px"><b>Gestionare echipe</b><button class="g-btn" onclick="gCloseModal()">✕</button></div>
+    <div id="gTeamsList">${rows||'<p style="color:#888;font-size:12px">Nicio echipă definită.</p>'}</div>
+    <button class="g-btn" onclick="gTeams.push({id:'t'+Date.now(),name:'Echipă nouă',color:'#3266ad',members:[]});gOpenTeams()" style="margin-top:8px">+ Echipă nouă</button>
+    <div style="display:flex;justify-content:flex-end;gap:6px;margin-top:12px"><button class="g-btn" onclick="gCloseModal()">Închide</button></div>
+  </div>`);
+}
+
+// ── PROJECT SETTINGS ──────────────────────────────────────────
+function gOpenProjectSettings(){
+  const p=proj();
+  gModal(`<div class="g-modal-box">
+    <div style="display:flex;justify-content:space-between;margin-bottom:12px"><b>Setări proiect Grafic</b><button class="g-btn" onclick="gCloseModal()">✕</button></div>
+    <div class="g-fr"><label>Data de start a proiectului</label><input type="date" id="gPS" value="${gFmtISO(gProjectStart)}"></div>
+    <div class="g-fr"><label><input type="checkbox" id="gSW" ${gSatWork?'checked':''} style="width:auto;margin-right:6px">Lucru sâmbăta</label></div>
+    <div style="display:flex;justify-content:flex-end;gap:6px;margin-top:12px">
+      <button class="g-btn" onclick="gCloseModal()">Anulare</button>
+      <button class="g-btn g-btn-primary" onclick="gProjectStart=new Date(document.getElementById('gPS').value);gSatWork=document.getElementById('gSW').checked;gCloseModal();gRecalc()">Salvează</button>
+    </div>
+  </div>`);
+}
+
+// ── RAIN MODAL ────────────────────────────────────────────────
+function gOpenRain(){
+  const mn=['Ian','Feb','Mar','Apr','Mai','Iun','Iul','Aug','Sep','Oct','Nov','Dec'];
+  const rows=Object.entries(gRainDays).map(([mo,v])=>`<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="width:32px;font-size:12px;font-weight:600">${mn[parseInt(mo)-1]}</span><input type="range" min="0" max="20" value="${v}" style="flex:1" oninput="gRainDays['${mo}']=parseInt(this.value);this.nextSibling.textContent=this.value+' zile'"><span style="font-size:12px;min-width:48px">${v} zile</span></div>`).join('');
+  gModal(`<div class="g-modal-box">
+    <div style="display:flex;justify-content:space-between;margin-bottom:12px"><b>Zile ploaie medii per lună</b><button class="g-btn" onclick="gCloseModal()">✕</button></div>
+    ${rows}
+    <div style="display:flex;justify-content:flex-end;gap:6px;margin-top:12px"><button class="g-btn" onclick="gCloseModal()">Anulare</button><button class="g-btn g-btn-primary" onclick="gCloseModal();gRecalc()">Aplică</button></div>
+  </div>`);
+}
+
+// ── HOLIDAYS MODAL ────────────────────────────────────────────
+function gOpenHolidays(){
+  gRecalc();
+  const visible=gHolidays.slice(0,50);
+  const rows=visible.map((h,i)=>`<div style="display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid #f0f0ec">
+    <input type="date" value="${h.date}" onchange="gHolidays[${i}].date=this.value" style="padding:3px 6px;border:1px solid #ccc;border-radius:4px;font-size:11px">
+    <input type="text" value="${h.name}" onchange="gHolidays[${i}].name=this.value" style="flex:1;padding:3px 6px;border:1px solid #ccc;border-radius:4px;font-size:11px">
+    <label style="display:flex;align-items:center;gap:3px;font-size:11px"><input type="checkbox" ${h.blocked!==false?'checked':''} onchange="gHolidays[${i}].blocked=this.checked" style="width:auto"> Blocat</label>
+    <button class="g-btn" style="padding:1px 4px" onclick="gHolidays.splice(${i},1);gOpenHolidays()">✕</button>
+  </div>`).join('');
+  gModal(`<div class="g-modal-box">
+    <div style="display:flex;justify-content:space-between;margin-bottom:10px"><b>Sărbători legale</b><button class="g-btn" onclick="gCloseModal()">✕</button></div>
+    <div id="gHolList">${rows}</div>
+    <button class="g-btn" onclick="gHolidays.push({date:new Date().toISOString().slice(0,10),name:'Sărbătoare',blocked:true});gOpenHolidays()" style="margin-top:8px">+ Adaugă</button>
+    <div style="display:flex;justify-content:flex-end;gap:6px;margin-top:12px"><button class="g-btn" onclick="gCloseModal()">Anulare</button><button class="g-btn g-btn-primary" onclick="gCloseModal();gRecalc()">Aplică</button></div>
+  </div>`);
+}
+
+// ── EXPORT MANOPERĂ ───────────────────────────────────────────
+function gExportManopera(){
+  if(!gComputed.length){alert('Nu există date de afișat.');return;}
+  const grand=gComputed.filter(c=>!c.isPause).reduce((s,c)=>s+c.cost,0);
+  const p=proj();
+  let body=`<h2>${p?.name||''} — Deviz Manoperă</h2><p style="color:#666;font-size:11px">Generat: ${new Date().toLocaleDateString('ro-RO')}</p>`;
+  gSections.forEach(s=>{
+    const rows=gComputed.filter(c=>c.sec===s.id&&!c.isPause);
+    if(!rows.length)return;
+    const secTot=rows.reduce((a,c)=>a+c.cost,0);
+    body+=`<h3 style="border-left:4px solid ${s.color};padding-left:8px;margin:14px 0 6px">${s.label} — ${Math.round(secTot).toLocaleString('ro-RO')} RON</h3>`;
+    body+=`<table style="width:100%;border-collapse:collapse;font-size:11px;margin-bottom:8px"><thead><tr style="background:#f0f0ee"><th style="padding:4px 7px;text-align:left">Etapă</th><th>Ore</th><th>Zile</th><th>Start</th><th>Fin</th><th style="text-align:right">Cost RON</th></tr></thead><tbody>`;
+    rows.forEach(c=>{body+=`<tr><td style="padding:3px 7px;border-bottom:1px solid #f0f0ec">${c.name}</td><td style="padding:3px 7px;border-bottom:1px solid #f0f0ec;text-align:center">${c.hours}h</td><td style="text-align:center;border-bottom:1px solid #f0f0ec;padding:3px 7px">${c.workDays}</td><td style="padding:3px 7px;border-bottom:1px solid #f0f0ec">${gFmtFull(c.start)}</td><td style="padding:3px 7px;border-bottom:1px solid #f0f0ec">${gFmtFull(c.end)}</td><td style="padding:3px 7px;border-bottom:1px solid #f0f0ec;text-align:right;font-weight:700">${c.cost>0?Math.round(c.cost).toLocaleString('ro-RO')+' RON':'—'}</td></tr>`;});
+    body+=`<tr style="background:#e8ecf0"><td colspan="5" style="padding:4px 7px;text-align:right;font-weight:700">Total ${s.label}</td><td style="padding:4px 7px;text-align:right;font-weight:700">${Math.round(secTot).toLocaleString('ro-RO')} RON</td></tr></tbody></table>`;
+  });
+  body+=`<table style="margin-top:12px;width:100%;border-collapse:collapse"><tr style="background:#dde3ea"><td colspan="5" style="padding:8px;font-weight:700;font-size:13px">TOTAL GENERAL MANOPERĂ</td><td style="padding:8px;font-weight:700;font-size:13px;text-align:right">${Math.round(grand).toLocaleString('ro-RO')} RON</td></tr></table>`;
+  const win=window.open('','_blank','width=900,height=700');
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Deviz Manoperă</title><style>body{font-family:Arial,sans-serif;padding:20px;font-size:12px}@media print{body{padding:8px}}</style></head><body>${body}<div style="margin-top:16px"><button onclick="window.print()" style="padding:7px 16px;background:#2a5cbf;color:#fff;border:none;border-radius:5px;cursor:pointer">🖨 Printează</button></div></body></html>`);
+  win.document.close();
+}
+
+function gPrint(){window.print();}
+
+// ── DIVIDER RESIZE ────────────────────────────────────────────
+function gInitDivider(){
+  const div=document.getElementById('gDivider');
+  const left=document.getElementById('gLeft');
+  if(!div||!left)return;
+  let dragging=false,startX=0,startW=0;
+  div.onmousedown=e=>{dragging=true;startX=e.clientX;startW=left.offsetWidth;div.classList.add('dragging');e.preventDefault();};
+  document.onmousemove=e=>{if(!dragging)return;const w=Math.max(180,Math.min(600,startW+(e.clientX-startX)));left.style.width=w+'px';gRenderGantt();};
+  document.onmouseup=()=>{dragging=false;div.classList.remove('dragging');};
+}
+
+// ── TOAST ─────────────────────────────────────────────────────
+function gShowToast(msg,color){
+  color=color||'#27873c';
+  const d=document.createElement('div');
+  d.textContent=msg;
+  d.style.cssText=`position:fixed;bottom:20px;right:20px;background:${color};color:#fff;padding:8px 16px;border-radius:6px;font-size:13px;z-index:9999;box-shadow:0 2px 8px rgba(0,0,0,.2)`;
+  document.body.appendChild(d);setTimeout(()=>d.remove(),2500);
+}
+
+// ── MAIN RENDER ───────────────────────────────────────────────
+function renderGantt(){
+  if(!document.getElementById('ganttApp'))return;
+  gLoad();
+  gInitDivider();
+  gRecalc();
+}
+
+init();
+</script>
+</body>
+</html>
