@@ -172,7 +172,7 @@ tfoot td{border-top:2px solid var(--border)}
 .status-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px;flex-shrink:0}
 .sd-plan{background:#2563eb}.sd-done{background:#16a34a}.sd-late{background:#dc2626}.sd-pause{background:#d97706}
 
-@media print{.devizStats,.no-print,.g-stats{display:none!important}input{border:none!important;background:transparent!important}.sidebar,.topbar,.no-print{display:none!important}.main{overflow:visible}.content{padding:0}body{background:#fff}.card{border:1px solid #ccc;page-break-inside:avoid}}
+@media print{.devizStats,.no-print,.g-stats,.stats,#devizStats{display:none!important}input{border:none!important;background:transparent!important;border-bottom:none!important}.sidebar,.topbar{display:none!important}.main{overflow:visible}.content{padding:0}body{background:#fff}.card{border:none;box-shadow:none;page-break-inside:avoid}}
 
 /* ═══ GANTT ═══════════════════════════════════════════════════ */
 #pg-gantt.active{display:flex;flex-direction:column;padding:0;overflow:hidden;height:calc(100vh - 52px)}
@@ -368,7 +368,7 @@ if('serviceWorker' in navigator) {
 
   <!-- DEVIZ -->
   <div class="page content" id="pg-deviz">
-    <div class="stats" id="devizStats" class="devizStats"></div>
+    <div class="stats devizStats no-print" id="devizStats"></div>
     <div class="no-print" style="display:flex;gap:8px;margin-bottom:12px;justify-content:flex-end">
       <button class="btn" onclick="window.print()">&#128424; Printează</button>
       <button class="btn btn-primary" onclick="exportDeviz()">&#8659; Export HTML</button>
