@@ -370,7 +370,7 @@ if('serviceWorker' in navigator) {
   <div class="page content" id="pg-deviz">
     <div class="stats devizStats no-print" id="devizStats"></div>
     <div class="no-print" style="display:flex;gap:8px;margin-bottom:12px;justify-content:flex-end">
-      <button class="btn" onclick="window.print()">&#128424; Printează</button>
+      <button class="btn no-print" onclick="window.print()">&#128424; Printează</button>
       <button class="btn btn-primary" onclick="exportDeviz()">&#8659; Export HTML</button>
     </div>
     <div id="devizContent"></div>
@@ -1451,9 +1451,35 @@ function renderDeviz(){
 }
 function exportDeviz(){
   const p=proj();
-  const c=document.getElementById('devizPrint')?.innerHTML||'';
-  const html=`<!DOCTYPE html><html lang="ro"><head><meta charset="UTF-8"><title>Deviz - ${esc(p.name)}</title><style>body{font-family:Arial,sans-serif;padding:28px;max-width:900px;margin:auto}table{width:100%;border-collapse:collapse}th,td{padding:7px 10px;text-align:left;border-bottom:1px solid #e5e7eb}th{background:#f8fafc;font-weight:600;font-size:11px;text-transform:uppercase}.num{text-align:right}.fw7{font-weight:700}.muted{color:#6b7280;font-size:12px}</style></head><body>
-${c}
+  // Get deviz content including notes
+  const devizEl=document.getElementById('devizPrint');
+  if(!devizEl){alert('Deschide mai întâi Deviz general'); return;}
+  // Clone and remove no-print elements
+  const clone=devizEl.cloneNode(true);
+  clone.querySelectorAll('.no-print').forEach(el=>el.remove());
+  // Get input values (replace inputs with spans for PDF)
+  clone.querySelectorAll('input').forEach(inp=>{
+    const span=document.createElement('span');
+    span.textContent=inp.value||inp.placeholder||'';
+    span.style.cssText=inp.style.cssText;
+    inp.parentNode.replaceChild(span,inp);
+  });
+  const content=clone.outerHTML;
+  const html=`<!DOCTYPE html><html lang="ro"><head><meta charset="UTF-8"><title>Deviz - ${esc(p.name)}</title><style>
+    @page{size:A4 landscape;margin:15mm 12mm}
+    @media print{body{margin:0;padding:0}}
+    body{font-family:Arial,sans-serif;padding:20px;max-width:100%}
+    table{width:100%;border-collapse:collapse;font-size:11px}
+    th,td{padding:5px 8px;text-align:left;border-bottom:1px solid #e5e7eb}
+    th{background:#f8fafc;font-weight:700;font-size:10px;text-transform:uppercase}
+    .num{text-align:right}
+    .fw7{font-weight:700}
+    .muted{color:#6b7280;font-size:11px}
+    tr{page-break-inside:avoid}
+    thead{display:table-header-group}
+    tfoot{display:table-footer-group}
+  </style></head><body>
+${content}
 <!-- AUTH SCREEN -->
 <div id="authScreen" style="display:none;position:fixed;inset:0;background:linear-gradient(135deg,#1e293b 0%,#0f172a 100%);z-index:9999;align-items:center;justify-content:center;padding:20px">
   <div style="background:#fff;border-radius:16px;padding:40px;width:100%;max-width:400px;box-shadow:0 25px 60px rgba(0,0,0,.4)">
