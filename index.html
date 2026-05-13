@@ -1354,6 +1354,14 @@ function renderDeviz(){
   <!-- TABLE -->
   <div class="card"><div class="card-bd">
   <table>
+    <colgroup>
+      <col style="width:60px">
+      <col>
+      <col style="width:60px">
+      <col style="width:50px">
+      <col>
+      <col>
+    </colgroup>
     <thead>
       <tr style="background:#e8c84a">
         <th style="width:60px;color:#0f172a;font-weight:800">Cod</th>
@@ -1408,17 +1416,21 @@ function renderDeviz(){
 
   <!-- TOTALS -->
   <table style="border-collapse:collapse;font-size:13px;width:100%;margin-top:0">
+    <colgroup>
+      <col style="width:60px">
+      <col>
+      <col style="width:60px">
+      <col style="width:50px">
+      <col>
+      <col>
+    </colgroup>
     <tr style="border-bottom:1px solid #e2e8f0">
-      <td colspan="2" style="border:none;padding:7px 12px;color:#374151">TVA 21%</td>
-      <td style="border:none"></td>
-      <td style="border:none"></td>
+      <td colspan="4" style="border:none;padding:7px 12px;color:#374151">TVA 21%</td>
       <td style="border:none;padding:7px 12px;color:#374151;text-align:right">${fm(totRon*TVA)} RON</td>
       <td style="border:none;padding:7px 12px;color:#374151;text-align:right">${fm(totRon*TVA/e)} EUR</td>
     </tr>
     <tr>
-      <td colspan="2" style="border:none;padding:10px 12px;font-weight:900;color:#0f172a;font-size:14px">Total cu TVA</td>
-      <td style="border:none"></td>
-      <td style="border:none"></td>
+      <td colspan="4" style="border:none;padding:10px 12px;font-weight:900;color:#0f172a;font-size:14px">Total cu TVA</td>
       <td style="border:none;padding:10px 12px;font-weight:900;color:#0f172a;font-size:15px;text-align:right">${fm(totRon*(1+TVA))} RON</td>
       <td style="border:none;padding:10px 12px;font-weight:800;color:#0f172a;text-align:right">${fm(totRon*(1+TVA)/e)} EUR</td>
     </tr>
