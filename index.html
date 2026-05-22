@@ -992,6 +992,29 @@ function removeOferta(itemId, itemName) {
 }
 
 
+
+function renameSubcat(catId, oldName, _unused) {
+  const newName = prompt('Redenumește subcapitolul:', oldName);
+  if(!newName || newName.trim() === oldName) return;
+  const newTrimmed = newName.trim();
+  const p = proj(); if(!p) return;
+  const cat = p.categories.find(c=>c.id===catId);
+  if(!cat) return;
+  // Rename in subcats array
+  if(cat.subcats) {
+    const idx = cat.subcats.indexOf(oldName);
+    if(idx >= 0) cat.subcats[idx] = newTrimmed;
+  }
+  // Rename in all items
+  if(cat.items) {
+    cat.items.forEach(item => {
+      if(item.subcat === oldName) item.subcat = newTrimmed;
+    });
+  }
+  save();
+  renderCost();
+}
+
 function renderCost(){
   const p=proj(); if(!p) return;
   const e=curs();
@@ -1042,6 +1065,7 @@ function renderCost(){
                 <td colspan="5" style="padding:5px 10px 5px 14px;font-size:11px;font-weight:700;color:#1e3a8a;border-bottom:1px solid #c7d7f7;border-top:1px solid #c7d7f7;user-select:none">
                   <span style="margin-right:5px;font-size:10px">${scOpen?'▼':'▶'}</span>${esc(sg)}
                   <span style="font-weight:400;color:#64748b;margin-left:6px">${groups[sg].length} articole</span>
+                  <button class="no-print" onclick="event.stopPropagation();renameSubcat('${cat.id}','${esc(sg).replace(/'/g,"\\'")}','${esc(sg).replace(/'/g,"\\'")}' )" title="Redenumește subcapitol" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:11px;padding:0 4px;margin-left:4px">✎</button>
                 </td>
                 <td class="num" style="padding:5px 10px;font-size:11px;font-weight:700;color:#1e3a8a;border-bottom:1px solid #c7d7f7;border-top:1px solid #c7d7f7">${fm(sgTot)}</td>
                 <td class="num" style="padding:5px 10px;font-size:11px;color:#64748b;border-bottom:1px solid #c7d7f7;border-top:1px solid #c7d7f7">${fm(sgTot/e)} EUR</td>
