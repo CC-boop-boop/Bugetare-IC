@@ -706,6 +706,20 @@ let openSubcats={}; // key: catId+'::'+subcatName
 
 // ── CATEGORY DRAG & DROP ─────────────────────────────────────
 let _catDragId = null;
+
+function moveCat(catId, dir) {
+  const p = proj(); if(!p) return;
+  const cats = p.categories;
+  const idx = cats.findIndex(c => c.id === catId);
+  if(idx < 0) return;
+  const newIdx = idx + dir;
+  if(newIdx < 0 || newIdx >= cats.length) return;
+  // Swap
+  [cats[idx], cats[newIdx]] = [cats[newIdx], cats[idx]];
+  save();
+  renderCost();
+}
+
 function catDragStart(e, catId) {
   _catDragId = catId;
   e.stopPropagation();
@@ -1002,6 +1016,8 @@ function renderCost(){
           <span class="cat-total">${fm(catTot)} RON</span>
           <span class="muted">${fm(catTot/e)} EUR</span>
           <button class="btn btn-sm no-print" style="font-size:11px" onclick="event.stopPropagation();openManageSubcats('${cat.id}')" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);color:#e2e8f0">☰ Subcapitole</button>
+          <button class="btn btn-sm no-print" onclick="event.stopPropagation();moveCat('${cat.id}',-1)" title="Mută sus" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);color:#e2e8f0;padding:2px 6px;font-size:13px">↑</button>
+          <button class="btn btn-sm no-print" onclick="event.stopPropagation();moveCat('${cat.id}',1)" title="Mută jos" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);color:#e2e8f0;padding:2px 6px;font-size:13px">↓</button>
           <button class="btn btn-sm no-print" style="font-size:11px" onclick="event.stopPropagation();openEditCatModal('${cat.id}')" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);color:#e2e8f0">✎ Capitol</button>
           <span style="color:#94a3b8;font-size:12px">${isOpen?'▲':'▼'}</span>
         </div>
@@ -1447,7 +1463,13 @@ function renderDeviz(){
       <td class="num" style="color:#94a3b8"></td>
       <td class="num" style="color:#94a3b8"></td>
       <td class="num fw7" style="color:#93c5fd">${ronM>0?fm(ronM):'-'}</td>
-      <td class="num" style="color:#e2e8f0">${eur>0?fm(eur):'-'}</td>
+      <td class="num" style="color:#e2e8f0;display:flex;align-items:center;justify-content:flex-end;gap:4px">
+        ${eur>0?fm(eur):'-'}
+        <span class="no-print" style="margin-left:8px">
+          <button onclick="moveCat('${cat.id}',-1);renderDeviz()" title="Mută sus" style="background:rgba(255,255,255,.15);border:none;color:#e2e8f0;cursor:pointer;padding:1px 4px;border-radius:3px;font-size:11px;line-height:1">↑</button>
+          <button onclick="moveCat('${cat.id}',1);renderDeviz()" title="Mută jos" style="background:rgba(255,255,255,.15);border:none;color:#e2e8f0;cursor:pointer;padding:1px 4px;border-radius:3px;font-size:11px;line-height:1">↓</button>
+        </span>
+      </td>
     </tr>`;
     // Group items by subcapitol
     const subcats = cat.subcats && cat.subcats.length ? cat.subcats : [];
