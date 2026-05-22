@@ -102,7 +102,7 @@ tfoot td{border-top:2px solid var(--border)}
 .modal-ft{padding:12px 18px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;position:sticky;bottom:0;background:#fff}
 
 .cat-sec{margin-bottom:12px}
-.cat-hd{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;background:linear-gradient(90deg,#1e293b 0%,#2d3f55 100%);border:1px solid #1e293b;border-radius:6px;cursor:grab;user-select:none}.cat-hd:active{cursor:grabbing}
+.cat-hd{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;background:#e8c84a;border:1px solid #d4b03c;border-radius:6px;cursor:grab;user-select:none}.cat-hd:active{cursor:grabbing}
 .drag-over-row{border-top:2px solid var(--blue)!important;background:#e8f4ff!important}
 .dragging-row{opacity:.4}
 .drag-handle{cursor:grab;color:#ccc;padding:0 4px;user-select:none;font-size:14px}
@@ -1011,14 +1011,14 @@ function renderCost(){
     const isOpen=openCats[cat.id]!==false;
     html+=`<div class="cat-sec">
       <div class="cat-hd" draggable="true" ondragstart="catDragStart(event,'${cat.id}')" ondragover="catDragOver(event)" ondragleave="catDragLeave(event)" ondrop="catDrop(event,'${cat.id}')" onclick="toggleCat('${cat.id}')">
-        <span class="cat-title"><span style="background:rgba(255,255,255,.15);color:#e2e8f0;font-size:11px;font-weight:800;padding:2px 8px;border-radius:4px;letter-spacing:.03em;font-family:monospace">${cat.code}</span><span style="color:#f1f5f9;font-size:14px;font-weight:700">${cat.name}</span></span>
+        <span class="cat-title"><span style="background:rgba(0,0,0,.12);color:#0f172a;font-size:11px;font-weight:800;padding:2px 8px;border-radius:4px;letter-spacing:.03em;font-family:monospace">${cat.code}</span><span style="color:#0f172a;font-size:14px;font-weight:700">${cat.name}</span></span>
         <div class="cat-actions">
           <span class="cat-total">${fm(catTot)} RON</span>
           <span class="muted">${fm(catTot/e)} EUR</span>
-          <button class="btn btn-sm no-print" style="font-size:11px" onclick="event.stopPropagation();openManageSubcats('${cat.id}')" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);color:#e2e8f0">☰ Subcapitole</button>
-          <button class="btn btn-sm no-print" onclick="event.stopPropagation();moveCat('${cat.id}',-1)" title="Mută sus" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);color:#e2e8f0;padding:2px 6px;font-size:13px">↑</button>
-          <button class="btn btn-sm no-print" onclick="event.stopPropagation();moveCat('${cat.id}',1)" title="Mută jos" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);color:#e2e8f0;padding:2px 6px;font-size:13px">↓</button>
-          <button class="btn btn-sm no-print" style="font-size:11px" onclick="event.stopPropagation();openEditCatModal('${cat.id}')" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);color:#e2e8f0">✎ Capitol</button>
+          <button class="btn btn-sm no-print" style="font-size:11px" onclick="event.stopPropagation();openManageSubcats('${cat.id}')" style="background:rgba(0,0,0,.1);border-color:rgba(0,0,0,.2);color:#0f172a">☰ Subcapitole</button>
+          <button class="btn btn-sm no-print" onclick="event.stopPropagation();moveCat('${cat.id}',-1)" title="Mută sus" style="background:rgba(0,0,0,.1);border-color:rgba(0,0,0,.2);color:#0f172a;padding:2px 6px;font-size:13px">↑</button>
+          <button class="btn btn-sm no-print" onclick="event.stopPropagation();moveCat('${cat.id}',1)" title="Mută jos" style="background:rgba(0,0,0,.1);border-color:rgba(0,0,0,.2);color:#0f172a;padding:2px 6px;font-size:13px">↓</button>
+          <button class="btn btn-sm no-print" style="font-size:11px" onclick="event.stopPropagation();openEditCatModal('${cat.id}')" style="background:rgba(0,0,0,.1);border-color:rgba(0,0,0,.2);color:#0f172a">✎ Capitol</button>
           <span style="color:#94a3b8;font-size:12px">${isOpen?'▲':'▼'}</span>
         </div>
       </div>
@@ -1393,6 +1393,24 @@ function devizDeleteNote(i) {
 }
 
 
+
+
+function toggleDevizSubcat(catId, sg) {
+  if(!window._devizCollapsed) window._devizCollapsed = {};
+  const key = catId + '_' + sg;
+  window._devizCollapsed[key] = !window._devizCollapsed[key];
+  renderDeviz();
+}
+
+function toggleItemHidden(catId, itemId) {
+  const cat = proj()?.categories?.find(c=>c.id===catId);
+  const item = cat?.items?.find(i=>i.id===itemId);
+  if(!item) return;
+  item.hidden = !item.hidden;
+  save();
+  renderDeviz();
+}
+
 function renderDeviz(){
   const p=proj(); if(!p) return;
   const e=curs();
@@ -1457,17 +1475,17 @@ function renderDeviz(){
     </thead>
     <tbody>`;
   rows.forEach(({cat,ronM,eur},idx)=>{
-    html+=`<tr style="background:#1e293b">
-      <td style="font-weight:800;color:#e8c84a;font-size:13px">${letterCode(idx)}</td>
-      <td style="font-weight:800;color:#f1f5f9;font-size:13px">${esc(cat.name)}</td>
+    html+=`<tr style="background:#e8c84a">
+      <td style="font-weight:800;color:#0f172a;font-size:13px">${letterCode(idx)}</td>
+      <td style="font-weight:800;color:#0f172a;font-size:13px">${esc(cat.name)}</td>
       <td class="num" style="color:#94a3b8"></td>
       <td class="num" style="color:#94a3b8"></td>
-      <td class="num fw7" style="color:#93c5fd">${ronM>0?fm(ronM):'-'}</td>
-      <td class="num" style="color:#e2e8f0;display:flex;align-items:center;justify-content:flex-end;gap:4px">
+      <td class="num fw7" style="color:#0f172a;font-weight:800">${ronM>0?fm(ronM):'-'}</td>
+      <td class="num" style="color:#0f172a;display:flex;align-items:center;justify-content:flex-end;gap:4px">
         ${eur>0?fm(eur):'-'}
         <span class="no-print" style="margin-left:8px">
-          <button onclick="moveCat('${cat.id}',-1);renderDeviz()" title="Mută sus" style="background:rgba(255,255,255,.15);border:none;color:#e2e8f0;cursor:pointer;padding:1px 4px;border-radius:3px;font-size:11px;line-height:1">↑</button>
-          <button onclick="moveCat('${cat.id}',1);renderDeviz()" title="Mută jos" style="background:rgba(255,255,255,.15);border:none;color:#e2e8f0;cursor:pointer;padding:1px 4px;border-radius:3px;font-size:11px;line-height:1">↓</button>
+          <button onclick="moveCat('${cat.id}',-1);renderDeviz()" title="Mută sus" style="background:rgba(0,0,0,.1);border:none;color:#0f172a;cursor:pointer;padding:1px 4px;border-radius:3px;font-size:11px;line-height:1">↑</button>
+          <button onclick="moveCat('${cat.id}',1);renderDeviz()" title="Mută jos" style="background:rgba(0,0,0,.1);border:none;color:#0f172a;cursor:pointer;padding:1px 4px;border-radius:3px;font-size:11px;line-height:1">↓</button>
         </span>
       </td>
     </tr>`;
@@ -1483,58 +1501,54 @@ function renderDeviz(){
         const sgItems = itemsWithSub.filter(i=>i.subcat===sg);
         if(!sgItems.length) return;
         const sgRon = sgItems.reduce((a,i)=>a+(i.ron||0),0);
-        html+=`<tr style="background:#e8f0fe"><td style="padding-left:16px;font-size:11px;font-weight:700;color:#1e3a8a">${letterCode(idx)}${si+1}.</td><td style="padding-left:16px;font-size:12px;font-weight:700;color:#1e3a8a">${esc(sg)}</td><td class="num"></td><td class="num"></td><td class="num" style="font-size:11px;font-weight:700;color:#1e3a8a">${fm(sgRon)}</td><td class="num" style="font-size:11px;color:#64748b">${fm(sgRon/e)}</td></tr>`;
+        const _sgCollapsed = window._devizCollapsed && window._devizCollapsed[cat.id+'_'+sg];
+        html+=`<tr style="background:#e8f0fe;cursor:pointer" onclick="toggleDevizSubcat('${cat.id}','${sg}')">
+          <td style="padding-left:16px;font-size:11px;font-weight:700;color:#1e3a8a">${letterCode(idx)}${si+1}.</td>
+          <td style="padding-left:16px;font-size:12px;font-weight:700;color:#1e3a8a">${_sgCollapsed?'▶':'▼'} ${esc(sg)}</td>
+          <td class="num"></td><td class="num"></td>
+          <td class="num" style="font-size:11px;font-weight:700;color:#1e3a8a">${fm(sgRon)}</td>
+          <td class="num" style="font-size:11px;color:#64748b">${fm(sgRon/e)}</td>
+        </tr>`;
+        if(!_sgCollapsed) {
         sgItems.forEach(item=>{
-          html+=`<tr><td class="muted" style="padding-left:28px"></td><td style="padding-left:28px;color:#374151;font-size:12px">• ${esc(item.name)}</td><td class="num muted" style="font-size:12px">${esc(item.um||'')}</td><td class="num muted" style="font-size:12px">${item.cant||''}</td><td class="num muted">${fm(item.ron)}</td><td class="num muted">${fm(item.ron/e)}</td></tr>`;
+          const _rowStyle = item.hidden ? 'opacity:.4;text-decoration:line-through' : '';
+        const _hidBtn = '<button class="no-print" onclick="toggleItemHidden(\''+cat.id+'\',\''+item.id+'\');" style="background:none;border:none;cursor:pointer;font-size:11px;color:#94a3b8;padding:0 2px">'+(item.hidden?'👁':'👁‍🗨')+'</button>';
+        html+='<tr style="'+_rowStyle+'"><td class="muted" style="padding-left:28px"></td><td style="padding-left:28px;color:#374151;font-size:12px">• '+esc(item.name)+'</td><td class="num muted" style="font-size:12px">'+esc(item.um||'')+'</td><td class="num muted" style="font-size:12px">'+(item.cant||'')+'</td><td class="num muted">'+(item.hidden?'<span style="color:#94a3b8;font-size:11px">ascuns</span>':fm(item.ron))+'</td><td class="num muted" style="white-space:nowrap">'+(item.hidden?'':fm(item.ron/e))+' '+_hidBtn+'</td></tr>';
         });
+        }
       });
       // Items without subcat at end
       itemsNoSub.forEach(item=>{
-        html+=`<tr><td class="muted" style="padding-left:20px"></td><td style="padding-left:20px;color:#374151;font-size:12px">• ${esc(item.name)}</td><td class="num muted" style="font-size:12px">${esc(item.um||'')}</td><td class="num muted" style="font-size:12px">${item.cant||''}</td><td class="num muted">${fm(item.ron)}</td><td class="num muted">${fm(item.ron/e)}</td></tr>`;
+        const _rowStyle2 = item.hidden ? 'opacity:.4;text-decoration:line-through' : '';
+        const _hidBtn2 = '<button class="no-print" onclick="toggleItemHidden(\''+cat.id+'\',\''+item.id+'\');" style="background:none;border:none;cursor:pointer;font-size:11px;color:#94a3b8;padding:0 2px">'+(item.hidden?'👁':'👁‍🗨')+'</button>';
+        html+='<tr style="'+_rowStyle2+'"><td class="muted" style="padding-left:20px"></td><td style="padding-left:20px;color:#374151;font-size:12px">• '+esc(item.name)+'</td><td class="num muted" style="font-size:12px">'+esc(item.um||'')+'</td><td class="num muted" style="font-size:12px">'+(item.cant||'')+'</td><td class="num muted">'+(item.hidden?'<span style="color:#94a3b8;font-size:11px">ascuns</span>':fm(item.ron))+'</td><td class="num muted" style="white-space:nowrap">'+(item.hidden?'':fm(item.ron/e))+' '+_hidBtn2+'</td></tr>';
       });
     } else {
       // No subcats - show all items flat
       cat.items.filter(i=>i.ron>0).forEach(item=>{
-        html+=`<tr><td class="muted" style="padding-left:20px"></td><td style="padding-left:20px;color:#374151;font-size:12px">• ${esc(item.name)}</td><td class="num muted" style="font-size:12px">${esc(item.um||'')}</td><td class="num muted" style="font-size:12px">${item.cant||''}</td><td class="num muted">${fm(item.ron)}</td><td class="num muted">${fm(item.ron/e)}</td></tr>`;
+        const _rowStyle2 = item.hidden ? 'opacity:.4;text-decoration:line-through' : '';
+        const _hidBtn2 = '<button class="no-print" onclick="toggleItemHidden(\''+cat.id+'\',\''+item.id+'\');" style="background:none;border:none;cursor:pointer;font-size:11px;color:#94a3b8;padding:0 2px">'+(item.hidden?'👁':'👁‍🗨')+'</button>';
+        html+='<tr style="'+_rowStyle2+'"><td class="muted" style="padding-left:20px"></td><td style="padding-left:20px;color:#374151;font-size:12px">• '+esc(item.name)+'</td><td class="num muted" style="font-size:12px">'+esc(item.um||'')+'</td><td class="num muted" style="font-size:12px">'+(item.cant||'')+'</td><td class="num muted">'+(item.hidden?'<span style="color:#94a3b8;font-size:11px">ascuns</span>':fm(item.ron))+'</td><td class="num muted" style="white-space:nowrap">'+(item.hidden?'':fm(item.ron/e))+' '+_hidBtn2+'</td></tr>';
       });
     }
   });
-  html+=`</tbody>
-    <tr style="background:#e8c84a;color:#0f172a"><td colspan="4" style="padding:10px;font-weight:800;font-size:14px">Total fără TVA</td><td class="num" style="padding:10px;font-weight:800;font-size:15px;color:#0f172a">${fm(totRon)}</td><td class="num" style="padding:10px;font-weight:800;color:#0f172a">${fm(totRon/e)}</td></tr>
-  </tfoot></table></div></div>
-
-  <!-- TOTALS -->
-  <table style="border-collapse:collapse;font-size:13px;width:100%;margin-top:0">
-    <colgroup>
-      <col style="width:60px">
-      <col>
-      <col style="width:60px">
-      <col style="width:50px">
-      <col>
-      <col>
-    </colgroup>
-    <tr style="border-bottom:1px solid #e2e8f0">
-      <td colspan="4" style="border:none;padding:7px 12px;color:#374151">TVA 21%</td>
-      <td style="border:none;padding:7px 12px;color:#374151;text-align:right">${fm(totRon*TVA)} RON</td>
-      <td style="border:none;padding:7px 12px;color:#374151;text-align:right">${fm(totRon*TVA/e)} EUR</td>
-    </tr>
-    <tr>
-      <td colspan="4" style="border:none;padding:10px 12px;font-weight:900;color:#0f172a;font-size:14px">Total cu TVA</td>
-      <td style="border:none;padding:10px 12px;font-weight:900;color:#0f172a;font-size:15px;text-align:right">${fm(totRon*(1+TVA))} RON</td>
-      <td style="border:none;padding:10px 12px;font-weight:800;color:#0f172a;text-align:right">${fm(totRon*(1+TVA)/e)} EUR</td>
-    </tr>
-  </table>
-
-  <!-- NOTES SECTION -->
-  <div style="margin-top:28px;padding-top:20px;border-top:2px solid #e8c84a">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-      <div style="font-size:12px;font-weight:700;color:#64748b;letter-spacing:.08em;text-transform:uppercase">Note</div>
-      <button onclick="devizAddNote()" class="no-print" style="background:none;border:1px solid #e2e8f0;border-radius:6px;padding:3px 10px;font-size:11px;color:#64748b;cursor:pointer">+ Adaugă notă</button>
-    </div>
-    <div id="devizNotesList"></div>
-  </div>
-
-  </div>`;
+  html += '</tbody>';
+  html += '<tr style="background:#e8c84a;color:#0f172a"><td colspan="4" style="padding:10px;font-weight:800;font-size:14px">Total f&#259;r&#259; TVA</td>';
+  html += '<td class="num" style="padding:10px;font-weight:800;font-size:15px;color:#0f172a">' + fm(totRon) + '</td>';
+  html += '<td class="num" style="padding:10px;font-weight:800;color:#0f172a">' + fm(totRon/e) + '</td></tr>';
+  html += '</tfoot></table></div></div>';
+  // TOTALS
+  html += '<table style="border-collapse:collapse;font-size:13px;width:100%;margin-top:0">';
+  html += '<colgroup><col style="width:60px"><col><col style="width:60px"><col style="width:50px"><col><col></colgroup>';
+  html += '<tr style="border-bottom:1px solid #e2e8f0">';
+  html += '<td colspan="4" style="border:none;padding:7px 12px;color:#374151">TVA 21%</td>';
+  html += '<td style="border:none;padding:7px 12px;color:#374151;text-align:right">' + fm(totRon*TVA) + ' RON</td>';
+  html += '<td style="border:none;padding:7px 12px;color:#374151;text-align:right">' + fm(totRon*TVA/e) + ' EUR</td></tr>';
+  html += '<tr>';
+  html += '<td colspan="4" style="border:none;padding:10px 12px;font-weight:900;color:#0f172a;font-size:14px">Total cu TVA</td>';
+  html += '<td style="border:none;padding:10px 12px;font-weight:900;color:#0f172a;font-size:15px;text-align:right">' + fm(totRon*(1+TVA)) + ' RON</td>';
+  html += '<td style="border:none;padding:10px 12px;font-weight:800;color:#0f172a;text-align:right">' + fm(totRon*(1+TVA)/e) + ' EUR</td>';
+  html += '</tr></table>';
   document.getElementById('devizContent').innerHTML=html;
   devizInitNotes(e);
 }
