@@ -1419,6 +1419,16 @@ function devizDeleteNote(i) {
 
 
 
+
+function toggleDevizExclude(catId) {
+  const p = proj(); if(!p) return;
+  const cat = p.categories.find(c=>c.id===catId);
+  if(!cat) return;
+  cat.devizExcluded = !cat.devizExcluded;
+  save();
+  renderDeviz();
+}
+
 function toggleDevizSubcat(catId, sg) {
   if(!window._devizCollapsed) window._devizCollapsed = {};
   const key = catId + '_' + sg;
@@ -1444,9 +1454,9 @@ function renderDeviz(){
     const ron=cat.items.reduce((a,i)=>a+(i.ron||0),0);
     const marja=cat.marja||0;
     const ronM=ron*(1+marja);
-    totRon+=ronM;
+    if(!cat.devizExcluded) totRon+=ronM; // skip excluded from total
     return{cat,ron,ronM,eur:ronM/e};
-  });
+  }).filter(r=>!r.cat.devizExcluded||r.cat._devizShowExcluded);
   document.getElementById('devizStats').innerHTML=`
     <div class="stat blue"><div class="stat-lbl">Total fără TVA</div><div class="stat-val">${fm(totRon)} RON</div><div class="stat-sub">${fm(totRon/e)} EUR</div></div>
     <div class="stat amber"><div class="stat-lbl">TVA 21%</div><div class="stat-val">${fm(totRon*TVA)} RON</div><div class="stat-sub">${fm(totRon*TVA/e)} EUR</div></div>
@@ -1499,17 +1509,21 @@ function renderDeviz(){
     </thead>
     <tbody>`;
   rows.forEach(({cat,ronM,eur},idx)=>{
-    html+=`<tr style="background:#e8c84a">
-      <td style="font-weight:800;color:#0f172a;font-size:13px">${letterCode(idx)}</td>
-      <td style="font-weight:800;color:#0f172a;font-size:13px">${esc(cat.name)}</td>
+    html+=`<tr style="background:${cat.devizExcluded?'#f1f5f9':'#e8c84a'}">
+      <td style="font-weight:800;color:${cat.devizExcluded?'#94a3b8':'#0f172a'};font-size:13px;text-decoration:${cat.devizExcluded?'line-through':''}">${letterCode(idx)}</td>
+      <td style="font-weight:800;color:${cat.devizExcluded?'#94a3b8':'#0f172a'};font-size:13px;text-decoration:${cat.devizExcluded?'line-through':''}">
+        ${esc(cat.name)}
+        ${cat.devizExcluded?'<span style="font-size:10px;font-weight:400;color:#94a3b8;margin-left:8px">(exclus din deviz)</span>':''}
+      </td>
       <td class="num" style="color:#94a3b8"></td>
       <td class="num" style="color:#94a3b8"></td>
-      <td class="num fw7" style="color:#0f172a;font-weight:800">${ronM>0?fm(ronM):'-'}</td>
-      <td class="num" style="color:#0f172a;display:flex;align-items:center;justify-content:flex-end;gap:4px">
+      <td class="num fw7" style="color:${cat.devizExcluded?'#94a3b8':'#0f172a'};text-decoration:${cat.devizExcluded?'line-through':''}">${ronM>0?fm(ronM):'-'}</td>
+      <td class="num" style="color:${cat.devizExcluded?'#94a3b8':'#0f172a'};text-decoration:${cat.devizExcluded?'line-through':''}">
         ${eur>0?fm(eur):'-'}
-        <span class="no-print" style="margin-left:8px">
-          <button onclick="moveCat('${cat.id}',-1);renderDeviz()" title="Mută sus" style="background:rgba(0,0,0,.1);border:none;color:#0f172a;cursor:pointer;padding:1px 4px;border-radius:3px;font-size:11px;line-height:1">↑</button>
-          <button onclick="moveCat('${cat.id}',1);renderDeviz()" title="Mută jos" style="background:rgba(0,0,0,.1);border:none;color:#0f172a;cursor:pointer;padding:1px 4px;border-radius:3px;font-size:11px;line-height:1">↓</button>
+        <span class="no-print" style="display:inline-flex;align-items:center;gap:3px;margin-left:10px">
+          <button onclick="moveCat('${cat.id}',-1);renderDeviz()" title="Mută sus" style="background:rgba(0,0,0,.1);border:none;color:#0f172a;cursor:pointer;padding:1px 5px;border-radius:3px;font-size:12px">↑</button>
+          <button onclick="moveCat('${cat.id}',1);renderDeviz()" title="Mută jos" style="background:rgba(0,0,0,.1);border:none;color:#0f172a;cursor:pointer;padding:1px 5px;border-radius:3px;font-size:12px">↓</button>
+          <button onclick="toggleDevizExclude('${cat.id}')" title="${cat.devizExcluded?'Include în deviz':'Exclude din totaluri'}" style="background:${cat.devizExcluded?'#ef4444':'#fff'};border:1px solid ${cat.devizExcluded?'#ef4444':'#cbd5e1'};color:${cat.devizExcluded?'#fff':'#64748b'};cursor:pointer;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;white-space:nowrap">${cat.devizExcluded?'✕ Inclus':'− Exclude'}</button>
         </span>
       </td>
     </tr>`;
